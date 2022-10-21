@@ -1,0 +1,4 @@
+repository "dokabi@ehdud1228@cloud"
+  path "/"
+    br "/main"
+    co "/main"

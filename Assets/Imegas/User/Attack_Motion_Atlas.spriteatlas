@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Attack_Motion_Atlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 0
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 128
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 0
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 2
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 1
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 341e733feb0090f4a85aab248f94ee4d, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: f43b53e0f3e4f18419d00c8c3b8bef9e, type: 3}
+  - {fileID: 21300000, guid: dba75af1d0592434ea6c5cd9ee2ad629, type: 3}
+  - {fileID: 21300000, guid: 51f1a443152c15042888407da4c4b733, type: 3}
+  - {fileID: 21300000, guid: a3d7867328858aa45a1feeb910201521, type: 3}
+  - {fileID: 21300000, guid: 554fa3835ecd24e4ab8814d021c7cf50, type: 3}
+  - {fileID: 21300000, guid: df581de3a41e26f4ba10a42af772d58d, type: 3}
+  - {fileID: 21300000, guid: 66449f75890877440a26f9b1d2ef3690, type: 3}
+  - {fileID: 21300000, guid: 3dfb1e564a6e74142b2607990bf39635, type: 3}
+  - {fileID: 21300000, guid: 00b99cd87f9887d4691d56a3c8c934d8, type: 3}
+  - {fileID: 21300000, guid: 0bd357c9f1613e241a0877793d9b2358, type: 3}
+  - {fileID: 21300000, guid: 4316f50b6da98d142b2bc5ba94b4ab74, type: 3}
+  - {fileID: 21300000, guid: 199a669bed019404c888506ac1c56489, type: 3}
+  - {fileID: 21300000, guid: 27bb522c01b799049b57b0eb2ab6d0d1, type: 3}
+  - {fileID: 21300000, guid: e8596b2cb40db484ab6844a233d7d323, type: 3}
+  - {fileID: 21300000, guid: 7c9e7e3c94f1ef34aabd29c572088182, type: 3}
+  - {fileID: 21300000, guid: a99135ee938390f409e2f8953032d79a, type: 3}
+  - {fileID: 21300000, guid: 473dee3f56f63cb49b8ee8f158acf109, type: 3}
+  - {fileID: 21300000, guid: 2d2a4dbfdc75a8b4384c7730c56d4873, type: 3}
+  - {fileID: 21300000, guid: e305aedfadec6294e9553f397d497496, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Player_AttackSide_First2
+  - Player_AttackDown3
+  - Player_AttackUp5
+  - Player_AttackSide_First5
+  - Player_AttackSide_Second2
+  - Player_AttackUp1
+  - Player_AttackSide_Second5
+  - Player_AttackDown1
+  - Player_AttackSide_First3
+  - Player_AttackUp3
+  - Player_AttackSide_First4
+  - Player_AttackSide_Second1
+  - Player_AttackSide_Second4
+  - Player_AttackSide_First1
+  - Player_AttackDown4
+  - Player_AttackUp2
+  - Player_AttackSide_Second3
+  - Player_AttackDown2
+  - Player_AttackUp4
+  m_RenderDataMap: {}
+  m_Tag: Attack_Motion_Atlas
+  m_IsVariant: 0
