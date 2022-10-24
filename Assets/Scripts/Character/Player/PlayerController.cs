@@ -82,6 +82,8 @@ namespace Character.Player
             get;
             private set;
         }
+
+        private SpriteRenderer m_SpriteRenderer;
         
         public enum ActionStatus
         {
@@ -170,16 +172,17 @@ namespace Character.Player
         public float platformCheckDistance = 0.4f;
         public float platformCheckWeight = 0.51f;
        
-        private PlayerAnimationController m_AnimationController;
+        private PlayerSpriteController m_SpriteController;
         private PlayerEffectController m_EffectController;
         private PlayerParticleController m_ParticleController;
         
         private void Start()
         {
             m_Rigidbody2D = GetComponent<Rigidbody2D>();
+            m_SpriteRenderer = GetComponent<SpriteRenderer>();
 
             m_AttackController = transform.Find("AttackController").GetComponent<PlayerAttackController>();
-            m_AnimationController = transform.Find("AnimationController").GetComponent<PlayerAnimationController>();
+            m_SpriteController = transform.Find("AnimationController").GetComponent<PlayerSpriteController>();
             m_EffectController = transform.Find("AnimationController").Find("EffectController").GetComponent<PlayerEffectController>();
             m_ParticleController = transform.Find("AnimationController").Find("ParticleController").GetComponent<PlayerParticleController>();
             
@@ -462,8 +465,7 @@ namespace Character.Player
 
             var nowStaggerTime = 0f;
             m_HaveControll = false;
-            m_IsInvincible = true;
-            StartCoroutine(OffInvisibleWithDelay(invincibleTimeMax));
+            StartCoroutine(ApplyInvisible(invincibleTimeMax));
             while (nowStaggerTime <= staggerTimeMax)
             {
                 m_Rigidbody2D.velocity = attackDir * knockBackSpeed + Vector2.up * knockBackSpeed / 2;
@@ -482,10 +484,20 @@ namespace Character.Player
             m_IsDashCool = false;
         }
 
-        private IEnumerator OffInvisibleWithDelay(float delaySecond = 0)
+        private IEnumerator ApplyInvisible(float maxDelaySecond = 0)
         {
-            yield return new WaitForSeconds(delaySecond);
+            m_SpriteController.StartBlink(maxDelaySecond);
+            
+            var playerLayer = LayerMask.NameToLayer("Player");
+            var enemyLayer = LayerMask.NameToLayer("Enemy");
+            
+            m_IsInvincible = true;
+            Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, true);
+            
+            yield return new WaitForSeconds(maxDelaySecond);
+            
             m_IsInvincible = false;
+            Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, false);
         }
 
         /// <summary>

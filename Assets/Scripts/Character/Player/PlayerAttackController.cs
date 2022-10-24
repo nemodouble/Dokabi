@@ -7,7 +7,7 @@ namespace Character.Player
     public class PlayerAttackController : MonoBehaviour
     {
         private PlayerController m_PlayerController;
-        private PlayerAnimationController m_AnimationController;
+        private PlayerSpriteController m_SpriteController;
         
         private Transform m_Up;
         private Transform m_Down;
@@ -43,7 +43,7 @@ namespace Character.Player
         {
             var parent = transform.parent;
             m_PlayerController = parent.GetComponent<PlayerController>();
-            m_AnimationController = parent.Find("AnimationController").GetComponent<PlayerAnimationController>();
+            m_SpriteController = parent.Find("AnimationController").GetComponent<PlayerSpriteController>();
             m_Up = transform.Find("MeleeUp");
             m_Down = transform.Find("MeleeDown");
             m_Left = transform.Find("MeleeLeft");
@@ -113,11 +113,11 @@ namespace Character.Player
         {
             if (Time.time - lastAtkTime < MeleeComboLimitTime)
             {
-                m_AnimationController.onComboAttackTime = !m_AnimationController.onComboAttackTime;
+                m_SpriteController.onComboAttackTime = !m_SpriteController.onComboAttackTime;
             }
             else
             {
-                m_AnimationController.onComboAttackTime = false;
+                m_SpriteController.onComboAttackTime = false;
             }
             lastAtkTime = Time.time;
         }

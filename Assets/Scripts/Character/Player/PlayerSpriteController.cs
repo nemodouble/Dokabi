@@ -1,15 +1,17 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Character.Player
 {
-    public class PlayerAnimationController : MonoBehaviour
+    public class PlayerSpriteController : MonoBehaviour
     {
         private PlayerController m_PlayerController;
         private PlayerAttackController m_PlayerAttackController;
         private PlayerEffectController m_PlayerEffectController;
         private PlayerParticleController m_PlayerParticleController;
 
+        private SpriteRenderer m_SpriteRenderer;
         private Animator m_Animator;
 
         public bool onComboAttackTime;
@@ -31,6 +33,7 @@ namespace Character.Player
 
         private void Start()
         {
+            m_SpriteRenderer = GetComponent<SpriteRenderer>();
             m_Animator = GetComponent<Animator>();
             try
             {
@@ -132,6 +135,23 @@ namespace Character.Player
             m_Animator.ResetTrigger(Fall);
             m_Animator.ResetTrigger(Walk);
             m_Animator.ResetTrigger(Idle);
+        }
+
+        public void StartBlink(float maxDelaySecond = 0, float blinkDelay = 0.2f)
+        {
+            StartCoroutine(SpriteBlink(maxDelaySecond, blinkDelay));
+        }
+        private IEnumerator SpriteBlink(float maxDelaySecond = 0, float blinkDelay = 0.2f)
+        {
+            var nowDelaySecond = 0f;
+            while (nowDelaySecond <= maxDelaySecond)
+            {
+                m_SpriteRenderer.color = Color.gray;
+                yield return new WaitForSeconds(blinkDelay);
+                m_SpriteRenderer.color = Color.white;
+                yield return new WaitForSeconds(blinkDelay);
+                nowDelaySecond += blinkDelay * 2;
+            }
         }
     }
 }
