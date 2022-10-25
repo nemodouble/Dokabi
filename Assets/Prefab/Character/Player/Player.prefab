@@ -15009,7 +15009,7 @@ MonoBehaviour:
   downAttackBounceForce: 40000
   invincibleTimeMax: 1.5
   staggerTimeMax: 0.15
-  knockBackSpeed: 10
+  knockBackSpeed: 5
   knockBackTimeMax: 0.3
   knockBackDir: {x: 0, y: 0}
   knockBackAfterStaggerTime: 1

@@ -70,7 +70,7 @@ namespace Character.Player
         [Header("피격")]
         public float invincibleTimeMax = 1.5f;
         public float staggerTimeMax = 0.15f;
-        public float knockBackSpeed = 10;
+        public float knockBackSpeed = 5;
         
         [Header("넉백")]
         public float knockBackTimeMax = 0.3f;
@@ -468,10 +468,12 @@ namespace Character.Player
             StartCoroutine(ApplyInvisible(invincibleTimeMax));
             while (nowStaggerTime <= staggerTimeMax)
             {
+                // 플레이어가 피격시 피격방향으로 튕겨나가는 속도
                 m_Rigidbody2D.velocity = attackDir * knockBackSpeed + Vector2.up * knockBackSpeed / 2;
                 nowStaggerTime += Time.deltaTime;
                 yield return null;
             }
+            m_Rigidbody2D.velocity = Vector2.zero;
             ChangeActionState(ActionStatus.Normal);
             m_HaveControll = true;
         }
@@ -675,19 +677,19 @@ namespace Character.Player
             }
         }
 
+        public void Hit(int attackDamage, Vector2 attackDir, float attackForceScale = 1)
+        {
+            if(CanChangeActionState(ActionStatus.Stagger))
+                StartStaggerState(attackDamage, attackDir, attackForceScale);
+        }
+        
         private void StartStaggerState(int attackDamage, Vector2 attackDir, float attackForceScale = 1)
         {
             StopNowActionState();
             m_PlayerActionStatus = ActionStatus.Stagger;
             m_NowStateCoroutine = StartCoroutine(StaggerState(attackDamage, attackDir, attackForceScale));
         }
-
-        public void Hit(int attackDamage, Vector2 attackDir, float attackForceScale = 1)
-        {
-            if(CanChangeActionState(ActionStatus.Stagger))
-                StartStaggerState(attackDamage, attackDir, attackForceScale);
-        }
-
+        
         // 피격 방향 가져오기
         public Vector2 GetAttackedDir(Vector2 attackerPosition)
         {
