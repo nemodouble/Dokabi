@@ -586,9 +586,9 @@ namespace Boss.MaeHwa
             }
         }
 
-        public RampageRange InstantiateRampageRange(Vector2 rampagePos, Vector3 rotation)
+        public MaeHwaRampageRange InstantiateRampageRange(Vector2 rampagePos, Vector3 rotation)
         {
-            return Instantiate(rampageRange, rampagePos,Quaternion.Euler(rotation)).GetComponent<RampageRange>();
+            return Instantiate(rampageRange, rampagePos,Quaternion.Euler(rotation)).GetComponent<MaeHwaRampageRange>();
         }
         /// <summary>
         /// Set Boss's LookingDir to Player direction

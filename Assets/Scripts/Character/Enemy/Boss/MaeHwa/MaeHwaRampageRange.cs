@@ -1,10 +1,11 @@
 using System;
+using Character.Player;
 using FMODUnity;
 using UnityEngine;
 
 namespace Boss.MaeHwa
 {
-    public class RampageRange : MonoBehaviour
+    public class MaeHwaRampageRange : MonoBehaviour
     {
         [SerializeField] private float attackSize = 0.1f;
         [SerializeField] private float noticeTime = 0.2f;
@@ -43,6 +44,7 @@ namespace Boss.MaeHwa
         public void SetDanger()
         {
             m_DestroyTime = attackTime;
+            destroyTimeNow = 0;
             m_Collider2D.isTrigger = true;
             m_Collider2D.size = new Vector2(m_Collider2D.size.x, attackSize);
             gameObject.layer = LayerMask.NameToLayer("Danger");
@@ -70,6 +72,16 @@ namespace Boss.MaeHwa
         public void SetDestroyTime(float destroyTime)
         {
             this.m_DestroyTime = destroyTime;
+        }
+
+        private void OnTriggerEnter2D(Collider2D col)
+        {
+            if(col.gameObject.CompareTag("Player") && gameObject.layer == LayerMask.NameToLayer("Danger"))
+            {
+                var pc = col.gameObject.GetComponent<PlayerController>();
+                var atkDir = pc.GetAttackedDir(transform.position);
+                col.gameObject.GetComponent<PlayerController>().Hit(1, atkDir);
+            }
         }
     }
 }

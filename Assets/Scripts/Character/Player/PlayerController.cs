@@ -688,6 +688,15 @@ namespace Character.Player
                 StartStaggerState(attackDamage, attackDir, attackForceScale);
         }
 
+        // 피격 방향 가져오기
+        public Vector2 GetAttackedDir(Vector2 attackerPosition)
+        {
+            Vector2 dir;
+            dir.x = attackerPosition.x > transform.position.x ? -1 : 1;
+            dir.y = attackerPosition.y > transform.position.y ? 1 : -1;
+            return dir;
+        }
+
         public DataSettings GetDataSettings()
         {
             throw new NotImplementedException();

@@ -58,7 +58,7 @@ namespace Boss.MaeHwa
                 new Vector3(0, 0, Random.Range(-20f,-40f))
             };
 
-            var rangeList = new List<RampageRange>();
+            var rangeList = new List<MaeHwaRampageRange>();
             for(var i = 0; i<3; i++)
             {
                 var pos = posList[Random.Range(0, posList.Count)];
@@ -77,7 +77,7 @@ namespace Boss.MaeHwa
 
             foreach (var range in rangeList)
             {
-                range.GetComponent<RampageRange>().SetDestroyTime(attackTime);
+                range.GetComponent<MaeHwaRampageRange>().SetDestroyTime(attackTime);
                 range.SetDanger();
                 // TO-DO : range 애니메이션 설정
             }
