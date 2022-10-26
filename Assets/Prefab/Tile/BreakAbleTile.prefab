@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2505216013916550058}
   - component: {fileID: 2505216013916550059}
   - component: {fileID: 8184440009205550117}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: HitAbleCollider
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -124,6 +124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 0
+  ableAttackDir: {x: 0, y: 0}
 --- !u!1 &2505216014130321008
 GameObject:
   m_ObjectHideFlags: 0

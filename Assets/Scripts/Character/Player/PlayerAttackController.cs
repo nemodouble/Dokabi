@@ -19,7 +19,7 @@ namespace Character.Player
         private const float MeleeComboLimitTime = 1f;
         private const float AtkDurationMax = 0.2f;
 
-        private int meleeDamage;
+        public int meleeDamage = 8;
 
         public enum AttackState
         {
@@ -105,6 +105,7 @@ namespace Character.Player
                 nowAttackState = AttackState.MeleeRight;
             }
 
+            // 공격 판정 시작
             m_NowCoroutine = StartCoroutine(MeleeAttackCoroutine(attackPos, attackBox, attackDir));
         }
         
