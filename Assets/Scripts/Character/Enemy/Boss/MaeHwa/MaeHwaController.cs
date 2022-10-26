@@ -349,12 +349,12 @@ namespace Boss.MaeHwa
                 case "Select-Attack":
                     SetLookingDir();
                     Rigid2D.velocity = Vector2.zero;
-                    ablePhaseList.Add(comboAttackStart);
+                    // ablePhaseList.Add(comboAttackStart);
                     ablePhaseList.Add(bodyAttackStart);
-                    if(Mathf.Abs(Player.transform.position.x - transform.parent.position.x) <= Mathf.Abs(rightEdgePos.x - transform.parent.position.x))
-                        ablePhaseList.Add(horizonAttackStart);
-                    ablePhaseList.Add(rampageAttackStart);
-                    ablePhaseList.Add(downStart);
+                    // if(Mathf.Abs(Player.transform.position.x - transform.parent.position.x) <= Mathf.Abs(rightEdgePos.x - transform.parent.position.x))
+                    //     ablePhaseList.Add(horizonAttackStart);
+                    // ablePhaseList.Add(rampageAttackStart);
+                    // ablePhaseList.Add(downStart);
                     break;
                 
                 

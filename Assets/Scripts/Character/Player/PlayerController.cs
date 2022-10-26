@@ -137,7 +137,7 @@ namespace Character.Player
         private float m_PlatformOffTime;
         
         // 캐릭터 조작
-        private bool m_HaveControll;
+        private bool m_HaveControl;
         public bool m_CanDecelX = true;
         
         // 캐릭터 이동
@@ -166,6 +166,8 @@ namespace Character.Player
             private set;
         }
         private bool m_IsInvincible;
+        private bool m_CanInitStunTime;
+        
 
         // 물리 관련
         private float m_OriginGravityScale;
@@ -320,6 +322,7 @@ namespace Character.Player
 
         private JumpStatus CheckJumpState()
         {
+            if (!m_HaveControl) return JumpStatus.CantJump;
             // 점프 버퍼 처리
             if (m_PlayerJumpStatus == JumpStatus.JumpBuffered)
             {
@@ -459,12 +462,20 @@ namespace Character.Player
             }
         }
         
+        private IEnumerator SetDashBool(float delaySecond = 0)
+        {
+            yield return new WaitForSeconds(delaySecond);
+            m_CanDecelX = true;
+            yield return new WaitForSeconds(dashCoolMax - delaySecond);
+            m_IsDashCool = false;
+        }
+        
         private IEnumerator StaggerState(int attackDamage, Vector2 attackDir, float attackForceScale = 1)
         {
             //hp -= attackDamage;
 
             var nowStaggerTime = 0f;
-            m_HaveControll = false;
+            m_HaveControl = false;
             StartCoroutine(ApplyInvisible(invincibleTimeMax));
             while (nowStaggerTime <= staggerTimeMax)
             {
@@ -473,17 +484,7 @@ namespace Character.Player
                 nowStaggerTime += Time.deltaTime;
                 yield return null;
             }
-            m_Rigidbody2D.velocity = Vector2.zero;
             ChangeActionState(ActionStatus.Normal);
-            m_HaveControll = true;
-        }
-        
-        private IEnumerator SetDashBool(float delaySecond = 0)
-        {
-            yield return new WaitForSeconds(delaySecond);
-            m_CanDecelX = true;
-            yield return new WaitForSeconds(dashCoolMax - delaySecond);
-            m_IsDashCool = false;
         }
 
         private IEnumerator ApplyInvisible(float maxDelaySecond = 0)
@@ -500,6 +501,23 @@ namespace Character.Player
             
             m_IsInvincible = false;
             Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, false);
+        }
+
+        public void StartStunState(float stunTime, bool canInitStunTime = false)
+        {
+            m_CanInitStunTime = canInitStunTime;
+            if (CanChangeActionState(ActionStatus.Stun))
+                StartCoroutine(StunState(stunTime));
+        }
+        
+        // Player stun state
+        private IEnumerator StunState(float stunTime)
+        {
+            m_PlayerActionStatus = ActionStatus.Stun;
+            m_HaveControl = false;
+            m_Rigidbody2D.velocity = Vector2.zero;
+            yield return new WaitForSeconds(stunTime);
+            ChangeActionState(ActionStatus.Normal);
         }
 
         /// <summary>
@@ -579,6 +597,21 @@ namespace Character.Player
                             throw new ArgumentOutOfRangeException();
                     }
                 case ActionStatus.Stun:
+                    switch (m_PlayerActionStatus)
+                    {
+                        case ActionStatus.Normal:
+                        case ActionStatus.Dash:
+                        case ActionStatus.Ball:
+                        case ActionStatus.Fly:
+                            return true;
+                        case ActionStatus.Stun:
+                            return m_CanInitStunTime;
+                        case ActionStatus.DownSmash:
+                        case ActionStatus.Stagger:
+                            return false;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 case ActionStatus.Stagger:
                     if (m_IsInvincible) return false;
                     switch (m_PlayerActionStatus)
@@ -587,9 +620,9 @@ namespace Character.Player
                         case ActionStatus.Dash:
                         case ActionStatus.Fly:
                         case ActionStatus.Ball:
+                        case ActionStatus.Stun:
                             return true;
                         case ActionStatus.DownSmash:
-                        case ActionStatus.Stun:
                         case ActionStatus.Stagger:
                             return false;
                         default:
@@ -627,9 +660,11 @@ namespace Character.Player
                 case ActionStatus.Ball:
                     break;
                 case ActionStatus.Stun:
+                    m_HaveControl = true;
                     break;
                 case ActionStatus.Stagger:
-                    m_HaveControll = true;
+                    m_HaveControl = true;
+                    m_Rigidbody2D.velocity = Vector2.zero;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -639,7 +674,7 @@ namespace Character.Player
         
         /// <summary>
         /// StopNowActionState()을 실행하고 새 액션작업을 시작합니다.
-        /// 액션 전환 가능 여부를 CanChangeActionState통해 확인 해야합니다.
+        /// 액션 전환 가능 여부를 CanChangeActionState통해 확인 해야합니다. (이 함수 내부에서는 확인하지 않습니다.)
         /// </summary>
         /// <param name="actionStatus">목표 액션 상태</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
@@ -668,10 +703,11 @@ namespace Character.Player
                     // m_NowStateCoroutine = StartCoroutine();
                     break;
                 case ActionStatus.Stun:
-                    // m_NowStateCoroutine = StartCoroutine();
-                    break;
+                    Debug.LogError("Stun 상태는 ChangeActionState를 통해 전환할 수 없습니다.");
+                    throw new ArgumentOutOfRangeException(nameof(actionStatus), actionStatus, null);
                 case ActionStatus.Stagger:
-                    // StartStaggerState를 통해 시작되야함
+                    Debug.LogError("Stagger 상태는 ChangeActionState를 통해 전환할 수 없습니다.");
+                    throw new ArgumentOutOfRangeException(nameof(actionStatus), actionStatus, null);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(actionStatus), actionStatus, null);
             }
@@ -680,7 +716,9 @@ namespace Character.Player
         public void Hit(int attackDamage, Vector2 attackDir, float attackForceScale = 1)
         {
             if(CanChangeActionState(ActionStatus.Stagger))
+            {
                 StartStaggerState(attackDamage, attackDir, attackForceScale);
+            }
         }
         
         private void StartStaggerState(int attackDamage, Vector2 attackDir, float attackForceScale = 1)

@@ -7,7 +7,7 @@ namespace Mechanics.System
     {
         [SerializeField] private int damage = 1;
 
-        private void OnTriggerEnter2D(Collider2D col)
+        private void OnTriggerStay2D(Collider2D col)
         {
             if (col.gameObject.CompareTag("Player"))
             {
@@ -15,6 +15,7 @@ namespace Mechanics.System
                 var attackDir = playerController.GetAttackedDir(transform.position);
                 playerController.Hit(1, attackDir);
             }
+            Debug.Log("Triggered" + col);
         }
     }
 }

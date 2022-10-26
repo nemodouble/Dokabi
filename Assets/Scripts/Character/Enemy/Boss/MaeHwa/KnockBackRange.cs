@@ -12,7 +12,7 @@ namespace Boss
                 PlayerController player = col.gameObject.GetComponent<PlayerController>();
                 if (player.CanChangeActionState(PlayerController.ActionStatus.Stun))
                 {
-                    col.gameObject.GetComponent<PlayerController>().ChangeActionState(PlayerController.ActionStatus.Stun);
+                    col.gameObject.GetComponent<PlayerController>().StartStunState(1f, true);
                 }
             }
         }
