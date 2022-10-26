@@ -15120,6 +15120,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 3462781472214157737}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &772912252 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7102201200968726235, guid: 4b3332f65b176244d9b0187129b7c25d,
+    type: 3}
+  m_PrefabInstance: {fileID: 858200023}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &772912253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 772912252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9f58990d45145cda4454f83c2e6d4a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTriggerDamage: 1
+  isCollisionDamage: 0
 --- !u!1 &812280160
 GameObject:
   m_ObjectHideFlags: 0
@@ -15766,11 +15786,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: DangerRange
       objectReference: {fileID: 0}
-    - target: {fileID: 7102201200968726235, guid: 4b3332f65b176244d9b0187129b7c25d,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
     - target: {fileID: 7102201200968726236, guid: 4b3332f65b176244d9b0187129b7c25d,
         type: 3}
       propertyPath: m_RootOrder
@@ -15829,12 +15844,17 @@ PrefabInstance:
     - target: {fileID: 7102201200968726237, guid: 4b3332f65b176244d9b0187129b7c25d,
         type: 3}
       propertyPath: m_Size.x
-      value: 0.8
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7102201200968726237, guid: 4b3332f65b176244d9b0187129b7c25d,
         type: 3}
       propertyPath: m_Size.y
-      value: 0.8
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7102201200968726237, guid: 4b3332f65b176244d9b0187129b7c25d,
+        type: 3}
+      propertyPath: m_Offset.y
+      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b3332f65b176244d9b0187129b7c25d, type: 3}
@@ -16133,7 +16153,6 @@ GameObject:
   - component: {fileID: 960777429}
   - component: {fileID: 960777430}
   - component: {fileID: 960777431}
-  - component: {fileID: 960777432}
   - component: {fileID: 960777433}
   m_Layer: 9
   m_Name: MaeHwa
@@ -16327,7 +16346,7 @@ MonoBehaviour:
   rampageAttackAfterWaitTime: 0.3
   rampageStaggerTime: 1.2
   downAirWaitTime: 0.3
-  downAccel: 3500
+  downAccel: 30
   downAccelTime: 0.5
   downAfterSmashTime: 0.2
   isBackStep: 0
@@ -16376,7 +16395,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.8, y: 1}
   m_EdgeRadius: 0
 --- !u!212 &960777426
 SpriteRenderer:
@@ -16526,20 +16545,6 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 1
   OverrideMaxDistance: 20
---- !u!114 &960777432
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 960777422}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9f58990d45145cda4454f83c2e6d4a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isTriggerDamage: 0
-  isCollisionDamage: 1
 --- !u!114 &960777433
 MonoBehaviour:
   m_ObjectHideFlags: 0

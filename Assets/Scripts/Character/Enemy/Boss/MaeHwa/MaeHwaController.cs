@@ -272,7 +272,7 @@ namespace Boss.MaeHwa
             
             // 다운어택
             downAirWait = new WaitPhase("Down-AirWait", downAirWaitTime, true);
-            downGetAccel = new MoveByForce("Down-GetAccel", Vector2.down, downAccel, downAccelTime);
+            downGetAccel = new MoveByVelocity("Down-GetAccel", Vector2.down, downAccel, downAccelTime);
             downSmashWait = new WaitPhase("Down-SmashWait", downAfterSmashTime);
             downSmashRampageWait = new WaitPhase("Down-SmashWait", rampageStaggerTime);
             
