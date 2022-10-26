@@ -395,12 +395,12 @@ namespace Boss.MaeHwa
                         : bodyLeftDash);
                     break;
                 case "Body-Dash":
-                    bossDangerRange.SetActive(true);
-                    bodyWall.SetActive(false);
                     Rigid2D.velocity = Vector2.zero;
                     ablePhaseList.Add(bodyAfterDashWait);
                     break;
                 case "Body-AfterDashWait":
+                    bossDangerRange.SetActive(true);
+                    bodyWall.SetActive(false);
                     RuntimeManager.PlayOneShot(bodyAttackEvent);
                     ablePhaseList.Add(bodyAttack);
                     break;

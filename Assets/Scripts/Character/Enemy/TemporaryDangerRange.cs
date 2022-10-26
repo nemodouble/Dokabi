@@ -7,15 +7,16 @@ namespace Mechanics.System
     {
         [SerializeField] private int damage = 1;
 
-        private void OnTriggerStay2D(Collider2D col)
+        private void FixedUpdate()
         {
-            if (col.gameObject.CompareTag("Player"))
+            var atkBox = GetComponent<BoxCollider2D>().size;
+            var hit = Physics2D.OverlapBox(transform.position, atkBox, 0, LayerMask.GetMask("Player"));
+            if (hit != null)
             {
-                var playerController = col.gameObject.GetComponent<PlayerController>();
+                var playerController = hit.gameObject.GetComponent<PlayerController>();
                 var attackDir = playerController.GetAttackedDir(transform.position);
                 playerController.Hit(1, attackDir);
             }
-            Debug.Log("Triggered" + col);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Mechanics.System
                 gameObject.SetActive(false);
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             if (durationNow < duration)
                 durationNow += Time.deltaTime;
