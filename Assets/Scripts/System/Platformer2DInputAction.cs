@@ -71,6 +71,15 @@ public partial class @Platformer2DInputAction : IInputActionCollection2, IDispos
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Cleanse"",
+                    ""type"": ""Button"",
+                    ""id"": ""2aa7f54f-8e14-48a7-b686-10cfd6cb7323"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -291,6 +300,28 @@ public partial class @Platformer2DInputAction : IInputActionCollection2, IDispos
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Action"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7a0ea38a-131e-4a3e-bd08-70b1ae6f60b8"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Cleanse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""87ae7709-790b-4c00-9f6e-ff1885bd6d64"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Cleanse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -883,6 +914,7 @@ public partial class @Platformer2DInputAction : IInputActionCollection2, IDispos
         m_Player_JumpAndFly = m_Player.FindAction("JumpAndFly", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_Action = m_Player.FindAction("Action", throwIfNotFound: true);
+        m_Player_Cleanse = m_Player.FindAction("Cleanse", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -959,6 +991,7 @@ public partial class @Platformer2DInputAction : IInputActionCollection2, IDispos
     private readonly InputAction m_Player_JumpAndFly;
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_Action;
+    private readonly InputAction m_Player_Cleanse;
     public struct PlayerActions
     {
         private @Platformer2DInputAction m_Wrapper;
@@ -968,6 +1001,7 @@ public partial class @Platformer2DInputAction : IInputActionCollection2, IDispos
         public InputAction @JumpAndFly => m_Wrapper.m_Player_JumpAndFly;
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
         public InputAction @Action => m_Wrapper.m_Player_Action;
+        public InputAction @Cleanse => m_Wrapper.m_Player_Cleanse;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -992,6 +1026,9 @@ public partial class @Platformer2DInputAction : IInputActionCollection2, IDispos
                 @Action.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAction;
                 @Action.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAction;
                 @Action.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAction;
+                @Cleanse.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCleanse;
+                @Cleanse.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCleanse;
+                @Cleanse.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCleanse;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1011,6 +1048,9 @@ public partial class @Platformer2DInputAction : IInputActionCollection2, IDispos
                 @Action.started += instance.OnAction;
                 @Action.performed += instance.OnAction;
                 @Action.canceled += instance.OnAction;
+                @Cleanse.started += instance.OnCleanse;
+                @Cleanse.performed += instance.OnCleanse;
+                @Cleanse.canceled += instance.OnCleanse;
             }
         }
     }
@@ -1172,6 +1212,7 @@ public partial class @Platformer2DInputAction : IInputActionCollection2, IDispos
         void OnJumpAndFly(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
         void OnAction(InputAction.CallbackContext context);
+        void OnCleanse(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

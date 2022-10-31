@@ -158,6 +158,11 @@ namespace Character.Player
             private set;
         }
         private bool m_IsAttackCool;
+        // 정화
+        private bool m_CanCleanse = true;
+        private bool m_IsCleansed = false;
+        private float m_CleanseDuration = 0.5f;
+        private float m_CleanseCoolTime = 2f;
         
         // 캐릭터 상태
         public int LookingDir
@@ -177,7 +182,7 @@ namespace Character.Player
         private PlayerSpriteController m_SpriteController;
         private PlayerEffectController m_EffectController;
         private PlayerParticleController m_ParticleController;
-        
+
         private void Start()
         {
             m_Rigidbody2D = GetComponent<Rigidbody2D>();
@@ -285,6 +290,34 @@ namespace Character.Player
                     m_ParticleController.PlayDashPS();
                 }
             }
+        }
+        
+        // 정화 시도
+        public void OnCleanse(InputAction.CallbackContext context)
+        {
+            if (context.performed && m_CanCleanse)
+            {
+                StartCoroutine(Cleanse());
+            }
+        }
+        
+        private IEnumerator Cleanse()
+        {
+            Debug.Log("정화 시도");
+            if(m_PlayerActionStatus == ActionStatus.Stun)
+            {
+                Debug.Log("정화됨");
+                ChangeActionState(ActionStatus.Normal);
+            }
+            // m_EffectController.PlayCleanseEffect();
+            // m_ParticleController.PlayCleansePS();
+            m_CanCleanse = false;
+            m_IsCleansed = true; 
+            yield return new WaitForSeconds(m_CleanseDuration);
+            m_IsCleansed = false;
+            yield return new WaitForSeconds(m_CleanseCoolTime - m_CleanseDuration);
+            m_CanCleanse = true;
+            Debug.Log("정화 준비됨");
         }
 
         public void OnAction(InputAction.CallbackContext context)
@@ -597,6 +630,7 @@ namespace Character.Player
                             throw new ArgumentOutOfRangeException();
                     }
                 case ActionStatus.Stun:
+                    if (m_IsCleansed) return false;
                     switch (m_PlayerActionStatus)
                     {
                         case ActionStatus.Normal:

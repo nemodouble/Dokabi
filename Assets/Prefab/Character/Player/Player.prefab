@@ -15162,6 +15162,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 10f4ba9b-7ad4-4b5e-8279-98ac72d7afa0
     m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5287284856156598498}
+        m_TargetAssemblyTypeName: Character.Player.PlayerController, Assembly-CSharp
+        m_MethodName: OnCleanse
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 2aa7f54f-8e14-48a7-b686-10cfd6cb7323
+    m_ActionName: Player/Cleanse[/Keyboard/d,/XInputControllerWindows/buttonNorth]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -15271,6 +15287,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f744eafc3edc41d49ef5cf6f5fc5dd5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meleeDamage: 8
   tmpEffect: {fileID: 2485028380480179958, guid: 535b9d2eb27436a48956a1aa6d7188fb,
     type: 3}
 --- !u!1 &5287284856744226209
