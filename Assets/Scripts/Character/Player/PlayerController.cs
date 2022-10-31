@@ -182,6 +182,7 @@ namespace Character.Player
         private PlayerSpriteController m_SpriteController;
         private PlayerEffectController m_EffectController;
         private PlayerParticleController m_ParticleController;
+        private PlayerSoundController m_SoundController;
 
         private void Start()
         {
@@ -190,6 +191,7 @@ namespace Character.Player
 
             m_AttackController = transform.Find("AttackController").GetComponent<PlayerAttackController>();
             m_SpriteController = transform.Find("AnimationController").GetComponent<PlayerSpriteController>();
+            m_SoundController = transform.Find("SoundController").GetComponent<PlayerSoundController>();
             m_EffectController = transform.Find("AnimationController").Find("EffectController").GetComponent<PlayerEffectController>();
             m_ParticleController = transform.Find("AnimationController").Find("ParticleController").GetComponent<PlayerParticleController>();
             
@@ -344,6 +346,8 @@ namespace Character.Player
                 m_CanAirDash = true;
                 m_CanCoyoteJump = true;
                 m_ParticleController.PlayWalkPS();
+                if(PlayerPlatformStatus != PlatformStatus.Flat)
+                    Land();
                 return PlatformStatus.Flat;
             }
             else
@@ -382,9 +386,15 @@ namespace Character.Player
                     return m_PlayerJumpStatus;
             }
         }
+
+        private void Land()
+        {
+            m_SoundController.PlayLandSound();
+        }
         
         private void Jump()
         {
+            m_SoundController.PlayJumpSound();
             m_PlayerJumpStatus = JumpStatus.Jumping;
             m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, 0);
             m_Rigidbody2D.AddForce(jumpSpeed * Vector2.up);
@@ -443,9 +453,10 @@ namespace Character.Player
         
         private IEnumerator FlyState()
         {
-            // Action 시작 처리
+            // Fly 시작 처리
             m_Rigidbody2D.gravityScale = 0;
             m_CanFly = false;
+            m_SoundController.PlayFlightSound();
             
             while (true)
             {
@@ -472,10 +483,12 @@ namespace Character.Player
 
         private IEnumerator DashState()
         {
+            // Dash 시작 처리
             m_Rigidbody2D.gravityScale = 0;
             m_CanAirDash = false;
             m_IsDashCool = true;
             m_CanDecelX = false;
+            m_SoundController.PlayDashSound();
             
             var startTime = Time.time;
             

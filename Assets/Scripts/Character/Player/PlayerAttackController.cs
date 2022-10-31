@@ -8,6 +8,7 @@ namespace Character.Player
     {
         private PlayerController m_PlayerController;
         private PlayerSpriteController m_SpriteController;
+        private PlayerSoundController m_SoundController;
         
         private Transform m_Up;
         private Transform m_Down;
@@ -44,6 +45,7 @@ namespace Character.Player
             var parent = transform.parent;
             m_PlayerController = parent.GetComponent<PlayerController>();
             m_SpriteController = parent.Find("AnimationController").GetComponent<PlayerSpriteController>();
+            m_SoundController = parent.Find("SoundController").GetComponent<PlayerSoundController>();
             m_Up = transform.Find("MeleeUp");
             m_Down = transform.Find("MeleeDown");
             m_Left = transform.Find("MeleeLeft");
@@ -62,6 +64,7 @@ namespace Character.Player
         private void DoMeleeAttack(Vector2 xyDir)
         {
             SetComboAttackAnimation();
+            m_SoundController.PlaySlashSound();
             
             // 공격 방향 판단
             Vector2 attackPos;
