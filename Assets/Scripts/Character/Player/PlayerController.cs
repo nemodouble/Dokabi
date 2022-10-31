@@ -197,6 +197,7 @@ namespace Character.Player
             
             m_PlayerActionStatus = ActionStatus.Normal;
             m_PlayerJumpStatus = JumpStatus.CanJump;
+            m_HaveControl = true;
 
             m_OriginGravityScale = m_Rigidbody2D.gravityScale;
 
