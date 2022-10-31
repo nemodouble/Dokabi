@@ -47,7 +47,8 @@ namespace Boss.Phase.Moving
                 {
                     var force = (maxSpeed - bossController.Rigid2D.velocity.magnitude) * accel *
                                 (targetPos - bossPos).normalized;
-                    bossController.Rigid2D.AddForce(force);
+                    // bossController.Rigid2D.AddForce(force);
+                    bossController.Rigid2D.velocity = (targetPos - bossPos) * 10;
                 }
                 yield return null;
             }

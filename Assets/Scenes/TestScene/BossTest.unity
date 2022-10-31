@@ -16334,8 +16334,8 @@ MonoBehaviour:
   horizonAfterWaitTime: 1
   horizonStepSpeed: 20
   bodyDashSpeed: 30
-  bodyDashTime: 0.2
-  bodyAfterDashWaitTime: 0.66
+  bodyDashTime: 0.3
+  bodyAfterDashWaitTime: 1
   bodyAfterAttackWaitTime: 1
   comboFirstBeforeWaitTime: 0.4
   comboAfterFirstWaitTime: 0.4
@@ -16358,7 +16358,7 @@ MonoBehaviour:
   rampageAttackAfterWaitTime: 0.3
   rampageStaggerTime: 1.2
   downAirWaitTime: 0.3
-  downAccel: 30
+  downAccel: 25
   downAccelTime: 0.5
   downAfterSmashTime: 0.2
   isBackStep: 0
@@ -16374,8 +16374,8 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
+  m_Mass: 100
+  m_LinearDrag: 1
   m_AngularDrag: 0.1
   m_GravityScale: 3
   m_Material: {fileID: 0}
