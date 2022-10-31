@@ -12,8 +12,8 @@ namespace Character.Player
         
         private Transform m_Up;
         private Transform m_Down;
-        private Transform m_Left;
-        private Transform m_Right;
+        private Transform m_Back;
+        private Transform m_Front;
         
         private const float AtkCool = 0.3f;
         private float lastAtkTime;
@@ -48,8 +48,8 @@ namespace Character.Player
             m_SoundController = parent.Find("SoundController").GetComponent<PlayerSoundController>();
             m_Up = transform.Find("MeleeUp");
             m_Down = transform.Find("MeleeDown");
-            m_Left = transform.Find("MeleeLeft");
-            m_Right = transform.Find("MeleeRight");
+            m_Back = transform.Find("MeleeBack");
+            m_Front = transform.Find("MeleeFront");
         }
         
         // 공격 시도
@@ -67,6 +67,7 @@ namespace Character.Player
             m_SoundController.PlaySlashSound();
             
             // 공격 방향 판단
+            // 공격 방향은 플레이어 기준으로 정해지므로 AttackController의 하위 오브젝트의 position은 중요하지 않음
             Vector2 attackPos;
             Vector2 attackBox;
             Vector2 attackDir;
@@ -85,26 +86,11 @@ namespace Character.Player
                 attackDir = Vector2.down;
                 nowAttackState = AttackState.MeleeDown;
             }
-            else if(xyDir.x > 0 || xyDir.x == 0 && m_PlayerController.LookingDir == 1)
+            else 
             {
-                attackPos = m_Right.position;
-                attackBox = m_Right.GetComponent<BoxCollider2D>().size;
-                attackDir = Vector2.right;
-                nowAttackState = AttackState.MeleeRight;
-            }
-            else if(xyDir.x < 0 || xyDir.x == 0 && m_PlayerController.LookingDir == -1)
-            {
-                attackPos = m_Left.position;
-                attackBox = m_Left.GetComponent<BoxCollider2D>().size;
-                attackDir = Vector2.left;
-                nowAttackState = AttackState.MeleeLeft;
-            }
-            else
-            {
-                Debug.LogError("잘못된 공격 방향");
-                attackPos = m_Right.position;
-                attackBox = m_Right.GetComponent<BoxCollider2D>().size;
-                attackDir = Vector2.right;
+                attackPos = m_Front.position;
+                attackBox = m_Front.GetComponent<BoxCollider2D>().size;
+                attackDir = m_PlayerController.LookingDir == 1 ? Vector2.right : Vector2.left;
                 nowAttackState = AttackState.MeleeRight;
             }
 
