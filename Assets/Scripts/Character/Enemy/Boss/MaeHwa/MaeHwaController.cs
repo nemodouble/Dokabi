@@ -349,12 +349,12 @@ namespace Boss.MaeHwa
                 case "Select-Attack":
                     SetLookingDir();
                     Rigid2D.velocity = Vector2.zero;
-                    // ablePhaseList.Add(comboAttackStart);
-                    // ablePhaseList.Add(bodyAttackStart);
-                    // if(Mathf.Abs(Player.transform.position.x - transform.parent.position.x) <= Mathf.Abs(rightEdgePos.x - transform.parent.position.x))
-                    //     ablePhaseList.Add(horizonAttackStart);
+                    ablePhaseList.Add(comboAttackStart);
+                    ablePhaseList.Add(bodyAttackStart);
+                    if(Mathf.Abs(Player.transform.position.x - transform.parent.position.x) <= Mathf.Abs(rightEdgePos.x - transform.parent.position.x))
+                        ablePhaseList.Add(horizonAttackStart);
                     ablePhaseList.Add(rampageAttackStart);
-                    // ablePhaseList.Add(downStart);
+                    ablePhaseList.Add(downStart);
                     break;
                 
                 
@@ -476,6 +476,8 @@ namespace Boss.MaeHwa
                     RuntimeManager.PlayOneShot(rampageRiseEvent);
                     RuntimeManager.PlayOneShot(yell1);
                     RuntimeManager.PlayOneShot(jump);
+                    RuntimeManager.PlayOneShot(rampageWindEvent);
+                    rampagePS.Play();
                     ablePhaseList.Add(rampageRise);
                     break;
                 case "Rampage-Rise":
@@ -487,12 +489,10 @@ namespace Boss.MaeHwa
                     ablePhaseList.Add(rampageBeforeNoticeWait);
                     break;
                 case "Rampage-BeforeNoticeWait":
-                    rampagePS.Play();
-                    RuntimeManager.PlayOneShot(rampageWindEvent);
-                    transform.position += new Vector3(0, 10000);
-                    ablePhaseList.Add(rampageBlink);
-                    break;
+                    // ablePhaseList.Add(rampageBlink);
+                    // break;
                 case "Rampage-Blink":
+                    transform.position += new Vector3(0, 10000);
                     ablePhaseList.Add(rampageNotice);
                     break;
                 case "Rampage-Notice":
