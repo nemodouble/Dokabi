@@ -44521,15 +44521,15 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5287284855241153949, guid: 065fde8d0bb2cc543bd0b8f938a0ca32,
+    - target: {fileID: 5287284855308793887, guid: 065fde8d0bb2cc543bd0b8f938a0ca32,
         type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 1
+      propertyPath: m_SortingLayer
+      value: 6
       objectReference: {fileID: 0}
-    - target: {fileID: 5287284855326657672, guid: 065fde8d0bb2cc543bd0b8f938a0ca32,
+    - target: {fileID: 5287284855795837661, guid: 065fde8d0bb2cc543bd0b8f938a0ca32,
         type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -1
+      propertyPath: m_SortingLayer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5287284856156598496, guid: 065fde8d0bb2cc543bd0b8f938a0ca32,
         type: 3}

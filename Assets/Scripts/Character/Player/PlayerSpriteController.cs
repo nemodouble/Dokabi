@@ -15,6 +15,7 @@ namespace Character.Player
         private Animator m_Animator;
 
         public bool onComboAttackTime;
+        public bool isFirstFrameAttackTrigger;
         
         private static readonly int Dash = Animator.StringToHash("Dash");
         private static readonly int Fly = Animator.StringToHash("Fly");
@@ -72,6 +73,8 @@ namespace Character.Player
                             break;
                         case PlayerAttackController.AttackState.MeleeRight:
                         case PlayerAttackController.AttackState.MeleeLeft:
+                            if (!isFirstFrameAttackTrigger) break;
+                            isFirstFrameAttackTrigger = false;
                             if (!onComboAttackTime)
                             {
                                 m_Animator.SetTrigger(MeleeSide1);
@@ -84,10 +87,14 @@ namespace Character.Player
                             }
                             break;
                         case PlayerAttackController.AttackState.MeleeUp:
+                            if (!isFirstFrameAttackTrigger) break;
+                            isFirstFrameAttackTrigger = false;
                             m_Animator.SetTrigger(MeleeUp);
                             m_PlayerEffectController.SetTrigger("MeleeUp");
                             break;
                         case PlayerAttackController.AttackState.MeleeDown:
+                            if (!isFirstFrameAttackTrigger) break;
+                            isFirstFrameAttackTrigger = false;
                             m_Animator.SetTrigger(MeleeDown);
                             m_PlayerEffectController.SetTrigger("MeleeDown");
                             break;
@@ -116,6 +123,13 @@ namespace Character.Player
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+        
+        // set specific trigger
+        public void SetTrigger(string triggerName)
+        {
+            ResetAllTrigger();
+            m_Animator.SetTrigger(triggerName);
         }
 
         // reset all trigger

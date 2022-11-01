@@ -95,6 +95,7 @@ namespace Character.Player
             }
 
             // 공격 판정 시작
+            m_SpriteController.isFirstFrameAttackTrigger = true;
             m_NowCoroutine = StartCoroutine(MeleeAttackCoroutine(attackPos, attackBox, attackDir));
         }
         
