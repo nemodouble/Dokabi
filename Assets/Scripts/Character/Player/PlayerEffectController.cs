@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Util;
+using Object = System.Object;
 
 namespace Character.Player
 {
@@ -13,10 +15,18 @@ namespace Character.Player
         private static readonly int MeleeSide2Short = Animator.StringToHash("MeleeSide2-Short");
         private static readonly int MeleeDownShort = Animator.StringToHash("MeleeDown-Short");
 
+        public GameObject m_JumpEffect;
+        private GameObject m_JumpEffectInstance;
+        public GameObject m_LandEffect;
+        private GameObject m_LandEffectInstance;
+
         private void Start()
         {
             m_Animator = GetComponent<Animator>();
             m_PlayerController = transform.parent.parent.GetComponent<PlayerController>();
+
+            m_JumpEffectInstance = Instantiate(m_JumpEffect);
+            m_LandEffectInstance = Instantiate(m_LandEffect);
         }
 
         public void SetTrigger(string id)
@@ -56,6 +66,20 @@ namespace Character.Player
             m_Animator.ResetTrigger(MeleeSide1Short);
             m_Animator.ResetTrigger(MeleeSide2Short);
             m_Animator.ResetTrigger(MeleeDownShort);
+        }
+        
+        // jump effect
+        public void JumpEffect()
+        {
+            m_JumpEffectInstance.SetActive(true);
+            m_JumpEffectInstance.transform.position = transform.position;
+        }
+        
+        // land effect
+        public void LandEffect()
+        {
+            m_LandEffectInstance.SetActive(true);
+            m_LandEffectInstance.transform.position = transform.position;
         }
     }
 }

@@ -116,5 +116,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   duration: 0.3333
-  startWithActive: 1
-  destroyItself: 1
+  startWithActive: 0
+  destroyItself: 0

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Character.Player
@@ -8,12 +9,14 @@ namespace Character.Player
         private ParticleSystem walkPS;
         private ParticleSystem flyPS;
         private ParticleSystem dashPS;
+        private ParticleSystem jumpPS;
 
         private void Start()
         {
             walkPS = transform.Find("WalkPS").GetComponent<ParticleSystem>();
             flyPS = transform.Find("FlyPS").GetComponent<ParticleSystem>();
             dashPS = transform.Find("DashPS").GetComponent<ParticleSystem>();
+            jumpPS = transform.Find("JumpPS").GetComponent<ParticleSystem>();
         }
         
         public void PlayWalkPS()
@@ -44,6 +47,11 @@ namespace Character.Player
         public void StopDashPS()
         {
             dashPS.Stop();
+        }
+
+        public void PlayJumpPS()
+        {
+            jumpPS.Play();
         }
     }
 }

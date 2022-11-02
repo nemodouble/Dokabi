@@ -379,14 +379,17 @@ namespace Character.Player
         private void Land()
         {
             m_SoundController.PlayLandSound();
+            m_EffectController.LandEffect();
         }
         
         private void Jump()
         {
-            m_SoundController.PlayJumpSound();
             m_PlayerJumpStatus = JumpStatus.Jumping;
             m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, 0);
             m_Rigidbody2D.AddForce(jumpSpeed * Vector2.up);
+            m_SoundController.PlayJumpSound();
+            m_EffectController.JumpEffect();
+            m_ParticleController.PlayJumpPS();
         }
         
         private void StopJump()
