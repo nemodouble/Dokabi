@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace UI
 {
-    public class HeartUIController : MonoBehaviour
+    public class HpUiController : MonoBehaviour
     {
-        public static HeartUIController Instace
+        public static HpUiController Instace
         {
             get { return s_Instance; }
         }
-        private static HeartUIController s_Instance;
+        private static HpUiController s_Instance;
         
 
         public int maxHP;
@@ -43,6 +43,22 @@ namespace UI
             else if(s_Instance != this)
                 throw new UnityException("There cannot be more than one HeartUIController script.  The instances are " + s_Instance.name + " and " + name + ".");
         
+        }
+        
+        public void SetHpUi(int hp)
+        {
+            nowHP = hp;
+            for (var i = 0; i < HeartAnimators.Count; i++)
+            {
+                if (i < nowHP)
+                {
+                    HeartAnimators[i].SetBool(IsAlive, true);
+                }
+                else
+                {
+                    HeartAnimators[i].SetBool(IsAlive, false);
+                }
+            }
         }
         
         public void HpIncrease(int amount)

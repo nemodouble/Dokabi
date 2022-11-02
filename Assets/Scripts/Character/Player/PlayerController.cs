@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using SceneManagement;
+using UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
@@ -17,12 +18,9 @@ namespace Character.Player
         private const float WalkSpeed = 8.6f;
 
         [Header("점프")]
-        public float jumpLengthMax = 0.02f;
         public float jumpSpeed = 980;
         public float fallGravityScale = 2f;
         public float jumpBufferLength = 0.5f;
-        public GameObject jumpImpact;
-        public GameObject riseImpact;
         
 
         [Header("벽 점프")]
@@ -36,7 +34,6 @@ namespace Character.Player
         [Header("대쉬")]
         public float dashAccel = 600f;
         public float dashLengthMax = 0.08f;
-        public float dashDelay = 0.16f;
         public float dashCoolMax = 0.3f;
 
         [Header("아래찍기")]
@@ -64,27 +61,19 @@ namespace Character.Player
         }
         [Header("공격")] 
         public MeleeType playerMeleeType = MeleeType.Short;
-        public float attackDetectTimeMax = 0.1f;
-        public float downAttackBounceForce = 40000;
 
         [Header("피격")]
         public float invincibleTimeMax = 1.5f;
         public float staggerTimeMax = 0.15f;
         public float knockBackSpeed = 5;
+        public int hp = 7;
         
-        [Header("넉백")]
-        public float knockBackTimeMax = 0.3f;
-        [SerializeField]private Vector2 knockBackDir;
-        public float knockBackAfterStaggerTime = 1f;
-
         public Rigidbody2D m_Rigidbody2D
         {
             get;
             private set;
         }
 
-        private SpriteRenderer m_SpriteRenderer;
-        
         public enum ActionStatus
         {
             Normal,
@@ -187,7 +176,6 @@ namespace Character.Player
         private void Start()
         {
             m_Rigidbody2D = GetComponent<Rigidbody2D>();
-            m_SpriteRenderer = GetComponent<SpriteRenderer>();
 
             m_AttackController = transform.Find("AttackController").GetComponent<PlayerAttackController>();
             m_SpriteController = transform.Find("AnimationController").GetComponent<PlayerSpriteController>();
@@ -519,7 +507,9 @@ namespace Character.Player
         
         private IEnumerator StaggerState(int attackDamage, Vector2 attackDir, float attackForceScale = 1)
         {
-            //hp -= attackDamage;
+            hp -= attackDamage;
+            HpUiController.Instace.SetHpUi(hp);
+            m_PlayerActionStatus = ActionStatus.Stagger;
 
             var nowStaggerTime = 0f;
             m_HaveControl = false;
@@ -772,7 +762,6 @@ namespace Character.Player
         private void StartStaggerState(int attackDamage, Vector2 attackDir, float attackForceScale = 1)
         {
             StopNowActionState();
-            m_PlayerActionStatus = ActionStatus.Stagger;
             m_NowStateCoroutine = StartCoroutine(StaggerState(attackDamage, attackDir, attackForceScale));
         }
         
