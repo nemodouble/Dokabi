@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Boss.Phase;
 using Boss.Phase.Moving;
+using Character.Enemy.Boss.MaeHwa;
 using FMODUnity;
 using Mechanics.Boss.Phase.Moving;
 using UnityEngine;
@@ -48,6 +49,7 @@ namespace Boss.MaeHwa
 
         [SerializeField] private float betweenPhaseWaitTime = 1f;
         private BossPhase endPhase;
+        private ParticleSystem dashPS;
 
         #region 걷기
 
@@ -59,6 +61,7 @@ namespace Boss.MaeHwa
         private BossPhase walkLeft;
         private BossPhase walkRight;
         private float walkDistance;
+        private ParticleSystem walkPS;
 
         #endregion
 
@@ -183,6 +186,7 @@ namespace Boss.MaeHwa
         private bool haveMoreStagger;
         private GameObject downEffect;
         private ParticleSystem teleportPS;
+        private ParticleSystem landPS;
 
         private readonly BossPhase downStart = new EmptyPhase("Down-Start", 7);
         private BossPhase downPlayPS = new EmptyPhase("Down-PlayPS");
@@ -212,6 +216,9 @@ namespace Boss.MaeHwa
             teleportPS = transform.Find("TeleportPS").GetComponent<ParticleSystem>();
             hitPS = parent.Find("HitPS").GetComponent<ParticleSystem>();
             deadPS = transform.Find("DeadPs").GetComponent<ParticleSystem>();
+            dashPS = transform.Find("PlatDashPS").GetComponent<ParticleSystem>();
+            walkPS = transform.Find("WalkPS").GetComponent<ParticleSystem>();
+            landPS = transform.Find("LandPS").GetComponent<ParticleSystem>();
             
             rampageRange = parent.Find("RampageRange").gameObject;
             horizonAttackRange = parent.Find("HorizonAttack").gameObject;
@@ -329,9 +336,11 @@ namespace Boss.MaeHwa
                     lookingDir = IsInDistance(0f, 4f) ^ (Player.transform.position.x > transform.position.x)
                         ? LookingDir.RightDir
                         : LookingDir.LeftDir;
+                    walkPS.Play();
                     ablePhaseList.Add(lookingDir == LookingDir.RightDir ? walkRight : walkLeft);
                     break;
                 case "Walk":
+                    walkPS.Stop();
                     ablePhaseList.Add(selectAttack);
                     break;
                 
@@ -362,6 +371,7 @@ namespace Boss.MaeHwa
                 case "Horizon-Start":
                     SetHorizonStep();
                     RuntimeManager.PlayOneShot(dashEvent);
+                    dashPS.Play();
                     ablePhaseList.Add(horizonStep);
                     break;
                 case "Horizon-Step":
@@ -371,6 +381,7 @@ namespace Boss.MaeHwa
                         : LookingDir.RightDir); 
                     RuntimeManager.PlayOneShot(horizonAttackEvent);
                     RuntimeManager.PlayOneShot(yell2);
+                    dashPS.Stop();
                     ablePhaseList.Add(horizonBeforeWait);
                     break;
                 case "Horizon-BeforeWait":
@@ -390,12 +401,14 @@ namespace Boss.MaeHwa
                     bossDangerRange.SetActive(false);
                     bodyWall.SetActive(true);
                     RuntimeManager.PlayOneShot(dashEvent);
+                    dashPS.Play();
                     ablePhaseList.Add(Player.transform.position.x > transform.position.x
                         ? bodyRightDash
                         : bodyLeftDash);
                     break;
                 case "Body-Dash":
                     Rigid2D.velocity = Vector2.zero;
+                    dashPS.Stop();
                     ablePhaseList.Add(bodyAfterDashWait);
                     break;
                 case "Body-AfterDashWait":
@@ -456,6 +469,7 @@ namespace Boss.MaeHwa
                 case "Combo-Third-BeforeWait":
                     RuntimeManager.PlayOneShot(comboStingAttackEvent);
                     RuntimeManager.PlayOneShot(yell3);
+                    dashPS.Play();
                     ablePhaseList.Add(comboThirdAttack);
                     break;
                 case "Combo-Third-Attack":
@@ -463,6 +477,7 @@ namespace Boss.MaeHwa
                     break;
                 case "Combo-Third-Dash":
                     Rigid2D.velocity = Vector2.zero;
+                    dashPS.Stop();
                     ablePhaseList.Add(comboThirdAfterWait);
                     break;
                 case "Combo-AfterWait":
@@ -519,10 +534,12 @@ namespace Boss.MaeHwa
                 case "Down-AirWait":
                     downEffect.SetActive(true);
                     RuntimeManager.PlayOneShot(downSmashEvent);
+                    GetComponent<ParticleTrigger>().Reset();
                     ablePhaseList.Add(downGetAccel);
                     break;
                 case "Down-GetAccel":
                     RuntimeManager.PlayOneShot(land);
+                    // landPS.Play();
                     if (haveMoreStagger)
                     {
                         haveMoreStagger = false;

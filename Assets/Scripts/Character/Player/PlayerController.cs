@@ -677,7 +677,7 @@ namespace Character.Player
         /// <summary>
         /// 현재 ActionState를 종료합니다. 이후 반드시 m_NowStateCoroutine를 할당해야 합니다.
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException">해당 state의 종료가 구현되지 않음</exception>
         private void StopNowActionState()
         {
             // 현 state 종료
