@@ -514,6 +514,7 @@ namespace Character.Player
             HpUiController.Instace.SetHpUi(hp);
             m_PlayerActionStatus = ActionStatus.Stagger;
             m_SoundController.PlayDamageSound();
+            TimeScaleController.Instance.SetTemporaryTimeScale(0.1f, 0.1f);
 
             var nowStaggerTime = 0f;
             m_HaveControl = false;
