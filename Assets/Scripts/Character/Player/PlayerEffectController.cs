@@ -14,6 +14,7 @@ namespace Character.Player
         private static readonly int MeleeSide1Short = Animator.StringToHash("MeleeSide1-Short");
         private static readonly int MeleeSide2Short = Animator.StringToHash("MeleeSide2-Short");
         private static readonly int MeleeDownShort = Animator.StringToHash("MeleeDown-Short");
+        private static readonly int Hit = Animator.StringToHash("Hit");
 
         public GameObject m_JumpEffect;
         private GameObject m_JumpEffectInstance;
@@ -48,6 +49,9 @@ namespace Character.Player
                         case "MeleeDown":
                             m_Animator.SetTrigger(MeleeDownShort);
                             break;
+                        case "Hit":
+                            m_Animator.SetTrigger(Hit);
+                            break;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
@@ -66,6 +70,7 @@ namespace Character.Player
             m_Animator.ResetTrigger(MeleeSide1Short);
             m_Animator.ResetTrigger(MeleeSide2Short);
             m_Animator.ResetTrigger(MeleeDownShort);
+            m_Animator.ResetTrigger(Hit);
         }
         
         // jump effect

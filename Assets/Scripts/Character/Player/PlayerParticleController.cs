@@ -55,8 +55,7 @@ namespace Character.Player
         public void StopDashPS()
         {
             dashPS.Stop();
-            if(playerController.PlayerPlatformStatus != PlayerController.PlatformStatus.Flat)
-                platDashPS.Stop();
+            platDashPS.Stop();
         }
 
         public void PlayJumpPS()
