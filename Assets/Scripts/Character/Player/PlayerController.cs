@@ -172,6 +172,7 @@ namespace Character.Player
         private PlayerEffectController m_EffectController;
         private PlayerParticleController m_ParticleController;
         private PlayerSoundController m_SoundController;
+        private float m_OriginDrag;
 
         private void Start()
         {
@@ -476,6 +477,8 @@ namespace Character.Player
         private IEnumerator DashState()
         {
             // Dash 시작 처리
+            m_OriginDrag = m_Rigidbody2D.drag;
+            m_Rigidbody2D.drag = m_OriginDrag / 3;
             m_Rigidbody2D.gravityScale = 0;
             m_CanAirDash = false;
             m_IsDashCool = true;
@@ -485,8 +488,6 @@ namespace Character.Player
             var startTime = Time.time;
             
             StartCoroutine(SetDashBool( 0.16f));
-            var originDrag = m_Rigidbody2D.drag;
-            m_Rigidbody2D.drag = originDrag / 3;
             m_Rigidbody2D.AddForce(new Vector2(LookingDir * dashAccel, 0));
 
             while (true)
@@ -494,7 +495,6 @@ namespace Character.Player
                 if (Time.time - startTime > dashLengthMax)
                 {
                     ChangeActionState(ActionStatus.Normal);
-                    m_Rigidbody2D.drag = originDrag;
                 }
                 yield return new WaitForFixedUpdate();
             }
@@ -691,6 +691,7 @@ namespace Character.Player
                     break;
                 case ActionStatus.Dash:
                     m_Rigidbody2D.gravityScale = m_OriginGravityScale;
+                    m_Rigidbody2D.drag = m_OriginDrag;
                     m_ParticleController.StopDashPS();
                     break;
                 case ActionStatus.Fly:
