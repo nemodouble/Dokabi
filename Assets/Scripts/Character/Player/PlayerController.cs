@@ -513,6 +513,7 @@ namespace Character.Player
             hp -= attackDamage;
             HpUiController.Instace.SetHpUi(hp);
             m_PlayerActionStatus = ActionStatus.Stagger;
+            m_SoundController.PlayDamageSound();
 
             var nowStaggerTime = 0f;
             m_HaveControl = false;
