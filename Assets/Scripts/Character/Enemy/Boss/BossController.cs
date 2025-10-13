@@ -118,6 +118,11 @@ namespace Boss
             Instantiate(instantiateGameObject, summonPos, Quaternion.identity);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="phases"></param>
+        /// <returns></returns>
         private BossPhase SelectPhase(IReadOnlyList<BossPhase> phases)
         {
             var recentness = new int[phases.Count];
@@ -156,7 +161,8 @@ namespace Boss
             {
                 if (!phaseSelectCount.TryGetValue(phases[i].PhaseName, out phaseSelectedCount[i]))
                     phaseSelectCount.Add(phases[i].PhaseName, 0);
-                phaseRandomRange[i] = (float)(phaseCountSum - 2 * phaseSelectedCount[i]) // 페이즈가 선택된 횟수 반영
+                phaseRandomRange[i] 
+                    = (float)(phaseCountSum - 2 * phaseSelectedCount[i]) // 페이즈가 선택된 횟수 반영
                     / phases[i].Rarity * // 페이즈별 희귀도 반영
                     ((float) recentRank[i] / phases.Count) + 1; // 페이즈 최신성랭킹 반영
 
