@@ -76,3 +76,7 @@ crashlytics-build.properties
 
 /.plastic/*
 /dokabi_sound/*
+
+# Assets to be removed due to licensing issues
+/Assets/ExternalAsset/
+/Assets/Art/Sprite/
