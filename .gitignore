@@ -80,3 +80,4 @@ crashlytics-build.properties
 # Assets to be removed due to licensing issues
 /Assets/ExternalAsset/
 /Assets/Art/Sprite/
+/Assets/tmp/image
