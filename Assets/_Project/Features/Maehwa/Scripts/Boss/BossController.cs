@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using _Project.Features.Battle.Scripts;
 using Boss.Phase;
 using Character;
 using FMODUnity;
@@ -36,8 +37,13 @@ namespace Boss
         public EventReference hitEvent;
         public EventReference dead;
         
-        [SerializeField]
-        internal int health;
+        private Health _health;
+        
+        protected virtual void Awake()
+        {
+            _health = new Health(100); // 보스 체력 초기화, 필요에 따라 조정
+        }
+
         protected virtual void Start()
         {
             Rigid2D = GetComponent<Rigidbody2D>();
@@ -63,8 +69,8 @@ namespace Boss
 
         public IEnumerator Hit(int damage, Vector2 attackDir, float attackForceScale)
         {
-            health -= damage;
-            if (health <= 0)
+            _health.TakeDamage(damage);
+            if (_health.IsDead())
             {
                 yield return Dead();
             }
