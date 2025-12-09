@@ -15,6 +15,8 @@ namespace _Project.Core.Scripts.FSM
 
         private readonly List<Transition<TStateId, TContext>> _anyTransitions
             = new List<Transition<TStateId, TContext>>();
+        
+        private readonly Random _random = new Random();
 
         public TStateId CurrentStateId { get; private set; }
         public IState<TContext> CurrentState { get; private set; }
@@ -31,15 +33,15 @@ namespace _Project.Core.Scripts.FSM
             _states[id] = state;
         }
 
-        public void AddTransition(TStateId from, TStateId to, Func<TContext, bool> condition)
+        public void AddTransition(TStateId from, TStateId to, Func<TContext, bool> condition, float weight = 1f)
         {
-            _transitions.Add(new Transition<TStateId, TContext>(from, to, condition));
+            _transitions.Add(new Transition<TStateId, TContext>(from, to, condition, weight));
         }
 
         // Any 상태에서 공통으로 나가는 전이 (예: HP<=0이면 무조건 Dead)
-        public void AddAnyTransition(TStateId to, Func<TContext, bool> condition)
+        public void AddAnyTransition(TStateId to, Func<TContext, bool> condition, float weight = 1f)
         {
-            _anyTransitions.Add(new Transition<TStateId, TContext>(default!, to, condition));
+            _anyTransitions.Add(new Transition<TStateId, TContext>(default!, to, condition, weight));
         }
 
         public void SetInitialState(TStateId id)
@@ -88,24 +90,47 @@ namespace _Project.Core.Scripts.FSM
 
         private TStateId FindNextState()
         {
-            // 우선 AnyTransition 체크
+            // 1. AnyTransition 우선 (이건 지금처럼 우선순위 고정)
             foreach (var t in _anyTransitions)
             {
                 if (t.Condition(_context))
                     return t.To;
             }
 
-            // 그 다음 현재 상태에서의 전이
+            // 2. 현재 상태에서 나가는 전이 중 조건 만족하는 것들 모으기
+            var candidates = new List<Transition<TStateId, TContext>>();
+
             foreach (var t in _transitions)
             {
                 if (!EqualityComparer<TStateId>.Default.Equals(t.From, CurrentStateId))
                     continue;
 
                 if (t.Condition(_context))
-                    return t.To;
+                    candidates.Add(t);
             }
 
-            return CurrentStateId;
+            if (candidates.Count == 0)
+                return CurrentStateId;
+
+            if (candidates.Count == 1)
+                return candidates[0].To;
+
+            // 3. 여러 개면 랜덤으로 하나 고르기 (가중치 랜덤)
+            var totalWeight = 0f;
+            foreach (var c in candidates)
+                totalWeight += c.Weight;
+
+            var pick = (float)_random.NextDouble() * totalWeight;
+
+            foreach (var c in candidates)
+            {
+                pick -= c.Weight;
+                if (pick <= 0f)
+                    return c.To;
+            }
+
+            // floating point 오차 대비해서 마지막 것 반환
+            return candidates[^1].To;
         }
 
         private void ChangeState(TStateId nextStateId)
