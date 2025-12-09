@@ -7,16 +7,13 @@ namespace _Project.Core.Scripts.FSM
     {
         private readonly TContext _context;
 
-        private readonly Dictionary<TStateId, IState<TContext>> _states
-            = new Dictionary<TStateId, IState<TContext>>();
+        private readonly Dictionary<TStateId, IState<TContext>> _states = new();
 
-        private readonly List<Transition<TStateId, TContext>> _transitions
-            = new List<Transition<TStateId, TContext>>();
+        private readonly List<Transition<TStateId, TContext>> _transitions = new();
 
-        private readonly List<Transition<TStateId, TContext>> _anyTransitions
-            = new List<Transition<TStateId, TContext>>();
+        private readonly List<Transition<TStateId, TContext>> _anyTransitions = new();
         
-        private readonly Random _random = new Random();
+        private readonly Random _random = new();
 
         public TStateId CurrentStateId { get; private set; }
         public IState<TContext> CurrentState { get; private set; }
@@ -33,15 +30,15 @@ namespace _Project.Core.Scripts.FSM
             _states[id] = state;
         }
 
-        public void AddTransition(TStateId from, TStateId to, Func<TContext, bool> condition, float weight = 1f)
+        public void AddTransition(TStateId from, TStateId to, Func<TContext, bool> condition, int priority = 0, float weight = 1f)
         {
-            _transitions.Add(new Transition<TStateId, TContext>(from, to, condition, weight));
+            _transitions.Add(new Transition<TStateId, TContext>(from, to, condition, priority, weight));
         }
 
         // Any 상태에서 공통으로 나가는 전이 (예: HP<=0이면 무조건 Dead)
-        public void AddAnyTransition(TStateId to, Func<TContext, bool> condition, float weight = 1f)
+        public void AddAnyTransition(TStateId to, Func<TContext, bool> condition, int priority = 0, float weight = 1f)
         {
-            _anyTransitions.Add(new Transition<TStateId, TContext>(default!, to, condition, weight));
+            _anyTransitions.Add(new Transition<TStateId, TContext>(default!, to, condition, priority, weight));
         }
 
         public void SetInitialState(TStateId id)
@@ -90,38 +87,70 @@ namespace _Project.Core.Scripts.FSM
 
         private TStateId FindNextState()
         {
-            // 1. AnyTransition 우선 (이건 지금처럼 우선순위 고정)
+            // 1. AnyTransition 우선 처리
+            var anyTransition = FindAnyTransition();
+            if (!EqualityComparer<TStateId>.Default.Equals(anyTransition, CurrentStateId))
+                return anyTransition;
+
+            // 2. 현재 상태에서 나가는 후보 전이 모으기
+            var candidates = FindTransitionCandidatesFromCurrentState();
+            if (candidates.Count == 0)
+                return CurrentStateId;
+
+            // 3. 후보 1개면 그대로, 여러 개면 가중치 랜덤 선택
+            return SelectTargetStateFromCandidates(candidates);
+        }
+
+        private TStateId FindAnyTransition()
+        {
             foreach (var t in _anyTransitions)
             {
                 if (t.Condition(_context))
                     return t.To;
             }
 
-            // 2. 현재 상태에서 나가는 전이 중 조건 만족하는 것들 모으기
-            var candidates = new List<Transition<TStateId, TContext>>();
+            return CurrentStateId;
+        }
+
+        private List<Transition<TStateId, TContext>> FindTransitionCandidatesFromCurrentState()
+        {
+            List<Transition<TStateId, TContext>> candidates = null;
+            var bestPriority = int.MinValue;
 
             foreach (var t in _transitions)
             {
                 if (!EqualityComparer<TStateId>.Default.Equals(t.From, CurrentStateId))
                     continue;
 
-                if (t.Condition(_context))
+                if (!t.Condition(_context))
+                    continue;
+
+                if (t.Priority > bestPriority)
+                {
+                    bestPriority = t.Priority;
+                    candidates = new List<Transition<TStateId, TContext>> { t };
+                }
+                else if (t.Priority == bestPriority)
+                {
+                    candidates ??= new List<Transition<TStateId, TContext>>();
                     candidates.Add(t);
+                }
             }
 
-            if (candidates.Count == 0)
-                return CurrentStateId;
+            return candidates ?? new List<Transition<TStateId, TContext>>();
+        }
 
+        private TStateId SelectTargetStateFromCandidates(
+            List<Transition<TStateId, TContext>> candidates)
+        {
             if (candidates.Count == 1)
                 return candidates[0].To;
 
-            // 3. 여러 개면 랜덤으로 하나 고르기 (가중치 랜덤)
             var totalWeight = 0f;
             foreach (var c in candidates)
                 totalWeight += c.Weight;
 
             var pick = (float)_random.NextDouble() * totalWeight;
-
             foreach (var c in candidates)
             {
                 pick -= c.Weight;
@@ -129,7 +158,7 @@ namespace _Project.Core.Scripts.FSM
                     return c.To;
             }
 
-            // floating point 오차 대비해서 마지막 것 반환
+            // 부동소수점 오차 대비용 fallback
             return candidates[^1].To;
         }
 
