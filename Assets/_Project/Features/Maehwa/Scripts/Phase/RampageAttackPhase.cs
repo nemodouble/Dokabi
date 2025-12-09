@@ -1,18 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
-using Boss.Phase;
+using _Project.Features.Boss.Scripts;
+using _Project.Features.Boss.Scripts.State;
+using _Project.Features.Maehwa.Scripts;
 using UnityEngine;
 using Util;
 
 namespace Boss.MaeHwa
 {
-    public class RampageAttackPhase : BossPhase
+    public class RampageAttackState : BossState
     {
         private readonly float noticeWaitTime;
         private readonly float attackBeforeWaitTime;
         private readonly float attackTime;
         private readonly float attackAfterWaitTime;
-        public RampageAttackPhase(string phaseName,float noticeWaitTime, float attackBeforeWaitTime, float attackTime, float attackAfterWaitTime, int rarity = 1) : base(phaseName, rarity)
+
+        // 서브 상태 정의
+        private enum SubState
+        {
+            None,
+            PreparePositions,
+            Warning,        // 범위 하나씩 생성
+            PreAttackWait,  // 공격 전 정지
+            Attack,         // SetDanger 적용
+            PostAttackWait, // 공격 후 정지
+            Finished
+        }
+
+        private SubState _subState = SubState.None;
+        private float _stateTimer;
+
+        private readonly List<Vector2> _posList = new();
+        private readonly List<Vector3> _rotList = new();
+        private readonly List<MaeHwaRampageRange> _rangeList = new();
+
+        private MaeHwaController _maeHwaController;
+        private Transform _playerTransform;
+
+        private int _spawnedWarningCount;
+
+        public RampageAttackState(string id,float noticeWaitTime, float attackBeforeWaitTime, float attackTime, float attackAfterWaitTime) : base(id)
         {
             this.noticeWaitTime = noticeWaitTime;
             this.attackBeforeWaitTime = attackBeforeWaitTime;
@@ -20,68 +47,196 @@ namespace Boss.MaeHwa
             this.attackAfterWaitTime = attackAfterWaitTime;
         }
 
-        protected internal override IEnumerator DoPhase(BossController bossController)
+        public override void OnEnter(BossContext ctx)
         {
-            var playerPos = GameObject.Find("Player").transform.position;
-
-            
-            float firstAngle;
-            RaycastHit2D raycastHit2D;
-            do
+            _maeHwaController = ctx.Controller as MaeHwaController;
+            if (_maeHwaController == null)
             {
-                InfiniteLoopDetector.Run();
-                firstAngle = Random.Range(0, 360);
-                raycastHit2D = Physics2D.Raycast(playerPos, new Vector2(Mathf.Cos(firstAngle), Mathf.Sin(firstAngle)),
-                    3f, LayerMask.GetMask("Platform"));
-            } while (raycastHit2D.collider != null);
-            
-            float secondAngle;
-            do
-            {
-                InfiniteLoopDetector.Run();
-                secondAngle = Random.Range(0, 360);
-                raycastHit2D = Physics2D.Raycast(playerPos, new Vector2(Mathf.Cos(secondAngle), Mathf.Sin(secondAngle)),
-                    5f, LayerMask.GetMask("Platform"));
-            } while (raycastHit2D.collider != null);
-            
-            var posList = new List<Vector2>
-            {
-                playerPos,
-                new Vector2(playerPos.x + 3f * Mathf.Cos(firstAngle), playerPos.y + 3f * Mathf.Sin(firstAngle)),
-                new Vector2(playerPos.x + 5f * Mathf.Cos(secondAngle), playerPos.y + 5f * Mathf.Sin(secondAngle))
-            };
-            
-            var rotList = new List<Vector3>
-            {
-                new Vector3(0, 0, Random.Range(10f,-10f)),
-                new Vector3(0, 0, Random.Range(20f,40f)),
-                new Vector3(0, 0, Random.Range(-20f,-40f))
-            };
-
-            var rangeList = new List<MaeHwaRampageRange>();
-            for(var i = 0; i<3; i++)
-            {
-                var pos = posList[Random.Range(0, posList.Count)];
-                posList.Remove(pos);
-                
-                var rot = rotList[Random.Range(0, posList.Count)];
-                rotList.Remove(rot);
-                
-                var range =  ((MaeHwaController) bossController).InstantiateRampageRange(pos, rot);
-                range.SetActive(true);
-                rangeList.Add(range);
-                
-                yield return new WaitForSeconds(noticeWaitTime);
+                Debug.LogError("RampageAttackState: MaeHwaController 캐스팅 실패");
+                _subState = SubState.Finished;
+                return;
             }
-            yield return new WaitForSeconds(attackBeforeWaitTime);
 
-            foreach (var range in rangeList)
+            var playerObj = ctx.PlayerTransform;
+            if (playerObj == null)
             {
-                range.GetComponent<MaeHwaRampageRange>().SetDestroyTime(attackTime);
+                Debug.LogError("RampageAttackState: Player 오브젝트를 찾지 못했습니다.");
+                _subState = SubState.Finished;
+                return;
+            }
+            _playerTransform = playerObj.transform;
+
+            _posList.Clear();
+            _rotList.Clear();
+            _rangeList.Clear();
+            _spawnedWarningCount = 0;
+            _stateTimer = 0f;
+
+            _subState = SubState.PreparePositions;
+        }
+
+        public override void OnExit(BossContext ctx)
+        {
+            // 여기서는 별도 정리 작업이 필요 없지만, 나중에 이펙트/코루틴 정리 등이 필요하면 추가.
+        }
+
+        public override void Tick(BossContext ctx, float deltaTime)
+        {
+            if (_subState == SubState.Finished)
+                return;
+
+            _stateTimer += deltaTime;
+
+            switch (_subState)
+            {
+                case SubState.PreparePositions:
+                    TickPreparePositions();
+                    break;
+                case SubState.Warning:
+                    TickWarning();
+                    break;
+                case SubState.PreAttackWait:
+                    if (_stateTimer >= attackBeforeWaitTime)
+                    {
+                        EnterAttack();
+                    }
+                    break;
+                case SubState.Attack:
+                    // Attack 단계는 즉시 다음 상태로 넘어가므로 여기선 할 일 없음
+                    break;
+                case SubState.PostAttackWait:
+                    if (_stateTimer >= attackAfterWaitTime)
+                    {
+                        _subState = SubState.Finished;
+                        // 필요하다면 여기서 다음 상태로 전환하는 이벤트를 날릴 수 있음.
+                    }
+                    break;
+            }
+        }
+
+        public override void FixedTick(BossContext ctx, float deltaTime)
+        {
+            // 물리 기반 행동이 없으므로 비워둠
+        }
+
+        public override void HandleEvent(BossContext ctx, object evt)
+        {
+            // 현재 패턴에서는 별도 이벤트 처리 없음
+        }
+
+        private void TickPreparePositions()
+        {
+            if (_playerTransform == null)
+            {
+                _subState = SubState.Finished;
+                return;
+            }
+
+            var playerPos = (Vector2)_playerTransform.position;
+
+            float firstAngleDeg;
+            RaycastHit2D raycastHit2D;
+            // 장애물 없는 첫 번째 방향 찾기 (3f 거리)
+            int safety = 0;
+            do
+            {
+                InfiniteLoopDetector.Run();
+                firstAngleDeg = Random.Range(0f, 360f);
+                var dir = new Vector2(Mathf.Cos(firstAngleDeg * Mathf.Deg2Rad), Mathf.Sin(firstAngleDeg * Mathf.Deg2Rad));
+                raycastHit2D = Physics2D.Raycast(playerPos, dir, 3f, LayerMask.GetMask("Platform"));
+                safety++;
+                if (safety > 50)
+                {
+                    break;
+                }
+            } while (raycastHit2D.collider != null);
+
+            float secondAngleDeg;
+            safety = 0;
+            // 장애물 없는 두 번째 방향 찾기 (5f 거리)
+            do
+            {
+                InfiniteLoopDetector.Run();
+                secondAngleDeg = Random.Range(0f, 360f);
+                var dir = new Vector2(Mathf.Cos(secondAngleDeg * Mathf.Deg2Rad), Mathf.Sin(secondAngleDeg * Mathf.Deg2Rad));
+                raycastHit2D = Physics2D.Raycast(playerPos, dir, 5f, LayerMask.GetMask("Platform"));
+                safety++;
+                if (safety > 50)
+                {
+                    break;
+                }
+            } while (raycastHit2D.collider != null);
+
+            _posList.Clear();
+            _posList.Add(playerPos);
+            _posList.Add(new Vector2(playerPos.x + 3f * Mathf.Cos(firstAngleDeg * Mathf.Deg2Rad), playerPos.y + 3f * Mathf.Sin(firstAngleDeg * Mathf.Deg2Rad)));
+            _posList.Add(new Vector2(playerPos.x + 5f * Mathf.Cos(secondAngleDeg * Mathf.Deg2Rad), playerPos.y + 5f * Mathf.Sin(secondAngleDeg * Mathf.Deg2Rad)));
+
+            _rotList.Clear();
+            _rotList.Add(new Vector3(0, 0, Random.Range(-10f, 10f)));
+            _rotList.Add(new Vector3(0, 0, Random.Range(20f, 40f)));
+            _rotList.Add(new Vector3(0, 0, Random.Range(-40f, -20f)));
+
+            _rangeList.Clear();
+            _spawnedWarningCount = 0;
+            _stateTimer = 0f;
+            _subState = SubState.Warning;
+        }
+
+        private void TickWarning()
+        {
+            // noticeWaitTime마다 하나씩 범위 생성 (최대 3개)
+            if (_spawnedWarningCount >= 3)
+            {
+                // 모두 생성했으면 공격 전 대기 상태로 전환
+                _stateTimer = 0f;
+                _subState = SubState.PreAttackWait;
+                return;
+            }
+
+            if (_stateTimer < noticeWaitTime)
+                return;
+
+            _stateTimer = 0f;
+
+            if (_posList.Count == 0 || _rotList.Count == 0)
+            {
+                // 데이터 이상 시 바로 종료
+                _subState = SubState.Finished;
+                return;
+            }
+
+            var posIndex = Random.Range(0, _posList.Count);
+            var pos = _posList[posIndex];
+            _posList.RemoveAt(posIndex);
+
+            var rotIndex = Random.Range(0, _rotList.Count);
+            var rot = _rotList[rotIndex];
+            _rotList.RemoveAt(rotIndex);
+
+            var range = _maeHwaController.InstantiateRampageRange(pos, rot);
+            range.SetActive(true);
+            _rangeList.Add(range);
+
+            _spawnedWarningCount++;
+        }
+
+        private void EnterAttack()
+        {
+            foreach (var range in _rangeList)
+            {
+                if (range == null) continue;
+                var comp = range.GetComponent<MaeHwaRampageRange>();
+                if (comp != null)
+                {
+                    comp.SetDestroyTime(attackTime);
+                }
                 range.SetDanger();
                 // TO-DO : range 애니메이션 설정
             }
-            yield return new WaitForSeconds(attackAfterWaitTime);
+
+            _stateTimer = 0f;
+            _subState = SubState.PostAttackWait;
         }
     }
 }

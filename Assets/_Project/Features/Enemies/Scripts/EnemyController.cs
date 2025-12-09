@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using _Project.Features.Battle.Scripts;
 using Character.Enemy.Normal.AttackLogic;
 using Character.Enemy.Normal.DeadLogic;
 using Character.Enemy.Normal.StateCheckLogic;
@@ -134,21 +135,21 @@ namespace Character.Enemy.Normal
             }
         }
 
-        public virtual IEnumerator Hit( int attackDamage,Vector2 knockbackDir, float attackForceScale)
+        public void Hit(int damage, Vector2 knockbackDir, float attackForceScale)
         {
             if (guardDirList.Contains(knockbackDir))
-                yield return Blocked(attackForceScale, knockbackDir);
+                StartCoroutine(Blocked(attackForceScale, knockbackDir));
             else
-                yield return Damaged(attackForceScale, knockbackDir, attackDamage);
+                StartCoroutine(Damaged(attackForceScale, knockbackDir, damage));
         }
 
         protected virtual IEnumerator Blocked(float attackForce, Vector2 knockbackDir)
         {
             throw new NotImplementedException();
         }
-        private IEnumerator Damaged(float attackForce, Vector2 knockbackDir, int attackDamage)
+        private IEnumerator Damaged(float attackForce, Vector2 knockbackDir, int damage)
         {
-            health -= attackDamage;
+            health -= damage;
             float knockBackTime = 0;
             while (knockBackTime < 0.05f)
             {

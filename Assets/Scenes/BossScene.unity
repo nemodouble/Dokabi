@@ -21439,7 +21439,6 @@ MonoBehaviour:
       Data3: 340981145
       Data4: 348583418
     Path: event:/boss/all boss/boss_death
-  health: 500
   horizonAttackEvent:
     Guid:
       Data1: 1436916311

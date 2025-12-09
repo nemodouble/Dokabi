@@ -21,11 +21,6 @@ namespace Util
         {
             Debug.Log( Math.Round( context.ReadValue<Vector2>().x,5) + " / " + Math.Round(context.ReadValue<Vector2>().y, 5) );
         }
-        
-        public static float GetVector2Length(Vector2 v)
-        {
-            return (float)Math.Sqrt(v.x * v.x + v.y * v.y);
-        }
         public static Vector3 DrawGizmosCircleXZ(Vector3 pos, float radius,
             int circleStep = 20, float ratioLastPt = 1f)
         {

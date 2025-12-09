@@ -1,11 +1,9 @@
-using System.Collections;
 using UnityEngine;
 
-namespace Character
+namespace _Project.Features.Battle.Scripts
 {
     public interface IHitAble
     { 
-        IEnumerator Hit(int attackDamage, Vector2 attackDir, float attackForceScale = 1);
-        
+        void Hit(int attackDamage, Vector2 attackDir, float knockbackForce = 1);
     }
 }

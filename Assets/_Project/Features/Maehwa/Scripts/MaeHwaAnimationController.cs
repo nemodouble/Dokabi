@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
+using _Project.Features.Boss.Scripts;
+using _Project.Features.Maehwa.Scripts;
 using UnityEngine;
 
 namespace Boss.MaeHwa
 {
-    public class MaeHwaAnimationController : MonoBehaviour
+    public class MaeHwaAnimationController : BossController
     {
         private MaeHwaController maeHwaController;
         private Animator animator;
@@ -20,9 +22,9 @@ namespace Boss.MaeHwa
             StartCoroutine(SetTrigger(PhaseNameToTrigger(maeHwaController.prevPhase)));
         }
 
-        private string PhaseNameToTrigger(string phaseName)
+        private string PhaseNameToTrigger(string id)
         {
-            switch (phaseName)
+            switch (id)
             {
                 case "Down-StartStep":
                 case "FrontStep":
@@ -62,7 +64,7 @@ namespace Boss.MaeHwa
                 case "Walk":
                     
                 case "Dead":
-                    return phaseName;
+                    return id;
                 
                 
                 default:

@@ -1,65 +1,38 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Boss.Phase;
-using Boss.Phase.Moving;
+using _Project.Features.Boss.Scripts;
+using _Project.Features.Boss.Scripts.State;
+using _Project.Features.Boss.Scripts.State.Dead;
+using _Project.Features.Boss.Scripts.State.Moving;
+using Boss.MaeHwa;
 using Character.Enemy.Boss.MaeHwa;
 using FMODUnity;
-using Mechanics.Boss.Phase.Moving;
 using UnityEngine;
 using UnityEngine.Serialization;
-using UnityEngine.UIElements;
 
-namespace Boss.MaeHwa
+namespace _Project.Features.Maehwa.Scripts
 {
     public class MaeHwaController : BossController
     {
         private enum LookingDir
         {
-            RightDir = 1, 
+            RightDir = 1,
             LeftDir = -1
         }
         private LookingDir lookingDir = LookingDir.LeftDir;
-        
         private Vector3 centerPos;
-        
-        // 사운드
-        public EventReference horizonAttackEvent;
-        public EventReference bodyAttackEvent;
-        public EventReference comboFirstAttackEvent;
-        public EventReference comboSecondAttackEvent;
-        public EventReference comboStingAttackEvent;
-        public EventReference downSmashEvent;
-        public EventReference rampageWindEvent;
-        public EventReference rampageRiseEvent;
-        public EventReference dashEvent;
-        public EventReference walkEvent;
-        public EventReference yell1;
-        public EventReference yell2;
-        public EventReference yell3;
-        public EventReference jump;
-        public EventReference land;
-        public EventReference deadVoice;
-        public EventReference outro;
-        [FormerlySerializedAs("flashEvent")] public EventReference teleportEvent;
-        
-        // 패턴 대기 
-        private readonly BossPhase startingWait = new WaitPhase("Start-Wait", 5.5f, false);
-        private readonly BossPhase selectAttack = new EmptyPhase("Select-Attack");
 
-        [SerializeField] private float betweenPhaseWaitTime = 1f;
-        private BossPhase endPhase;
+        // 패턴 대기
+        private readonly BossState startingWait = new WaitState("Start-Wait", 5.5f, false);
+        private readonly BossState selectAttack = new EmptyState("Select-Attack");
+
+        private BossState _endState;
         private ParticleSystem dashPS;
 
         #region 걷기
 
-        //walk
-        [Header("걷기")] 
-        [SerializeField] private float walkSpeed = 3f;
-        [SerializeField] private float walkTime = 1f;
-        
-        private BossPhase walkLeft;
-        private BossPhase walkRight;
+        private BossState walkLeft;
+        private BossState walkRight;
         private float walkDistance;
         private ParticleSystem walkPS;
 
@@ -68,228 +41,191 @@ namespace Boss.MaeHwa
         #region 가로베기
 
         // horizon attack
-        [Header("가로베기")] 
-        [SerializeField] private float horizonBeforeWaitTime = 1f;
-        [SerializeField] private float horizonAfterWaitTime = 1f;
-        [SerializeField] private float horizonStepSpeed = 20f;
         private GameObject horizonAttackRange;
         private Vector3 leftEdgePos;
         private Vector3 rightEdgePos;
-        
-        private readonly BossPhase horizonAttackStart = new EmptyPhase("Horizon-Start", 3);
-        private BossPhase horizonStep;
-        private BossPhase horizonBeforeWait;
-        private BossPhase horizonAttack;
-        private BossPhase horizonAfterWait;
+
+        private readonly BossState horizonAttackStart = new EmptyState("Horizon-Start", 3);
+        private BossState horizonStep;
+        private BossState horizonBeforeWait;
+        private BossState horizonAttack;
+        private BossState horizonAfterWait;
 
         #endregion
 
         #region 바디태클
 
         // body attack
-        [Header("바디태클")]
-        [SerializeField] private float bodyDashSpeed = 20f;
-        [SerializeField] private float bodyDashTime = 0.3f;
-        [SerializeField] private float bodyAfterDashWaitTime = 1f;
-        [SerializeField] private float bodyAfterAttackWaitTime = 1f;
         private GameObject bodyWall;
         private GameObject bodyStrongAttack;
         private GameObject bossDangerRange;
-        
-        private readonly BossPhase bodyAttackStart = new EmptyPhase("Body-Start");
-        private BossPhase bodyLeftDash;
-        private BossPhase bodyRightDash;
-        private BossPhase bodyAfterDashWait;
-        private BossPhase bodyAttack;
-        private BossPhase bodyAfterAttackWait;
+
+        private readonly BossState bodyAttackStart = new EmptyState("Body-Start");
+        private BossState bodyLeftDash;
+        private BossState bodyRightDash;
+        private BossState bodyAfterDashWait;
+        private BossState bodyAttack;
+        private BossState bodyAfterAttackWait;
 
         #endregion
 
         #region 콤보
-        
+
         // combo attack
-        [Header("콤보")] 
-        [SerializeField] private float comboFirstBeforeWaitTime = 0.4f;
-        [SerializeField] private float comboAfterFirstWaitTime = 0.1f;
-        [SerializeField] private float comboBeforeSecondWaitTime = 0.4f;
-        [SerializeField] private float comboAfterSecondWaitTime = 0.1f;
-        [SerializeField] private float comboBeforeThirdWaitTime = 0.9f;
-        [SerializeField] private float comboAfterThirdWaitTime = 1f;
-        [SerializeField] private float comboNormalSpeed = 10f;
-        [SerializeField] private float comboNormalLength = 0.2f;
-        [SerializeField] private float comboStingSpeed = 20f;
-        [SerializeField] private float comboStingTime = 0.2f;
         private GameObject comboNormalAttack;
         private GameObject comboStingAttack;
-        
-        private readonly BossPhase comboAttackStart = new EmptyPhase("Combo-Start");
-        private BossPhase comboFirstAttackStart;
-        private BossPhase comboFirstBeforeWait;
-        private BossPhase comboFirstNoDash;
-        private BossPhase comboFirstLeftDash;
-        private BossPhase comboFirstRightDash;
-        private BossPhase comboFirstAttack;
-        private BossPhase comboFirstAfterWait;
-        private BossPhase comboSecondWait;
-        private BossPhase comboSecondLeftDash;
-        private BossPhase comboSecondRightDash;
-        private BossPhase comboSecondNoDash;
-        private BossPhase comboSecondAttack;
-        private BossPhase comboSecondAfterWait;
-        private BossPhase comboThirdBeforeWait;
-        private BossPhase comboThirdAttack;
-        private BossPhase comboThirdLeftDash;
-        private BossPhase comboThirdRightDash;
-        private BossPhase comboThirdAfterWait;
-        
-        
+
+        private readonly BossState comboAttackStart = new EmptyState("Combo-Start");
+        private BossState comboFirstAttackStart;
+        private BossState comboFirstBeforeWait;
+        private BossState comboFirstNoDash;
+        private BossState comboFirstLeftDash;
+        private BossState comboFirstRightDash;
+        private BossState comboFirstAttack;
+        private BossState comboFirstAfterWait;
+        private BossState comboSecondWait;
+        private BossState comboSecondLeftDash;
+        private BossState comboSecondRightDash;
+        private BossState comboSecondNoDash;
+        private BossState comboSecondAttack;
+        private BossState comboSecondAfterWait;
+        private BossState comboThirdBeforeWait;
+        private BossState comboThirdAttack;
+        private BossState comboThirdLeftDash;
+        private BossState comboThirdRightDash;
+        private BossState comboThirdAfterWait;
+
+
 
         #endregion
 
         #region 난무
 
         //Rampage
-        [Header("난무")] 
-        [SerializeField] private float rampageRiseSpeed = 5f;
-        [SerializeField] private float rampageRiseTime = 0.3f;
-        [SerializeField] private float rampageRiseWaitTime = 0.3f;
-        [FormerlySerializedAs("rampageBeforeNoticeWait")] [SerializeField] private float rampageBeforeNoticeWaitTime = 1f;
-        [SerializeField] private float rampageBlinkWait = 2f;
-        [SerializeField] private float rampageNoticeInterval = 0.1f;
-        [SerializeField] private float rampageBeforeAttackTime = 0.5f;
-        [SerializeField] private float rampageAttackTime = 0.2f;
-        [SerializeField] private float rampageAttackAfterWaitTime = 0.3f;
-        [SerializeField] private float rampageStaggerTime = 3f;
         private ParticleSystem rampagePS;
         private GameObject rampageRange;
         private float originGravity;
-        
-        private readonly BossPhase rampageAttackStart = new EmptyPhase("Rampage-Start", 10);
-        private BossPhase rampageRise;
-        private BossPhase rampageRiseWait;
-        private BossPhase rampageBeforeNoticeWait;
-        private BossPhase rampageBlink;
-        private BossPhase rampageNotice;
-        private BossPhase rampageToDown;
+
+        private readonly BossState rampageAttackStart = new EmptyState("Rampage-Start", 10);
+        private BossState rampageRise;
+        private BossState rampageRiseWait;
+        private BossState rampageBeforeNoticeWait;
+        private BossState rampageBlink;
+        private BossState rampageNotice;
+        private BossState rampageToDown;
 
         #endregion
 
         #region 다운스매쉬
 
         //downSmash
-        [FormerlySerializedAs("downAirWait")]
-        [Header("다운스매싱")] 
-        [SerializeField] private float downAirWaitTime;
-        [SerializeField] private float downAccel;
-        [SerializeField] private float downAccelTime;
-        [SerializeField] private float downAfterSmashTime;
         private bool haveMoreStagger;
         private GameObject downEffect;
         private ParticleSystem teleportPS;
         private ParticleSystem landPS;
 
-        private readonly BossPhase downStart = new EmptyPhase("Down-Start", 7);
-        private BossPhase downPlayPS = new EmptyPhase("Down-PlayPS");
-        private BossPhase downBlink = new EmptyPhase("Down-Blink");
-        private BossPhase downAirWait;
-        private BossPhase downGetAccel;
-        private BossPhase downSmashWait;
-        private BossPhase downSmashRampageWait;
+        private readonly BossState downStart = new EmptyState("Down-Start", 7);
+        private BossState downPlayPS = new EmptyState("Down-PlayPS");
+        private BossState downBlink = new EmptyState("Down-Blink");
+        private BossState downAirWait;
+        private BossState downGetAccel;
+        private BossState downSmashWait;
+        private BossState downSmashRampageWait;
 
         #endregion
-        
+
         public bool isBackStep;
-        
-        
+
+
         protected override void Start()
         {
             // transform, gameObject 할당
             var parent = gameObject.transform.parent;
-            
+
             bodyWall = transform.Find("PushWall").gameObject;
             bossDangerRange = transform.Find("DangerRange").gameObject;
             bodyStrongAttack = transform.Find("StrongAttack").gameObject;
             comboNormalAttack = transform.Find("NormalAttack").gameObject;
             comboStingAttack = transform.Find("StingAttack").gameObject;
             downEffect = transform.Find("DownEffect").gameObject;
-            
+
             teleportPS = transform.Find("TeleportPS").GetComponent<ParticleSystem>();
             hitPS = parent.Find("HitPS").GetComponent<ParticleSystem>();
             deadPS = transform.Find("DeadPs").GetComponent<ParticleSystem>();
             dashPS = transform.Find("PlatDashPS").GetComponent<ParticleSystem>();
             walkPS = transform.Find("WalkPS").GetComponent<ParticleSystem>();
             landPS = transform.Find("LandPS").GetComponent<ParticleSystem>();
-            
+
             rampageRange = parent.Find("RampageRange").gameObject;
             horizonAttackRange = parent.Find("HorizonAttack").gameObject;
-            
+
             leftEdgePos = parent.Find("LeftEdge").transform.position;
             rightEdgePos = parent.Find("RightEdge").transform.position;
-            
+
             rampagePS = parent.Find("RampagePS").GetComponent<ParticleSystem>();
             centerPos = parent.position;
 
             #region 패턴할당
 
             // 패턴 할당
-            
+
             // 걷기
             walkLeft = new MoveByVelocity("Walk", Vector2.left, walkSpeed, walkTime);
             walkRight = new MoveByVelocity("Walk",Vector2.right, walkSpeed, walkTime);
-            
+
             // 가로 베기
-            horizonBeforeWait = new WaitPhase("Horizon-BeforeWait", horizonBeforeWaitTime, true);
+            horizonBeforeWait = new WaitState("Horizon-BeforeWait", horizonBeforeWaitTime, true);
             horizonAttack = new AttackFixedRange("Horizon-Attack", horizonAttackRange);
-            horizonAfterWait = new WaitPhase("Horizon-AfterWait", horizonAfterWaitTime, true);
-            
+            horizonAfterWait = new WaitState("Horizon-AfterWait", horizonAfterWaitTime, true);
+
             // 바디태클
-            bodyAfterDashWait = new WaitPhase("Body-AfterDashWait", bodyAfterDashWaitTime);
+            bodyAfterDashWait = new WaitState("Body-AfterDashWait", bodyAfterDashWaitTime);
             bodyLeftDash = new MoveByVelocity("Body-Dash", Vector2.left, bodyDashSpeed, bodyDashTime);
             bodyRightDash = new MoveByVelocity("Body-Dash", Vector2.right, bodyDashSpeed, bodyDashTime);
             bodyAttack = new AttackFixedRange("Body-Attack", bodyStrongAttack);
-            bodyAfterAttackWait = new WaitPhase("Body-AfterAttackWait", bodyAfterAttackWaitTime);
-            
+            bodyAfterAttackWait = new WaitState("Body-AfterAttackWait", bodyAfterAttackWaitTime);
+
             // 콤보 공격
-            comboFirstAttackStart = new EmptyPhase("Combo-FirstAttackStart");
-            comboFirstBeforeWait = new WaitPhase("Combo-First-BeforeWait", comboFirstBeforeWaitTime);
+            comboFirstAttackStart = new EmptyState("Combo-FirstAttackStart");
+            comboFirstBeforeWait = new WaitState("Combo-First-BeforeWait", comboFirstBeforeWaitTime);
             comboFirstAttack = new AttackFixedRange("Combo-First-Attack", comboNormalAttack);
-            comboFirstNoDash = new WaitPhase("Combo-First-DashOrWait", comboNormalLength);
+            comboFirstNoDash = new WaitState("Combo-First-DashOrWait", comboNormalLength);
             comboFirstLeftDash = new MoveByVelocity("Combo-First-DashOrWait", Vector2.left, comboNormalSpeed, comboNormalLength);
             comboFirstRightDash = new MoveByVelocity("Combo-First-DashOrWait", Vector2.right, comboNormalSpeed, comboNormalLength);
-            comboFirstAfterWait = new WaitPhase("Combo-First-AfterWait", comboAfterFirstWaitTime);
-            comboSecondWait = new WaitPhase("Combo-Second-BeforeWait", comboBeforeSecondWaitTime);
-            comboSecondNoDash = new WaitPhase("Combo-Second-DashOrWait", comboNormalLength);
+            comboFirstAfterWait = new WaitState("Combo-First-AfterWait", comboAfterFirstWaitTime);
+            comboSecondWait = new WaitState("Combo-Second-BeforeWait", comboBeforeSecondWaitTime);
+            comboSecondNoDash = new WaitState("Combo-Second-DashOrWait", comboNormalLength);
             comboSecondLeftDash = new MoveByVelocity("Combo-Second-DashOrWait", Vector2.left, comboNormalSpeed, comboNormalLength);
             comboSecondRightDash = new MoveByVelocity("Combo-Second-DashOrWait", Vector2.right, comboNormalSpeed, comboNormalLength);
             comboSecondAttack = new AttackFixedRange("Combo-Second-Attack", comboNormalAttack);
-            comboSecondAfterWait = new WaitPhase("Combo-Second-AfterWait", comboAfterSecondWaitTime);
-            comboThirdBeforeWait = new WaitPhase("Combo-Third-BeforeWait", comboBeforeThirdWaitTime);
+            comboSecondAfterWait = new WaitState("Combo-Second-AfterWait", comboAfterSecondWaitTime);
+            comboThirdBeforeWait = new WaitState("Combo-Third-BeforeWait", comboBeforeThirdWaitTime);
             comboThirdAttack = new AttackFixedRange("Combo-Third-Attack", comboStingAttack);
             comboThirdLeftDash = new MoveByVelocity("Combo-Third-Dash", Vector2.left, comboStingSpeed, comboStingTime);
             comboThirdRightDash = new MoveByVelocity("Combo-Third-Dash", Vector2.right, comboStingSpeed, comboStingTime);
-            comboThirdAfterWait = new WaitPhase("Combo-AfterWait", comboAfterThirdWaitTime);
-            
+            comboThirdAfterWait = new WaitState("Combo-AfterWait", comboAfterThirdWaitTime);
+
             // 난무
             rampageRise = new MoveLikeJump("Rampage-Rise", rampageRiseSpeed, rampageRiseTime);
-            rampageRiseWait = new WaitPhase("Rampage-RiseWait", rampageRiseWaitTime, true);
-            rampageBeforeNoticeWait = new WaitPhase("Rampage-BeforeNoticeWait", rampageBeforeNoticeWaitTime, true);
-            rampageBlink = new WaitPhase("Rampage-Blink", rampageBlinkWait, true);
-            rampageNotice = new RampageAttackPhase("Rampage-Notice", rampageNoticeInterval, rampageBeforeAttackTime, rampageAttackTime, rampageAttackAfterWaitTime);
-            rampageToDown = new EmptyPhase("Down-AirWait");
-            
+            rampageRiseWait = new WaitState("Rampage-RiseWait", rampageRiseWaitTime, true);
+            rampageBeforeNoticeWait = new WaitState("Rampage-BeforeNoticeWait", rampageBeforeNoticeWaitTime, true);
+            rampageBlink = new WaitState("Rampage-Blink", rampageBlinkWait, true);
+            rampageNotice = new RampageAttackState("Rampage-Notice", rampageNoticeInterval, rampageBeforeAttackTime, rampageAttackTime, rampageAttackAfterWaitTime);
+            rampageToDown = new EmptyState("Down-AirWait");
+
             // 다운어택
-            downAirWait = new WaitPhase("Down-AirWait", downAirWaitTime, true);
+            downAirWait = new WaitState("Down-AirWait", downAirWaitTime, true);
             downGetAccel = new MoveByVelocity("Down-GetAccel", Vector2.down, downAccel, downAccelTime);
-            downSmashWait = new WaitPhase("Down-SmashWait", downAfterSmashTime);
-            downSmashRampageWait = new WaitPhase("Down-SmashWait", rampageStaggerTime);
-            
+            downSmashWait = new WaitState("Down-SmashWait", downAfterSmashTime);
+            downSmashRampageWait = new WaitState("Down-SmashWait", rampageStaggerTime);
+
             // 사망
-            DeadPhase = new DeadNormal("Dead");
-            
-            endPhase = new WaitPhase("EndPhase", betweenPhaseWaitTime);
+            DeadState = new DeadNormal("Dead");
+
+            _endState = new WaitState("EndPhase", betweenPhaseWaitTime);
 
             #endregion
-            
+
             base.Start();
         }
 
@@ -313,9 +249,9 @@ namespace Boss.MaeHwa
             yield return base.Dead();
         }
 
-        protected override List<BossPhase> GetAblePhaseList()
+        protected override List<BossState> GetAblePhaseList()
         {
-            var ablePhaseList = new List<BossPhase>();
+            var ablePhaseList = new List<BossState>();
             if (prevPhase == "")
             {
                 SetLookingDir();
@@ -326,12 +262,12 @@ namespace Boss.MaeHwa
                 case "Start-Wait":
                 case "EndPhase":
                     SetLookingDir();
-                    ablePhaseList.Add(new EmptyPhase("Select-Walk"));
+                    ablePhaseList.Add(new EmptyState("Select-Walk"));
                     if(IsInDistance(0f,3f))
-                        ablePhaseList.Add(new EmptyPhase("Select-Step", 2));
+                        ablePhaseList.Add(new EmptyState("Select-Step", 2));
                     ablePhaseList.Add(selectAttack);
                     break;
-                
+
                 case "Select-Walk":
                     lookingDir = IsInDistance(0f, 4f) ^ (Player.transform.position.x > transform.position.x)
                         ? LookingDir.RightDir
@@ -343,7 +279,7 @@ namespace Boss.MaeHwa
                     walkPS.Stop();
                     ablePhaseList.Add(selectAttack);
                     break;
-                
+
                 case "Select-Step":
                     RuntimeManager.PlayOneShot(dashEvent);
                     ablePhaseList.Add(IsInDistance(0f, 3f)
@@ -354,7 +290,7 @@ namespace Boss.MaeHwa
                 case "BackStep":
                     ablePhaseList.Add(selectAttack);
                     break;
-                
+
                 case "Select-Attack":
                     SetLookingDir();
                     Rigid2D.velocity = Vector2.zero;
@@ -365,8 +301,8 @@ namespace Boss.MaeHwa
                     ablePhaseList.Add(rampageAttackStart);
                     ablePhaseList.Add(downStart);
                     break;
-                
-                
+
+
                 // 가로베기
                 case "Horizon-Start":
                     SetHorizonStep();
@@ -378,7 +314,7 @@ namespace Boss.MaeHwa
                     var bossTransform = transform;
                     SetLookingDir(bossTransform.position.x > bossTransform.parent.position.x
                         ? LookingDir.LeftDir
-                        : LookingDir.RightDir); 
+                        : LookingDir.RightDir);
                     RuntimeManager.PlayOneShot(horizonAttackEvent);
                     RuntimeManager.PlayOneShot(yell2);
                     dashPS.Stop();
@@ -393,9 +329,9 @@ namespace Boss.MaeHwa
                     ablePhaseList.Add(horizonAfterWait);
                     break;
                 case "Horizon-AfterWait":
-                    ablePhaseList.Add(endPhase);
+                    ablePhaseList.Add(_endState);
                     break;
-                        
+
                 // 몸통 박치기
                 case "Body-Start":
                     bossDangerRange.SetActive(false);
@@ -421,9 +357,9 @@ namespace Boss.MaeHwa
                     ablePhaseList.Add(bodyAfterAttackWait);
                     break;
                 case "Body-AfterAttackWait":
-                    ablePhaseList.Add(endPhase);
+                    ablePhaseList.Add(_endState);
                     break;
-                    
+
                 // 3연격
                 case "Combo-Start":
                 case "Combo-Step":
@@ -433,7 +369,7 @@ namespace Boss.MaeHwa
                     ablePhaseList.Add(comboFirstBeforeWait);
                     break;
                 case "Combo-First-BeforeWait":
-                    ablePhaseList.Add(IsInDistance(0f, 2.5f) ? comboFirstNoDash : 
+                    ablePhaseList.Add(IsInDistance(0f, 2.5f) ? comboFirstNoDash :
                         lookingDir == LookingDir.LeftDir ? comboFirstLeftDash : comboFirstRightDash);
                     break;
                 case "Combo-First-DashOrWait":
@@ -481,10 +417,10 @@ namespace Boss.MaeHwa
                     ablePhaseList.Add(comboThirdAfterWait);
                     break;
                 case "Combo-AfterWait":
-                    ablePhaseList.Add(endPhase);
+                    ablePhaseList.Add(_endState);
                     break;
-                
-                
+
+
                 // 난무
                 case "Rampage-Start":
                     Rigid2D.velocity = Vector2.zero;
@@ -517,7 +453,7 @@ namespace Boss.MaeHwa
                     haveMoreStagger = true;
                     ablePhaseList.Add(rampageToDown);
                     break;
-                
+
                 // 상단 내려찍기
                 case "Down-Start":
                     teleportPS.Play();
@@ -549,10 +485,10 @@ namespace Boss.MaeHwa
                         ablePhaseList.Add(downSmashWait);
                     break;
                 case "Down-SmashWait":
-                    ablePhaseList.Add(endPhase);
+                    ablePhaseList.Add(_endState);
                     break;
-                
-                
+
+
                 default:
                     Debug.Log("보스 상태 지정 안됨");
                     ablePhaseList.Add(startingWait);
@@ -586,11 +522,11 @@ namespace Boss.MaeHwa
             var distance = Mathf.Abs(transform.position.x - Player.transform.position.x);
             return distance >= minDistance && distance <= maxDistance;
         }
-        private BossPhase GetStepToKeepDistance(string stepName, float targetDistance, out bool isBackStep)
+        private BossState GetStepToKeepDistance(string stepName, float targetDistance, out bool isBackStep)
         {
-             
-            BossPhase rightStep = new Step(stepName, Vector2.right * 3f, 20f, 10, 0.3f);
-            BossPhase leftStep = new Step(stepName, Vector2.left * 3f, 20f, 10, 0.3f);
+
+            BossState rightStep = new Step(stepName, Vector2.right * 3f, 20f, 10, 0.3f);
+            BossState leftStep = new Step(stepName, Vector2.left * 3f, 20f, 10, 0.3f);
             if (Mathf.Abs(transform.position.x - Player.transform.position.x) >= targetDistance)
             {
                 isBackStep = false;
