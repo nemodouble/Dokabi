@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace _Project.Features.Boss.Scripts.State
 {
-    public class WaitState : BossState
+    public class WaitState : BossState<BossContext>
     {
         private readonly float _waitingSecond;
         private readonly bool _notMoving;

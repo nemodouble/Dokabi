@@ -1,6 +1,6 @@
 namespace _Project.Features.Boss.Scripts.State
 {
-    public class EmptyState : BossState
+    public class EmptyState : BossState<BossContext>
     {
         private readonly string _enterAnimTrigger;
 

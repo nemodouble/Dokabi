@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace _Project.Features.Boss.Scripts.State
 {
-    public class AttackFixedRange : BossState
+    public class AttackFixedRange : BossState<BossContext>
     {
         private readonly GameObject _attackRange;
         private readonly string _enterAnimTrigger;

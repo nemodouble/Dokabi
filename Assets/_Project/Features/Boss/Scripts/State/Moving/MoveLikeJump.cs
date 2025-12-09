@@ -2,7 +2,7 @@ using _Project.Features.Boss.Scripts;
 
 namespace _Project.Features.Boss.Scripts.State.Moving
 {
-    public class MoveLikeJump : BossState
+    public class MoveLikeJump : BossState<BossContext>
     {
         private readonly float startSpeed;
         private readonly float jumpTime;

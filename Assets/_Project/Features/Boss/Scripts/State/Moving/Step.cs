@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _Project.Features.Boss.Scripts.State.Moving
 {
-    public class Step : BossState
+    public class Step : BossState<BossContext>
     {
         private readonly Vector2 _relativePos;
         private readonly float _maxSpeed;

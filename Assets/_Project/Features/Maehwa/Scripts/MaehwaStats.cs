@@ -3,6 +3,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "MaeHwaStats", menuName = "Boss/MaeHwa Stats")]
 public class MaeHwaStats : ScriptableObject
 {
+    [Header("시작")]
+    public float startWaitTime = 5.5f;
+    
     [Header("걷기")]
     public float walkSpeed = 3f;
     public float walkTime = 1f;

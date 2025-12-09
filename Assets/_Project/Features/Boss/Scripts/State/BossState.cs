@@ -3,7 +3,7 @@ using _Project.Core.Scripts.FSM;
 
 namespace _Project.Features.Boss.Scripts.State
 {
-    public abstract class BossState : IState<BossContext>
+    public abstract class BossState<TContext> : IState<TContext>
     {
         public readonly string ID;
         
@@ -13,14 +13,14 @@ namespace _Project.Features.Boss.Scripts.State
 
         public bool IsFinished { get; protected set; }
 
-        public abstract void OnEnter(BossContext ctx);
+        public abstract void OnEnter(TContext ctx);
 
-        public abstract void OnExit(BossContext ctx);
+        public abstract void OnExit(TContext ctx);
 
-        public abstract void Tick(BossContext ctx, float deltaTime);
+        public abstract void Tick(TContext ctx, float deltaTime);
 
-        public abstract void FixedTick(BossContext ctx, float deltaTime);
+        public abstract void FixedTick(TContext ctx, float deltaTime);
 
-        public abstract void HandleEvent(BossContext ctx, object evt);
+        public abstract void HandleEvent(TContext ctx, object evt);
     }
 }

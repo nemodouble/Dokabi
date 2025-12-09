@@ -4,15 +4,15 @@ using UnityEngine;
 
 namespace _Project.Features.Boss.Scripts
 {
-    public class BossStateMachine : MonoBehaviour
+    public class BossStateMachine<TContext> : MonoBehaviour
     {
-        protected BossContext Context;
+        protected TContext Context;
         
-        protected StateMachine<string, BossContext> StateMachine;
+        protected StateMachine<string, TContext> StateMachine;
         
         public virtual void Initialize()
         {
-            StateMachine = new StateMachine<string, BossContext>(Context);
+            StateMachine = new StateMachine<string, TContext>(Context);
         }
     }
 }

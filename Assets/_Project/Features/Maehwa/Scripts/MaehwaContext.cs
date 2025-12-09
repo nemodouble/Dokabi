@@ -4,6 +4,6 @@ namespace _Project.Features.Maehwa.Scripts
 {
     public class MaehwaContext : BossContext
     {
-        public MaeHwaStats MaeHwaStats { get; set; }
+        public MaeHwaStats Stats { get; set; }
     }
 }

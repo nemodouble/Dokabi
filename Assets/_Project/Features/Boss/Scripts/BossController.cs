@@ -14,7 +14,7 @@ namespace _Project.Features.Boss.Scripts
         [SerializeField] private BossContext context;
         [SerializeField] private BossMovement movement;
         [SerializeField] private BossSoundPlayer soundPlayer;
-        [SerializeField] private BossStateMachine stateMachine;
+        [SerializeField] private BossStateMachine<BossContext> stateMachine;
         [SerializeField] private BossHealth health;
 
         public BossAnimation Animation => bossAnimation;
@@ -23,7 +23,7 @@ namespace _Project.Features.Boss.Scripts
         public BossContext Context => context;
         public BossMovement Movement => movement;
         public BossSoundPlayer Sound => soundPlayer;
-        public BossStateMachine FSM => stateMachine;
+        public BossStateMachine<BossContext> FSM => stateMachine;
         public BossHealth Health => health;
 
         protected virtual void Awake()

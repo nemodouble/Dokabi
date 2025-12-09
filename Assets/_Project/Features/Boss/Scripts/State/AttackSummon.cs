@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace _Project.Features.Boss.Scripts.State
 {
-    public class AttackSummon : BossState
+    public class AttackSummon : BossState<BossContext>
     {
         private readonly GameObject _prefab;
         private readonly Vector2 _relativePos;

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace _Project.Features.Boss.Scripts.State.Dead
 {
-    public class DeadNormal : BossState
+    public class DeadNormal : BossState<BossContext>
     {
         private readonly string _enterAnimTrigger;
 

@@ -23,7 +23,6 @@ namespace _Project.Features.Maehwa.Scripts
         private Vector3 centerPos;
 
         // 패턴 대기
-        private readonly BossState startingWait = new WaitState("Start-Wait", 5.5f, false);
         private readonly BossState selectAttack = new EmptyState("Select-Attack");
 
         private BossState _endState;

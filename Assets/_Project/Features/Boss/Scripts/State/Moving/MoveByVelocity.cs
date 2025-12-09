@@ -3,7 +3,7 @@ using _Project.Features.Boss.Scripts;
 
 namespace _Project.Features.Boss.Scripts.State.Moving
 {
-    public class MoveByVelocity : BossState
+    public class MoveByVelocity : BossState<BossContext>
     {
         private readonly string _enterAnimTrigger;
         private readonly float velocity;

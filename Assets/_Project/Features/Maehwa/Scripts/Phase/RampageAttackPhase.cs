@@ -8,7 +8,7 @@ using Util;
 
 namespace Boss.MaeHwa
 {
-    public class RampageAttackState : BossState
+    public class RampageAttackState : BossState<MaehwaContext>
     {
         private readonly float noticeWaitTime;
         private readonly float attackBeforeWaitTime;
@@ -47,7 +47,7 @@ namespace Boss.MaeHwa
             this.attackAfterWaitTime = attackAfterWaitTime;
         }
 
-        public override void OnEnter(BossContext ctx)
+        public override void OnEnter(MaehwaContext ctx)
         {
             _maeHwaController = ctx.Controller as MaeHwaController;
             if (_maeHwaController == null)
@@ -75,12 +75,12 @@ namespace Boss.MaeHwa
             _subState = SubState.PreparePositions;
         }
 
-        public override void OnExit(BossContext ctx)
+        public override void OnExit(MaehwaContext ctx)
         {
             // 여기서는 별도 정리 작업이 필요 없지만, 나중에 이펙트/코루틴 정리 등이 필요하면 추가.
         }
 
-        public override void Tick(BossContext ctx, float deltaTime)
+        public override void Tick(MaehwaContext ctx, float deltaTime)
         {
             if (_subState == SubState.Finished)
                 return;
@@ -114,12 +114,12 @@ namespace Boss.MaeHwa
             }
         }
 
-        public override void FixedTick(BossContext ctx, float deltaTime)
+        public override void FixedTick(MaehwaContext ctx, float deltaTime)
         {
             // 물리 기반 행동이 없으므로 비워둠
         }
 
-        public override void HandleEvent(BossContext ctx, object evt)
+        public override void HandleEvent(MaehwaContext ctx, object evt)
         {
             // 현재 패턴에서는 별도 이벤트 처리 없음
         }
