@@ -43,7 +43,7 @@ namespace Character.Player
                 m_PlayerAttackController = parent.Find("AttackController").GetComponent<PlayerAttackController>();
                 m_PlayerEffectController = transform.Find("EffectController").GetComponent<PlayerEffectController>();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Debug.LogError("PlayerAnimatorController : 플레이어 컨트롤러들 할당 실패");
             }

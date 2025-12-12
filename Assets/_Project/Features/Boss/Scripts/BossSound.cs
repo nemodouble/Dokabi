@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace _Project.Features.Boss.Scripts
 {
-    public class BossSoundPlayer : MonoBehaviour
+    public class BossSound : MonoBehaviour
     {
-        [SerializeField] public BossController boss;
+        [SerializeField] public Component boss; // BossController<TStateId>
         
         [ShowInInspector] private Dictionary<string, EventReference> soundEvents = new();
         public EventReference hitEvent;
@@ -16,8 +16,14 @@ namespace _Project.Features.Boss.Scripts
 
         public void Initialize()
         {
-            boss.Context.OnHit += OnHit;
-            boss.Context.OnDead += OnDead;
+            if (boss == null)
+                boss = GetComponent(typeof(BossController<,>));
+
+            if (boss != null && boss.TryGetComponent(out BossContext<object> ctx))
+            {
+                ctx.OnHit += OnHit;
+                ctx.OnDead += OnDead;
+            }
         }
 
         public void PlaySound(string soundEventId)

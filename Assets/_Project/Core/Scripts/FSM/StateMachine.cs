@@ -18,7 +18,7 @@ namespace _Project.Core.Scripts.FSM
         public TStateId CurrentStateId { get; private set; }
         public IState<TContext> CurrentState { get; private set; }
 
-        public event Action<TStateId, TStateId>? OnStateChanged;
+        public event Action<TStateId, TStateId> OnStateChanged;
 
         public StateMachine(TContext context)
         {

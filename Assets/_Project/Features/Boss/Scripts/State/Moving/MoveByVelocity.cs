@@ -3,98 +3,61 @@ using _Project.Features.Boss.Scripts;
 
 namespace _Project.Features.Boss.Scripts.State.Moving
 {
-    public class MoveByVelocity : BossState<BossContext>
+    public class MoveByVelocity<TStateId> : BossState<TStateId, BossContext<TStateId>>
     {
-        private readonly string _enterAnimTrigger;
-        private readonly float velocity;
-        private readonly Vector2 dir;
-        private readonly float timeMax;
-        protected float length;
+        private readonly float _velocity;
+        private readonly Vector2 _dir;
+        private readonly float _timeMax;
+        protected float _length;
         protected bool haveTargetPos = true;
-        
-        private float timeNow;
-        private Vector2 startPos;
+
+        private float _timeNow;
+        private Vector2 _startPos;
         protected Vector3? targetPos;
 
         private float _currentSpeed;
         private Vector2 _moveDir;
 
-        public MoveByVelocity(string id, Vector2 dir, float velocity, float timeMax, float length = 0,
-                              string enterAnimTrigger = null) : base(id)
+        public MoveByVelocity(TStateId id, Vector2 dir, float velocity, float timeMax, float length = 0)
+            : base(id)
         {
-            this.velocity = velocity;
-            this.dir = dir;
-            this.timeMax = timeMax;
+            _velocity = velocity;
+            _dir = dir;
+            _timeMax = timeMax;
             if (length != 0)
-                this.length = length;
+                _length = length;
             else
                 haveTargetPos = false;
-
-            _enterAnimTrigger = enterAnimTrigger;
         }
 
-        public override void OnEnter(BossContext ctx)
-        {   
-            if (!string.IsNullOrEmpty(_enterAnimTrigger))
-                ctx.PlayAnimTrigger(_enterAnimTrigger);
+        public override void OnEnter(BossContext<TStateId> ctx)
+        {
+            ctx.NotifyStateEnter(ID);
 
-            startPos = ctx.Controller.transform.position;
+            _startPos = ctx.Controller.transform.position;
             if (targetPos == null && haveTargetPos)
             {
-                targetPos = (Vector2)startPos + dir.normalized * length;
-            }
-            else if (targetPos != null && length == 0)
-            {
-                length = ((Vector2)targetPos - startPos).magnitude;
+                targetPos = (Vector2)_startPos + _dir.normalized * _length;
             }
 
-            timeNow = 0f;
-            IsFinished = false;
-            _moveDir = dir.normalized;
-            _currentSpeed = velocity;
+            _moveDir = _dir.normalized;
+            _currentSpeed = _velocity;
+            _timeNow = 0f;
         }
 
-        public override void OnExit(BossContext ctx)
-        {
-            ctx.StopMove();
-        }
-
-        public override void Tick(BossContext ctx, float deltaTime)
+        public override void Tick(BossContext<TStateId> ctx, float deltaTime)
         {
             if (IsFinished)
                 return;
 
-            timeNow += deltaTime;
-            if (timeNow >= timeMax)
+            _timeNow += deltaTime;
+            if (_timeNow >= _timeMax)
             {
                 IsFinished = true;
-                return;
-            }
-
-            var pos = (Vector2)ctx.Controller.transform.position;
-
-            if (targetPos != null)
-            {
-                var toTarget = ((Vector2)targetPos - pos);
-                var leftLength = toTarget.magnitude;
-                if (leftLength <= 0.05f || (pos - startPos).magnitude > length)
-                {
-                    IsFinished = true;
-                    _currentSpeed = 0f;
-                    return;
-                }
-
-                _moveDir = toTarget.normalized;
-                _currentSpeed = velocity;
-            }
-            else
-            {
-                _moveDir = dir.normalized;
-                _currentSpeed = velocity;
             }
         }
 
-        public override void FixedTick(BossContext ctx, float deltaTime)
+        public override void FixedTick(BossContext<TStateId> ctx, float deltaTime)
         {
             if (IsFinished)
             {
@@ -102,11 +65,27 @@ namespace _Project.Features.Boss.Scripts.State.Moving
                 return;
             }
 
+            if (haveTargetPos && targetPos.HasValue)
+            {
+                var current = (Vector2)ctx.Controller.transform.position;
+                var toTarget = (Vector2)targetPos.Value - current;
+                if (toTarget.magnitude <= 0.1f)
+                {
+                    IsFinished = true;
+                    ctx.StopMove();
+                    return;
+                }
+                _moveDir = toTarget.normalized;
+            }
+
             ctx.Move(_moveDir * _currentSpeed);
         }
 
-        public override void HandleEvent(BossContext ctx, object evt)
+        public override void OnExit(BossContext<TStateId> ctx)
         {
+            ctx.StopMove();
         }
+
+        public override void HandleEvent(BossContext<TStateId> ctx, object evt) { }
     }
 }

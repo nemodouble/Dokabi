@@ -2,24 +2,22 @@ using UnityEngine;
 
 namespace _Project.Features.Boss.Scripts.State
 {
-    public class AttackFixedRange : BossState<BossContext>
+    public class AttackFixedRange<TStateId> : BossState<TStateId, BossContext<TStateId>>
     {
         private readonly GameObject _attackRange;
-        private readonly string _enterAnimTrigger;
 
-        public AttackFixedRange(string id, GameObject attackRange, string enterAnimTrigger = null)
+        public AttackFixedRange(TStateId id, GameObject attackRange)
             : base(id)
         {
             _attackRange = attackRange;
-            _enterAnimTrigger = enterAnimTrigger;
         }
 
-        public override void OnEnter(BossContext ctx)
+        public override void OnEnter(BossContext<TStateId> ctx)
         {
             IsFinished = false;
 
-            if (!string.IsNullOrEmpty(_enterAnimTrigger))
-                ctx.PlayAnimTrigger(_enterAnimTrigger);
+            // 상태 진입 알림 (연출은 BossContext를 구독한 레이어가 담당)
+            ctx.NotifyStateEnter(ID);
 
             if (_attackRange != null)
             {
@@ -30,19 +28,19 @@ namespace _Project.Features.Boss.Scripts.State
             IsFinished = true;
         }
 
-        public override void OnExit(BossContext ctx)
+        public override void OnExit(BossContext<TStateId> ctx)
         {
         }
 
-        public override void Tick(BossContext ctx, float deltaTime)
+        public override void Tick(BossContext<TStateId> ctx, float deltaTime)
         {
         }
 
-        public override void FixedTick(BossContext ctx, float deltaTime)
+        public override void FixedTick(BossContext<TStateId> ctx, float deltaTime)
         {
         }
 
-        public override void HandleEvent(BossContext ctx, object evt)
+        public override void HandleEvent(BossContext<TStateId> ctx, object evt)
         {
         }
     }

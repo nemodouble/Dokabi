@@ -7,7 +7,7 @@ namespace _Project.Features.Boss.Scripts
         private Rigidbody2D rigid2D;
         private BoxCollider2D boxCollider;
 
-        private void Awake()
+        public void Initialize()
         {
             if (rigid2D == null)
                 rigid2D = GetComponent<Rigidbody2D>();

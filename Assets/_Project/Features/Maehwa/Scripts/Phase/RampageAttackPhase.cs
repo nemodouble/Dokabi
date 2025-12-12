@@ -1,14 +1,13 @@
-using System.Collections;
 using System.Collections.Generic;
 using _Project.Features.Boss.Scripts;
 using _Project.Features.Boss.Scripts.State;
-using _Project.Features.Maehwa.Scripts;
+using Boss.MaeHwa;
 using UnityEngine;
 using Util;
 
-namespace Boss.MaeHwa
+namespace _Project.Features.Maehwa.Scripts.Phase
 {
-    public class RampageAttackState : BossState<MaehwaContext>
+    public class RampageAttackState : BossState<MaehwaStateId, MaehwaContext>
     {
         private readonly float noticeWaitTime;
         private readonly float attackBeforeWaitTime;
@@ -34,12 +33,12 @@ namespace Boss.MaeHwa
         private readonly List<Vector3> _rotList = new();
         private readonly List<MaeHwaRampageRange> _rangeList = new();
 
-        private MaeHwaController _maeHwaController;
+        private BossController<MaehwaStateId, BossContext<MaehwaStateId>> _maeHwaController;
         private Transform _playerTransform;
 
         private int _spawnedWarningCount;
 
-        public RampageAttackState(string id,float noticeWaitTime, float attackBeforeWaitTime, float attackTime, float attackAfterWaitTime) : base(id)
+        public RampageAttackState(MaehwaStateId id, float noticeWaitTime, float attackBeforeWaitTime, float attackTime, float attackAfterWaitTime) : base(id)
         {
             this.noticeWaitTime = noticeWaitTime;
             this.attackBeforeWaitTime = attackBeforeWaitTime;
@@ -49,7 +48,7 @@ namespace Boss.MaeHwa
 
         public override void OnEnter(MaehwaContext ctx)
         {
-            _maeHwaController = ctx.Controller as MaeHwaController;
+            _maeHwaController = ctx.Controller;
             if (_maeHwaController == null)
             {
                 Debug.LogError("RampageAttackState: MaeHwaController 캐스팅 실패");
@@ -90,10 +89,10 @@ namespace Boss.MaeHwa
             switch (_subState)
             {
                 case SubState.PreparePositions:
-                    TickPreparePositions();
+                    TickPreparePositions(ctx);
                     break;
                 case SubState.Warning:
-                    TickWarning();
+                    TickWarning(ctx);
                     break;
                 case SubState.PreAttackWait:
                     if (_stateTimer >= attackBeforeWaitTime)
@@ -124,7 +123,7 @@ namespace Boss.MaeHwa
             // 현재 패턴에서는 별도 이벤트 처리 없음
         }
 
-        private void TickPreparePositions()
+        private void TickPreparePositions(MaehwaContext ctx)
         {
             if (_playerTransform == null)
             {
@@ -183,7 +182,7 @@ namespace Boss.MaeHwa
             _subState = SubState.Warning;
         }
 
-        private void TickWarning()
+        private void TickWarning(MaehwaContext ctx)
         {
             // noticeWaitTime마다 하나씩 범위 생성 (최대 3개)
             if (_spawnedWarningCount >= 3)
@@ -214,9 +213,16 @@ namespace Boss.MaeHwa
             var rot = _rotList[rotIndex];
             _rotList.RemoveAt(rotIndex);
 
-            var range = _maeHwaController.InstantiateRampageRange(pos, rot);
-            range.SetActive(true);
-            _rangeList.Add(range);
+            var attackController = ctx.Attack as MaehwaAttack;
+            if (attackController != null)
+            {
+                var range = attackController.InstantiateRampageRange(pos, rot);
+                range.SetActive(true);
+                _rangeList.Add(range);
+            }
+            else {
+                Debug.LogError("RampageAttackState: MaeHwaAttackController 캐스팅 실패");
+            }
 
             _spawnedWarningCount++;
         }

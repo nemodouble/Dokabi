@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace _Project.Features.Boss.Scripts
 {
-    [RequireComponent(typeof(Health))]
     public class BossHealth : MonoBehaviour, IHitAble
     {
         private Health _health;
@@ -12,15 +11,10 @@ namespace _Project.Features.Boss.Scripts
         public event Action OnDead;
         public event Action<int, Vector2, float> OnHit;
 
-        private void Awake()
-        {
-            _health = GetComponent<Health>();
-        }
-
         public void Initialize()
         {
             if (_health == null)
-                _health = GetComponent<Health>();
+                _health = new Health(400);
             _health.CurrentHp = _health.MaxHp;
         }
 

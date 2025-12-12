@@ -2,19 +2,23 @@ using UnityEngine;
 
 namespace _Project.Features.Boss.Scripts
 {
-    public class BossAttackController : MonoBehaviour
+    public class BossAttack : MonoBehaviour
     {
-        private BossController boss;
-        private GameObject dangerRange;
+        private Component boss; // BossController<TStateId> 대응
 
         public void Initialize()
         {
-            boss.Context.OnDead += OnDead;
+            if (boss == null)
+                boss = GetComponent(typeof(BossController<,>));
+
+            if (boss != null && boss.TryGetComponent(out BossContext<object> ctx))
+            {
+                ctx.OnDead += OnDead;
+            }
         }
 
         private void OnDead()
         {
-            dangerRange.SetActive(false);
         }
 
         internal void CallInstantiate(GameObject instantiateGameObject, Vector3 relativePos)

@@ -3,11 +3,12 @@ using _Project.Core.Scripts.FSM;
 
 namespace _Project.Features.Boss.Scripts.State
 {
-    public abstract class BossState<TContext> : IState<TContext>
+    public abstract class BossState<TStateId, TContext> : IState<TContext>
     {
-        public readonly string ID;
-        
-        protected BossState(string id) {
+        public readonly TStateId ID;
+
+        protected BossState(TStateId id)
+        {
             ID = id;
         }
 

@@ -1,50 +1,84 @@
+using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Project.Features.Boss.Scripts
 {
     public class BossAnimation : MonoBehaviour
     {
-        public Animator Animator;
-        public BossController boss;
+        public Animator animator;
+        public Component boss; // BossController<TStateId> 제네릭을 위해 Component로 완화
 
-        public void Initialize()
+        // 공통 BossContext 캐시 (제네릭 파라미터를 모를 수 있으므로 Component로 보관)
+        [SerializeField] protected Component bossContext;
+
+        protected virtual void Awake()
+        {
+            Initialize();
+        }
+
+        public virtual void Initialize()
         {
             if (boss == null)
-                boss = GetComponent<BossController>();
+                boss = GetComponent(typeof(BossController<,>));
 
-            if (Animator == null)
+            if (bossContext == null)
+                bossContext = GetComponent(typeof(BossContext<>));
+
+            if (animator == null)
             {
-                // BossController가 가지고 있는 Animator(또는 애니메이션용 컴포넌트)를 우선 사용
                 if (boss != null && boss.TryGetComponent(out Animator bossAnimator))
                 {
-                    Animator = bossAnimator;
+                    animator = bossAnimator;
                 }
                 else
                 {
-                    Animator = GetComponent<Animator>();
+                    animator = GetComponent<Animator>();
                 }
             }
+
+            SubscribeStateEvents();
         }
+
+        protected virtual void OnEnable()
+        {
+            SubscribeStateEvents();
+        }
+
+        protected virtual void OnDisable()
+        {
+            UnsubscribeStateEvents();
+        }
+
+        /// <summary>
+        /// 상태 컨텍스트 이벤트 구독 패턴을 위한 템플릿 메서드. 자식에서 필요시 override.
+        /// </summary>
+        protected virtual void SubscribeStateEvents() { }
+
+        /// <summary>
+        /// 상태 컨텍스트 이벤트 해제 패턴을 위한 템플릿 메서드. 자식에서 필요시 override.
+        /// </summary>
+        protected virtual void UnsubscribeStateEvents() { }
 
         public void PlayTrigger(string triggerName)
         {
-            if (Animator == null || string.IsNullOrEmpty(triggerName))
+            if (animator == null || string.IsNullOrEmpty(triggerName))
                 return;
-            Animator.SetTrigger(triggerName);
+            animator.SetTrigger(triggerName);
         }
 
         public void SetBool(string paramName, bool value)
         {
-            if (Animator == null || string.IsNullOrEmpty(paramName))
+            if (animator == null || string.IsNullOrEmpty(paramName))
                 return;
-            Animator.SetBool(paramName, value);
+            animator.SetBool(paramName, value);
         }
 
         public void SetFloat(string paramName, float value)
         {
-            if (Animator == null || string.IsNullOrEmpty(paramName))
+            if (animator == null || string.IsNullOrEmpty(paramName))
                 return;
-            Animator.SetFloat(paramName, value);
+            animator.SetFloat(paramName, value);
         }
     }
 }

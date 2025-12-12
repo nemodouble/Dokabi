@@ -1,7 +1,7 @@
 using Character.Player;
 using UnityEngine;
 
-namespace Boss
+namespace _Project.Features.Maehwa.Scripts
 {
     public class KnockBackRange : MonoBehaviour
     {

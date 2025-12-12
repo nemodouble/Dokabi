@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _Project.Features.Boss.Scripts.State.Moving
 {
-    public class Step : BossState<BossContext>
+    public class Step<TStateId> : BossState<TStateId, BossContext<TStateId>>
     {
         private readonly Vector2 _relativePos;
         private readonly float _maxSpeed;
@@ -17,24 +17,20 @@ namespace _Project.Features.Boss.Scripts.State.Moving
         private Vector2 _moveDir;
         private float _currentSpeed;
 
-        private readonly string _enterAnimTrigger;
-
-        public Step(string id, Vector2 relativePos, float maxSpeed, float accel, float decelLengthRate,
-                    string enterAnimTrigger = null) : base(id)
+        public Step(TStateId id, Vector2 relativePos, float maxSpeed, float accel, float decelLengthRate) : base(id)
         {
             _relativePos = relativePos;
             _maxSpeed = maxSpeed;
             _accel = accel;
             _decelLengthRate = decelLengthRate;
-            _enterAnimTrigger = enterAnimTrigger;
         }
 
-        public override void OnEnter(BossContext ctx)
+        public override void OnEnter(BossContext<TStateId> ctx)
         {
             IsFinished = false;
 
-            if (!string.IsNullOrEmpty(_enterAnimTrigger))
-                ctx.PlayAnimTrigger(_enterAnimTrigger);
+            // 상태 진입 알림 (연출은 BossContext를 구독한 레이어가 담당)
+            ctx.NotifyStateEnter(ID);
 
             var bossController = ctx.Controller;
             _startingPos = bossController.transform.position;
@@ -43,7 +39,7 @@ namespace _Project.Features.Boss.Scripts.State.Moving
             _currentSpeed = 0f;
         }
 
-        public override void Tick(BossContext ctx, float deltaTime)
+        public override void Tick(BossContext<TStateId> ctx, float deltaTime)
         {
             if (IsFinished)
                 return;
@@ -89,7 +85,7 @@ namespace _Project.Features.Boss.Scripts.State.Moving
             }
         }
 
-        public override void FixedTick(BossContext ctx, float deltaTime)
+        public override void FixedTick(BossContext<TStateId> ctx, float deltaTime)
         {
             if (IsFinished)
             {
@@ -100,12 +96,12 @@ namespace _Project.Features.Boss.Scripts.State.Moving
             ctx.Move(_moveDir * _currentSpeed);
         }
 
-        public override void OnExit(BossContext ctx)
+        public override void OnExit(BossContext<TStateId> ctx)
         {
             ctx.StopMove();
         }
 
-        public override void HandleEvent(BossContext ctx, object evt)
+        public override void HandleEvent(BossContext<TStateId> ctx, object evt)
         {
             // 이벤트 처리 필요 시 구현
         }

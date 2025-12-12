@@ -2,45 +2,37 @@ using UnityEngine;
 
 namespace _Project.Features.Boss.Scripts.State
 {
-    public class WaitState : BossState<BossContext>
+    public class WaitState<TStateId> : BossState<TStateId, BossContext<TStateId>>
     {
         private readonly float _waitingSecond;
         private readonly bool _notMoving;
-        private readonly string _enterAnimTrigger;
-        private readonly string _exitAnimTrigger;
 
         private float _elapsed;
 
-        public WaitState(string id, float waitingSecond, bool notMoving = false,
-                         string enterAnimTrigger = null, string exitAnimTrigger = null) : base(id)
+        public WaitState(TStateId id, float waitingSecond, bool notMoving = false) : base(id)
         {
             _waitingSecond = waitingSecond;
             _notMoving = notMoving;
-            _enterAnimTrigger = enterAnimTrigger;
-            _exitAnimTrigger = exitAnimTrigger;
         }
 
-        public override void OnEnter(BossContext ctx)
+        public override void OnEnter(BossContext<TStateId> ctx)
         {
             _elapsed = 0f;
             IsFinished = false;
 
-            if (!string.IsNullOrEmpty(_enterAnimTrigger))
-                ctx.PlayAnimTrigger(_enterAnimTrigger);
+            // 상태 진입 알림 (연출은 BossContext를 구독한 레이어가 담당)
+            ctx.NotifyStateEnter(ID);
         }
 
-        public override void OnExit(BossContext ctx)
+        public override void OnExit(BossContext<TStateId> ctx)
         {
             if (_notMoving)
             {
                 ctx.StopMove();
             }
-
-            if (!string.IsNullOrEmpty(_exitAnimTrigger))
-                ctx.PlayAnimTrigger(_exitAnimTrigger);
         }
 
-        public override void Tick(BossContext ctx, float deltaTime)
+        public override void Tick(BossContext<TStateId> ctx, float deltaTime)
         {
             if (IsFinished)
                 return;
@@ -52,7 +44,7 @@ namespace _Project.Features.Boss.Scripts.State
             }
         }
 
-        public override void FixedTick(BossContext ctx, float deltaTime)
+        public override void FixedTick(BossContext<TStateId> ctx, float deltaTime)
         {
             if (_notMoving && !IsFinished)
             {
@@ -60,6 +52,6 @@ namespace _Project.Features.Boss.Scripts.State
             }
         }
 
-        public override void HandleEvent(BossContext ctx, object evt) { }
+        public override void HandleEvent(BossContext<TStateId> ctx, object evt) { }
     }
 }

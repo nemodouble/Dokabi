@@ -2,25 +2,23 @@ using UnityEngine;
 
 namespace _Project.Features.Boss.Scripts.State
 {
-    public class AttackSummon : BossState<BossContext>
+    public class AttackSummon<TStateId> : BossState<TStateId, BossContext<TStateId>>
     {
         private readonly GameObject _prefab;
         private readonly Vector2 _relativePos;
-        private readonly string _enterAnimTrigger;
 
-        public AttackSummon(string id, GameObject gameObject, Vector2? relativePos = null, string enterAnimTrigger = null) : base(id)
+        public AttackSummon(TStateId id, GameObject gameObject, Vector2? relativePos = null) : base(id)
         {
             _prefab = gameObject;
             _relativePos = relativePos ?? Vector2.zero;
-            _enterAnimTrigger = enterAnimTrigger;
         }
 
-        public override void OnEnter(BossContext ctx)
+        public override void OnEnter(BossContext<TStateId> ctx)
         {
             IsFinished = false;
 
-            if (!string.IsNullOrEmpty(_enterAnimTrigger))
-                ctx.PlayAnimTrigger(_enterAnimTrigger);
+            // 상태 진입 알림 (연출은 BossContext를 구독한 레이어가 담당)
+            ctx.NotifyStateEnter(ID);
 
             ctx.SummonAttack(_prefab, _relativePos);
 
@@ -28,12 +26,12 @@ namespace _Project.Features.Boss.Scripts.State
             IsFinished = true;
         }
 
-        public override void OnExit(BossContext ctx) { }
+        public override void OnExit(BossContext<TStateId> ctx) { }
 
-        public override void Tick(BossContext ctx, float deltaTime) { }
+        public override void Tick(BossContext<TStateId> ctx, float deltaTime) { }
 
-        public override void FixedTick(BossContext ctx, float deltaTime) { }
+        public override void FixedTick(BossContext<TStateId> ctx, float deltaTime) { }
 
-        public override void HandleEvent(BossContext ctx, object evt) { }
+        public override void HandleEvent(BossContext<TStateId> ctx, object evt) { }
     }
 }

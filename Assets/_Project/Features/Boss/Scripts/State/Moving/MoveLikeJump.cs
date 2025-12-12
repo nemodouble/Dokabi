@@ -2,37 +2,34 @@ using _Project.Features.Boss.Scripts;
 
 namespace _Project.Features.Boss.Scripts.State.Moving
 {
-    public class MoveLikeJump : BossState<BossContext>
+    public class MoveLikeJump<TStateId> : BossState<TStateId, BossContext<TStateId>>
     {
         private readonly float startSpeed;
         private readonly float jumpTime;
         private float jumpTimeNow;
         private float _currentVy;
-        private readonly string _enterAnimTrigger;
 
-        public MoveLikeJump(string id, float startSpeed, float jumpTime, string enterAnimTrigger = null)
+        public MoveLikeJump(TStateId id, float startSpeed, float jumpTime)
             : base(id)
         {
             this.startSpeed = startSpeed;
             this.jumpTime = jumpTime;
-            _enterAnimTrigger = enterAnimTrigger;
         }
 
-        public override void OnEnter(BossContext ctx)
+        public override void OnEnter(BossContext<TStateId> ctx)
         {
             jumpTimeNow = 0f;
             _currentVy = startSpeed;
 
-            if (!string.IsNullOrEmpty(_enterAnimTrigger))
-                ctx.PlayAnimTrigger(_enterAnimTrigger);
+            ctx.NotifyStateEnter(ID);
         }
 
-        public override void OnExit(BossContext ctx)
+        public override void OnExit(BossContext<TStateId> ctx)
         {
             ctx.StopMove();
         }
 
-        public override void Tick(BossContext ctx, float deltaTime)
+        public override void Tick(BossContext<TStateId> ctx, float deltaTime)
         {
             if (IsFinished)
                 return;
@@ -49,7 +46,7 @@ namespace _Project.Features.Boss.Scripts.State.Moving
             }
         }
 
-        public override void FixedTick(BossContext ctx, float deltaTime)
+        public override void FixedTick(BossContext<TStateId> ctx, float deltaTime)
         {
             if (IsFinished)
             {
@@ -61,6 +58,6 @@ namespace _Project.Features.Boss.Scripts.State.Moving
             ctx.MoveY(_currentVy);
         }
 
-        public override void HandleEvent(BossContext ctx, object evt) { }
+        public override void HandleEvent(BossContext<TStateId> ctx, object evt) { }
     }
 }

@@ -152,7 +152,7 @@ namespace Character.Player
                     
                     if (scanned[i].GetComponent<IHitAble>() != null)
                     {
-                        StartCoroutine(scanned[i].GetComponent<IHitAble>().Hit(meleeDamage, atkDir));
+                        scanned[i].GetComponent<IHitAble>().Hit(meleeDamage, atkDir);
                         enemyHit = true;
                     }
                 }

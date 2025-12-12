@@ -5,26 +5,18 @@ using UnityEngine.Serialization;
 namespace _Project.Features.Boss.Scripts
 {
     [RequireComponent(typeof(SpriteFlasher))]
-    public abstract class BossController : MonoBehaviour
+    public class BossController<TStateId, TContext> : MonoBehaviour
+        where TContext : BossContext<TStateId>
     {
         [Header("Boss Components")]
         [SerializeField] private BossAnimation bossAnimation;
-        [SerializeField] private BossAttackController attackController;
-        [SerializeField] private BossEffectPlayer effectPlayer;
-        [SerializeField] private BossContext context;
+        [FormerlySerializedAs("attackController")] [SerializeField] private BossAttack attack;
+        [FormerlySerializedAs("effectPlayer")] [SerializeField] private BossEffect effect;
         [SerializeField] private BossMovement movement;
-        [SerializeField] private BossSoundPlayer soundPlayer;
-        [SerializeField] private BossStateMachine<BossContext> stateMachine;
+        [FormerlySerializedAs("soundPlayer")] [SerializeField] private BossSound sound;
+        [SerializeField] private BossStateMachine<TStateId, TContext> stateMachine;
         [SerializeField] private BossHealth health;
-
-        public BossAnimation Animation => bossAnimation;
-        public BossAttackController Attack => attackController;
-        public BossEffectPlayer Effect => effectPlayer;
-        public BossContext Context => context;
-        public BossMovement Movement => movement;
-        public BossSoundPlayer Sound => soundPlayer;
-        public BossStateMachine<BossContext> FSM => stateMachine;
-        public BossHealth Health => health;
+        [SerializeField] private TContext context;
 
         protected virtual void Awake()
         {
@@ -37,21 +29,25 @@ namespace _Project.Features.Boss.Scripts
         protected void InitializeBoss()
         {
             CacheOrGetComponent(ref health);
-            CacheOrGetComponent(ref context);
             CacheOrGetComponent(ref bossAnimation);
-            CacheOrGetComponent(ref soundPlayer);
-            CacheOrGetComponent(ref effectPlayer);
+            CacheOrGetComponent(ref sound);
+            CacheOrGetComponent(ref effect);
             CacheOrGetComponent(ref stateMachine);
-            CacheOrGetComponent(ref attackController);
+            CacheOrGetComponent(ref attack);
             CacheOrGetComponent(ref movement);
+            CacheOrGetComponent(ref context);
 
             // 의존 관계 연결 및 세부 초기화
-            context?.Initialize(this);
+            health?.Initialize();
             bossAnimation?.Initialize();
-            soundPlayer?.Initialize();
-            effectPlayer?.Initialize();
+            sound?.Initialize();
+            effect?.Initialize();
             stateMachine?.Initialize();
-            attackController?.Initialize();
+            attack?.Initialize();
+            movement?.Initialize();
+            context?.Initialize();
+            
+            context.BindModules(health, movement, attack, bossAnimation, sound, effect);
         }
 
         private void CacheOrGetComponent<T>(ref T field) where T : Component

@@ -4,26 +4,54 @@ using UnityEngine;
 
 namespace _Project.Features.Boss.Scripts
 {
-    public class BossContext : MonoBehaviour
+    public class BossContext<TStateId> : MonoBehaviour
     {
-        public BossController Controller { get; private set; }
-        
         public Transform PlayerTransform { get; private set; }
+        
+        public BossAnimation Anim { get; private set; }
+        public BossAttack Attack { get; private set; }
+        public BossEffect Effect { get; private set; }
+        public BossMovement Movement { get; private set; }
+        public BossSound Sound { get; private set; }
+        public BossStateMachine<TStateId, BossContext<TStateId>> StateMachine { get; private set; }
+        public BossHealth Health { get; private set; }
+        
+        public BossController<TStateId, BossContext<TStateId>> Controller { get; private set; }
 
         public event Action OnDead;
         public event Action<int, Vector2, float> OnHit;
 
-        public void Initialize(BossController controller)
+        // 상태 진입 이벤트: 상태 ID를 전달해 연출 전담 컴포넌트가 처리하도록 한다.
+        public event Action<TStateId> OnStateEntered;
+        public event Action<TStateId> OnStateExited;
+
+        public virtual void Initialize()
         {
-            Controller = controller;
             PlayerTransform = FindObjectOfType<PlayerController>()?.transform;
 
-            if (Controller.Health != null)
+            if (Health != null)
             {
-                Controller.Health.Initialize();
-                Controller.Health.OnDead += HandleDead;
-                Controller.Health.OnHit += HandleHit;
+                Health.Initialize();
+                Health.OnDead += HandleDead;
+                Health.OnHit += HandleHit;
             }
+        }
+        
+        public void BindModules(
+            BossHealth health,
+            BossMovement movement,
+            BossAttack attack,
+            BossAnimation anim,
+            BossSound sound,
+            BossEffect effect)
+        {
+            Health = health;
+            Movement = movement;
+            Attack = attack;
+            Anim = anim;
+            Sound = sound;
+            Effect = effect;
+            Controller = GetComponent<BossController<TStateId, BossContext<TStateId>>>();
         }
 
         private void HandleDead()
@@ -38,29 +66,29 @@ namespace _Project.Features.Boss.Scripts
 
         public bool IsDead()
         {
-            return Controller.Health != null && Controller.Health.IsDead();
+            return Health != null && Health.IsDead();
         }
 
         // ===== Movement Facade =====
         public void Move(Vector2 velocity)
         {
-            if (Controller == null || Controller.Movement == null)
+            if (Controller == null || Movement == null)
                 return;
-            Controller.Movement.SetVelocity(velocity);
+            Movement.SetVelocity(velocity);
         }
 
         public void MoveX(float vx)
         {
-            if (Controller == null || Controller.Movement == null)
+            if (Controller == null || Movement == null)
                 return;
-            Controller.Movement.SetVelocityX(vx);
+            Movement.SetVelocityX(vx);
         }
 
         public void MoveY(float vy)
         {
-            if (Controller == null || Controller.Movement == null)
+            if (Controller == null || Movement == null)
                 return;
-            Controller.Movement.SetVelocityY(vy);
+            Movement.SetVelocityY(vy);
         }
 
         public void StopMove()
@@ -70,42 +98,53 @@ namespace _Project.Features.Boss.Scripts
 
         public bool IsHeading(Vector2 dir, float distance)
         {
-            if (Controller == null || Controller.Movement == null)
+            if (Controller == null || Movement == null)
                 return false;
 
-            var hit = Controller.Movement.IsHeading(dir, distance);
+            var hit = Movement.IsHeading(dir, distance);
             return hit.collider != null;
         }
 
         // ===== Attack Facade =====
         public void SummonAttack(GameObject prefab, Vector2 relativePos)
         {
-            if (Controller == null || Controller.Attack == null || prefab == null)
+            if (Controller == null || Attack == null || prefab == null)
                 return;
 
-            Controller.Attack.CallInstantiate(prefab, relativePos);
+            Attack.CallInstantiate(prefab, relativePos);
         }
 
         // ===== Animation Facade =====
         public void PlayAnimTrigger(string triggerName)
         {
-            if (Controller.Animation == null)
+            if (Anim == null)
                 return;
-            Controller.Animation.PlayTrigger(triggerName);
+            Anim.PlayTrigger(triggerName);
         }
 
         public void SetAnimBool(string paramName, bool value)
         {
-            if (Controller.Animation == null)
+            if (Anim == null)
                 return;
-            Controller.Animation.SetBool(paramName, value);
+            Anim.SetBool(paramName, value);
         }
 
         public void SetAnimFloat(string paramName, float value)
         {
-            if (Controller.Animation == null)
+            if (Anim == null)
                 return;
-            Controller.Animation.SetFloat(paramName, value);
+            Anim.SetFloat(paramName, value);
+        }
+
+        // FSM State에서 상태 진입을 알릴 때 사용. 연출은 이 이벤트를 구독하는 쪽에서 처리.
+        public void NotifyStateEnter(TStateId id)
+        {
+            OnStateEntered?.Invoke(id);
+        }
+
+        public void NotifyStateExit(TStateId id)
+        {
+            OnStateExited?.Invoke(id);
         }
     }
 }

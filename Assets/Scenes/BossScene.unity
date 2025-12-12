@@ -21399,8 +21399,15 @@ GameObject:
   - component: {fileID: 960777428}
   - component: {fileID: 960777425}
   - component: {fileID: 960777424}
-  - component: {fileID: 960777423}
+  - component: {fileID: 960777434}
   - component: {fileID: 960777429}
+  - component: {fileID: 960777441}
+  - component: {fileID: 960777440}
+  - component: {fileID: 960777439}
+  - component: {fileID: 960777438}
+  - component: {fileID: 960777437}
+  - component: {fileID: 960777436}
+  - component: {fileID: 960777435}
   - component: {fileID: 960777430}
   - component: {fileID: 960777431}
   - component: {fileID: 960777433}
@@ -21412,194 +21419,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &960777423
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 960777422}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ecfc0e96392c471fb491af32018ffa95, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prevPhase: 
-  hitEvent:
-    Guid:
-      Data1: -827719277
-      Data2: 1335339144
-      Data3: 878828982
-      Data4: -1624705997
-    Path: event:/boss/maehwa/attack/maehwa_damage
-  dead:
-    Guid:
-      Data1: 1013487976
-      Data2: 1141943542
-      Data3: 340981145
-      Data4: 348583418
-    Path: event:/boss/all boss/boss_death
-  horizonAttackEvent:
-    Guid:
-      Data1: 1436916311
-      Data2: 1136137912
-      Data3: -1093513599
-      Data4: -104382041
-    Path: event:/boss/maehwa/attack/maehwa_bigslash
-  bodyAttackEvent:
-    Guid:
-      Data1: -1375440302
-      Data2: 1265294658
-      Data3: 1976326288
-      Data4: -329830148
-    Path: event:/boss/maehwa/attack/maehwa_slash_up
-  comboFirstAttackEvent:
-    Guid:
-      Data1: -224891342
-      Data2: 1283653526
-      Data3: 1467278265
-      Data4: -993287852
-    Path: event:/boss/maehwa/attack/maehwa_slash_down
-  comboSecondAttackEvent:
-    Guid:
-      Data1: -1375440302
-      Data2: 1265294658
-      Data3: 1976326288
-      Data4: -329830148
-    Path: event:/boss/maehwa/attack/maehwa_slash_up
-  comboStingAttackEvent:
-    Guid:
-      Data1: 461902153
-      Data2: 1329659930
-      Data3: 1025665201
-      Data4: 1503593188
-    Path: event:/boss/maehwa/attack/maehwa_stab_side
-  downSmashEvent:
-    Guid:
-      Data1: -295570400
-      Data2: 1129681269
-      Data3: 625074070
-      Data4: 8859405
-    Path: event:/boss/maehwa/attack/maehwa_stab_down
-  rampageWindEvent:
-    Guid:
-      Data1: -1474731972
-      Data2: 1261247107
-      Data3: -152634947
-      Data4: -108947926
-    Path: event:/boss/maehwa/attack/maehwa_flower_wind
-  rampageRiseEvent:
-    Guid:
-      Data1: 1675655760
-      Data2: 1315173968
-      Data3: 1556882064
-      Data4: 1240925377
-    Path: event:/boss/maehwa/attack/maehwa_flower_cut
-  dashEvent:
-    Guid:
-      Data1: 383126761
-      Data2: 1167206756
-      Data3: -1314442078
-      Data4: 1191088760
-    Path: event:/boss/maehwa/move/maehwa_dash
-  walkEvent:
-    Guid:
-      Data1: 1979647336
-      Data2: 1212581018
-      Data3: 1068127402
-      Data4: 1299969553
-    Path: event:/boss/maehwa/move/maehwa_walk
-  yell1:
-    Guid:
-      Data1: -2026158703
-      Data2: 1218492390
-      Data3: 1565042597
-      Data4: 2133243267
-    Path: event:/voice/boss/maehwa/yell_1
-  yell2:
-    Guid:
-      Data1: -199369137
-      Data2: 1142242063
-      Data3: 1385271450
-      Data4: -1906144815
-    Path: event:/voice/boss/maehwa/yell_2
-  yell3:
-    Guid:
-      Data1: 916122805
-      Data2: 1102192603
-      Data3: 1455188923
-      Data4: -1613581461
-    Path: event:/voice/boss/maehwa/yell_3
-  jump:
-    Guid:
-      Data1: 2073847671
-      Data2: 1098224844
-      Data3: -926197083
-      Data4: 864327229
-    Path: event:/character/move/character_jump
-  land:
-    Guid:
-      Data1: 948778710
-      Data2: 1151269464
-      Data3: -2106121033
-      Data4: 9431875
-    Path: event:/boss/maehwa/attack/maehwa_land
-  deadVoice:
-    Guid:
-      Data1: -1250906916
-      Data2: 1238863059
-      Data3: -1093408127
-      Data4: 832268969
-    Path: event:/voice/boss/maehwa/death
-  outro:
-    Guid:
-      Data1: -1624890204
-      Data2: 1307000005
-      Data3: -396396378
-      Data4: -67775418
-    Path: event:/bgm/boss/maehwa/maehwa_outro
-  teleportEvent:
-    Guid:
-      Data1: -1760072947
-      Data2: 1103370465
-      Data3: -463545707
-      Data4: 1204279109
-    Path: event:/boss/maehwa/move/maehwa_flash
-  betweenPhaseWaitTime: 0.1
-  walkSpeed: 7
-  walkTime: 0.7
-  horizonBeforeWaitTime: 1
-  horizonAfterWaitTime: 1
-  horizonStepSpeed: 20
-  bodyDashSpeed: 40
-  bodyDashTime: 0.2
-  bodyAfterDashWaitTime: 1
-  bodyAfterAttackWaitTime: 1
-  comboFirstBeforeWaitTime: 0.4
-  comboAfterFirstWaitTime: 0.4
-  comboBeforeSecondWaitTime: 0.1
-  comboAfterSecondWaitTime: 0.4
-  comboBeforeThirdWaitTime: 0.6
-  comboAfterThirdWaitTime: 1
-  comboNormalSpeed: 10
-  comboNormalLength: 0.2
-  comboStingSpeed: 20
-  comboStingTime: 0.2
-  rampageRiseSpeed: 20
-  rampageRiseTime: 0.4
-  rampageRiseWaitTime: 0.3
-  rampageBeforeNoticeWaitTime: 1
-  rampageBlinkWait: 2
-  rampageNoticeInterval: 0.1
-  rampageBeforeAttackTime: 0.7
-  rampageAttackTime: 1
-  rampageAttackAfterWaitTime: 0.3
-  rampageStaggerTime: 1.2
-  downAirWaitTime: 0.4
-  downAccel: 25
-  downAccelTime: 0.4
-  downAfterSmashTime: 0.3
-  isBackStep: 0
 --- !u!50 &960777424
 Rigidbody2D:
   serializedVersion: 4
@@ -21783,6 +21602,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdd91bb6c8cc2b947862465288b6ab48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 960777428}
+  boss: {fileID: 960777434}
+  bossContext: {fileID: 960777440}
+  maehwaContext: {fileID: 960777440}
+  maeHwaController: {fileID: 960777434}
 --- !u!114 &960777430
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21823,6 +21647,7 @@ MonoBehaviour:
   AllowFadeout: 1
   TriggerOnce: 0
   Preload: 0
+  AllowNonRigidbodyDoppler: 0
   Params: []
   OverrideAttenuation: 0
   OverrideMinDistance: 1
@@ -21858,6 +21683,268 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isTriggerDamage: 1
   isCollisionDamage: 0
+--- !u!114 &960777434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960777422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aecb29f56bc7439898e9bde76fca541a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bossAnimation: {fileID: 960777429}
+  attackController: {fileID: 960777441}
+  effectPlayer: {fileID: 960777439}
+  movement: {fileID: 960777438}
+  soundPlayer: {fileID: 960777437}
+  stateMachine: {fileID: 960777436}
+  health: {fileID: 960777435}
+--- !u!114 &960777435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960777422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9bef30050bb4f73b67783cbe5d7585f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &960777436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960777422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d212dd8f6264f6db2d71866cdba2ed0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &960777437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960777422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f14d1637c0914d24a28c39c7041a897a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boss: {fileID: 960777434}
+  hitEvent:
+    Guid:
+      Data1: -1338699594
+      Data2: 1321900053
+      Data3: 1302126727
+      Data4: -1931647003
+    Path: event:/character/attack/character_damage
+  dead:
+    Guid:
+      Data1: -1250906916
+      Data2: 1238863059
+      Data3: -1093408127
+      Data4: 832268969
+    Path: event:/voice/boss/maehwa/death
+  horizonAttackEvent:
+    Guid:
+      Data1: 1436916311
+      Data2: 1136137912
+      Data3: -1093513599
+      Data4: -104382041
+    Path: event:/boss/maehwa/attack/maehwa_bigslash
+  bodyAttackEvent:
+    Guid:
+      Data1: -314950912
+      Data2: 1258930361
+      Data3: 1681196200
+      Data4: 343550723
+    Path: event:/boss/maehwa/attack/maehwa_stun
+  comboFirstAttackEvent:
+    Guid:
+      Data1: -1375440302
+      Data2: 1265294658
+      Data3: 1976326288
+      Data4: -329830148
+    Path: event:/boss/maehwa/attack/maehwa_slash_up
+  comboSecondAttackEvent:
+    Guid:
+      Data1: -224891342
+      Data2: 1283653526
+      Data3: 1467278265
+      Data4: -993287852
+    Path: event:/boss/maehwa/attack/maehwa_slash_down
+  comboStingAttackEvent:
+    Guid:
+      Data1: 944511456
+      Data2: 1098953273
+      Data3: 1545615523
+      Data4: -1875891655
+    Path: event:/boss/maehwa/attack/maehwa_slash3
+  downSmashEvent:
+    Guid:
+      Data1: -224891342
+      Data2: 1283653526
+      Data3: 1467278265
+      Data4: -993287852
+    Path: event:/boss/maehwa/attack/maehwa_slash_down
+  rampageWindEvent:
+    Guid:
+      Data1: -1474731972
+      Data2: 1261247107
+      Data3: -152634947
+      Data4: -108947926
+    Path: event:/boss/maehwa/attack/maehwa_flower_wind
+  rampageRiseEvent:
+    Guid:
+      Data1: 2073847671
+      Data2: 1098224844
+      Data3: -926197083
+      Data4: 864327229
+    Path: event:/character/move/character_jump
+  dashEvent:
+    Guid:
+      Data1: 383126761
+      Data2: 1167206756
+      Data3: -1314442078
+      Data4: 1191088760
+    Path: event:/boss/maehwa/move/maehwa_dash
+  walkEvent:
+    Guid:
+      Data1: 1979647336
+      Data2: 1212581018
+      Data3: 1068127402
+      Data4: 1299969553
+    Path: event:/boss/maehwa/move/maehwa_walk
+  yell1:
+    Guid:
+      Data1: -2026158703
+      Data2: 1218492390
+      Data3: 1565042597
+      Data4: 2133243267
+    Path: event:/voice/boss/maehwa/yell_1
+  yell2:
+    Guid:
+      Data1: -199369137
+      Data2: 1142242063
+      Data3: 1385271450
+      Data4: -1906144815
+    Path: event:/voice/boss/maehwa/yell_2
+  yell3:
+    Guid:
+      Data1: 916122805
+      Data2: 1102192603
+      Data3: 1455188923
+      Data4: -1613581461
+    Path: event:/voice/boss/maehwa/yell_3
+  jump:
+    Guid:
+      Data1: -314950912
+      Data2: 1258930361
+      Data3: 1681196200
+      Data4: 343550723
+    Path: event:/boss/maehwa/attack/maehwa_stun
+  land:
+    Guid:
+      Data1: 948778710
+      Data2: 1151269464
+      Data3: -2106121033
+      Data4: 9431875
+    Path: event:/boss/maehwa/attack/maehwa_land
+  deadVoice:
+    Guid:
+      Data1: 1013487976
+      Data2: 1141943542
+      Data3: 340981145
+      Data4: 348583418
+    Path: event:/boss/all boss/boss_death
+  outro:
+    Guid:
+      Data1: -1624890204
+      Data2: 1307000005
+      Data3: -396396378
+      Data4: -67775418
+    Path: event:/bgm/boss/maehwa/maehwa_outro
+  teleportEvent:
+    Guid:
+      Data1: -1760072947
+      Data2: 1103370465
+      Data3: -463545707
+      Data4: 1204279109
+    Path: event:/boss/maehwa/move/maehwa_flash
+--- !u!114 &960777438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960777422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2347621bf2a04e698a693f527ad16797, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &960777439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960777422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74fc7aaf52414106b10763392487086e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boss: {fileID: 960777434}
+  hitPS: {fileID: 359598316}
+  deadPS: {fileID: 1578761850}
+  spriteFlasher: {fileID: 960777430}
+  maehwaContext: {fileID: 960777440}
+  walkPS: {fileID: 777891739}
+  dashPS: {fileID: 1680493956}
+  rampagePS: {fileID: 1747231815}
+  teleportPS: {fileID: 1183281387}
+--- !u!114 &960777440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960777422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7163c81dddf4316b632a8d3ed254e07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stats: {fileID: 11400000, guid: 943e58c7ae72450449df510b408df2c5, type: 2}
+--- !u!114 &960777441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960777422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b151c3c3e9d3455aa9269da1a799dd6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  horizonAttackRange: {fileID: 33413806}
+  bodyStrongAttack: {fileID: 1779034338}
+  comboNormalAttack: {fileID: 887068775}
+  comboStingAttack: {fileID: 837925286}
+  rampageRangePrefab: {fileID: 518994}
+  downEffect: {fileID: 1352087216}
+  bodyWall: {fileID: 935167850}
+  bossDangerRange: {fileID: 772912252}
 --- !u!1001 &1016668066
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -57222,6 +57309,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!198 &1680493956 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 2498966819693020464, guid: 0791f9ec581984a4e95f79b498b133bf,
+    type: 3}
+  m_PrefabInstance: {fileID: 1299834232}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1704140884
 GameObject:
   m_ObjectHideFlags: 0
