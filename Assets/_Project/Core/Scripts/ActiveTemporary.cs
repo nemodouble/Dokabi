@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Mechanics.System
+namespace _Project.Core.Scripts
 {
     public class ActiveTemporary : MonoBehaviour
     {

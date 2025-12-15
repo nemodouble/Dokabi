@@ -53,11 +53,15 @@ namespace _Project.Features.Maehwa.Scripts
 
         private void OnStateEntered(MaehwaStateId stateId)
         {
+            HandleTrigger(stateId);
+        }
+        
+        private void HandleTrigger(MaehwaStateId stateId)
+        {
             var trigger = stateId.ToString();
             if (trigger == "null" || string.IsNullOrEmpty(trigger))
                 return;
-
-            animator.SetTrigger(trigger);
+            PlayTrigger(trigger);
         }
     }
 }

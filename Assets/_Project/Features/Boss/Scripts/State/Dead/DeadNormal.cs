@@ -11,7 +11,7 @@ namespace _Project.Features.Boss.Scripts.State.Dead
             // 상태 진입 알림 (연출은 BossContext를 구독한 레이어가 담당)
             ctx.NotifyStateEnter(ID);
 
-            var boss = ctx.Controller.gameObject;
+            var boss = ctx.GameObject;
             boss.layer = LayerMask.NameToLayer("Dummy");
             boss.tag = "Dummy";
         }

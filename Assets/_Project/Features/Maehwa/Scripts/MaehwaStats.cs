@@ -9,6 +9,7 @@ public class MaeHwaStats : ScriptableObject
     [Header("걷기")]
     public float walkSpeed = 3f;
     public float walkTime = 1f;
+    public float walkCloselyDistance = 4f;
 
     [Header("가로베기")]
     public float horizonBeforeWaitTime = 1f;
@@ -32,6 +33,8 @@ public class MaeHwaStats : ScriptableObject
     public float comboNormalLength = 0.2f;
     public float comboStingSpeed = 20f;
     public float comboStingTime = 0.2f;
+    public float comboSkipSecondDistance = 5f;
+    public float comboAttackWithDashDistance = 2.5f;
 
     [Header("난무")]
     public float rampageRiseSpeed = 5f;
@@ -48,7 +51,7 @@ public class MaeHwaStats : ScriptableObject
     [Header("다운스매싱")]
     public float downAirWaitTime = 0.5f;
     public float downAccel = 30f;
-    public float downAccelTime = 0.2f;
+    public float downAccelTime = 2f;
     public float downAfterSmashTime = 1f;
 
     [Header("기타")]

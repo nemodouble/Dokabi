@@ -34,7 +34,7 @@ namespace _Project.Features.Boss.Scripts.State.Moving
         {
             ctx.NotifyStateEnter(ID);
 
-            _startPos = ctx.Controller.transform.position;
+            _startPos = ctx.Transform.position;
             if (targetPos == null && haveTargetPos)
             {
                 targetPos = (Vector2)_startPos + _dir.normalized * _length;
@@ -43,6 +43,7 @@ namespace _Project.Features.Boss.Scripts.State.Moving
             _moveDir = _dir.normalized;
             _currentSpeed = _velocity;
             _timeNow = 0f;
+            IsFinished = false;
         }
 
         public override void Tick(BossContext<TStateId> ctx, float deltaTime)
@@ -59,6 +60,7 @@ namespace _Project.Features.Boss.Scripts.State.Moving
 
         public override void FixedTick(BossContext<TStateId> ctx, float deltaTime)
         {
+            var breakPoint = ID.ToString();
             if (IsFinished)
             {
                 ctx.StopMove();
@@ -67,7 +69,7 @@ namespace _Project.Features.Boss.Scripts.State.Moving
 
             if (haveTargetPos && targetPos.HasValue)
             {
-                var current = (Vector2)ctx.Controller.transform.position;
+                var current = (Vector2)ctx.transform.position;
                 var toTarget = (Vector2)targetPos.Value - current;
                 if (toTarget.magnitude <= 0.1f)
                 {

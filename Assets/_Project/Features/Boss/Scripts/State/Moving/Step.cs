@@ -32,8 +32,7 @@ namespace _Project.Features.Boss.Scripts.State.Moving
             // 상태 진입 알림 (연출은 BossContext를 구독한 레이어가 담당)
             ctx.NotifyStateEnter(ID);
 
-            var bossController = ctx.Controller;
-            _startingPos = bossController.transform.position;
+            _startingPos = ctx.transform.position;
             _targetPos = _startingPos + _relativePos;
             _moveDir = (_targetPos - _startingPos).normalized;
             _currentSpeed = 0f;
@@ -44,7 +43,7 @@ namespace _Project.Features.Boss.Scripts.State.Moving
             if (IsFinished)
                 return;
 
-            var bossTransform = ctx.Controller.transform;
+            var bossTransform = ctx.transform;
             var bossPos = (Vector2)bossTransform.position;
             var toTarget = _targetPos - bossPos;
             var leftLength = toTarget.magnitude;

@@ -33,12 +33,28 @@ namespace _Project.Features.Boss.Scripts
         
         public void SetVelocityX(float vx)
         {
-            rigid2D.velocity = new Vector2(vx, rigid2D.velocity.y);
+            SetVelocity(new Vector2(vx, rigid2D.velocity.y));
         }
         
         public void SetVelocityY(float vy)
         {
-            rigid2D.velocity = new Vector2(rigid2D.velocity.x, vy);
+            SetVelocity(new Vector2(rigid2D.velocity.x, vy));
+        }
+
+        // 현재 보스가 플랫폼 위에 서 있는지 판별
+        public bool IsOnPlatform(float checkDistance = 0.1f)
+        {
+            if (boxCollider == null)
+                boxCollider = GetComponent<BoxCollider2D>();
+
+            LayerMask platformLayer = LayerMask.GetMask("Platform");
+
+            // 콜라이더의 중심에서 약간 아래쪽으로 이동한 위치를 기준으로 박스캐스트
+            Vector2 origin = (Vector2)transform.position + Vector2.down * (boxCollider.size.y * 0.5f - 0.01f);
+            Vector2 size = new Vector2(boxCollider.size.x * 0.9f, 0.05f); // 살짝 줄여서 가장자리에서의 오탐을 줄임
+
+            var hit = Physics2D.BoxCast(origin, size, 0f, Vector2.down, checkDistance, platformLayer);
+            return hit.collider != null;
         }
     }
 }

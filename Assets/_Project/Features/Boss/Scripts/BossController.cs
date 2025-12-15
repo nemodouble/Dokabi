@@ -1,10 +1,11 @@
 ﻿using System;
+using _Project.Features.Battle.Scripts;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace _Project.Features.Boss.Scripts
 {
-    [RequireComponent(typeof(SpriteFlasher))]
+    [RequireComponent(typeof(SpriteView))]
     public class BossController<TStateId, TContext> : MonoBehaviour
         where TContext : BossContext<TStateId>
     {
@@ -38,16 +39,16 @@ namespace _Project.Features.Boss.Scripts
             CacheOrGetComponent(ref context);
 
             // 의존 관계 연결 및 세부 초기화
+            context?.Initialize();
+            context?.BindModules(health, movement, attack, bossAnimation, sound, effect);
             health?.Initialize();
             bossAnimation?.Initialize();
             sound?.Initialize();
             effect?.Initialize();
-            stateMachine?.Initialize();
             attack?.Initialize();
+            stateMachine?.Initialize();
             movement?.Initialize();
-            context?.Initialize();
             
-            context.BindModules(health, movement, attack, bossAnimation, sound, effect);
         }
 
         private void CacheOrGetComponent<T>(ref T field) where T : Component

@@ -1,3 +1,5 @@
+using System;
+using _Project.Features.Battle.Scripts;
 using _Project.Features.Boss.Scripts;
 using Boss.MaeHwa;
 using UnityEngine;
@@ -11,35 +13,30 @@ namespace _Project.Features.Maehwa.Scripts
     public class MaehwaAttack : BossAttack
     {
         [Header("Maehwa Attack Objects")]        
-        [SerializeField] private GameObject horizonAttackRange;
-        [SerializeField] private GameObject bodyStrongAttack;
-        [SerializeField] private GameObject comboNormalAttack;
-        [SerializeField] private GameObject comboStingAttack;
+        [SerializeField] private FixedDangerRange horizonAttackRange;
+        [SerializeField] private FixedDangerRange bodyStrongAttack;
+        [SerializeField] private FixedDangerRange comboNormalAttack;
+        [SerializeField] private FixedDangerRange comboStingAttack;
         [SerializeField] private GameObject rampageRangePrefab;
-        [SerializeField] private GameObject downEffect;
         [SerializeField] private GameObject bodyWall;
         [SerializeField] private GameObject bossDangerRange;
 
         /// <summary>
         /// 가로베기 공격 범위
         /// </summary>
-        public GameObject HorizonAttackRange => horizonAttackRange;
+        public FixedDangerRange HorizonAttackRange => horizonAttackRange;
         /// <summary>
         /// 바디 태클 강 공격 범위
         /// </summary>
-        public GameObject BodyStrongAttack => bodyStrongAttack;
+        public FixedDangerRange BodyStrongAttack => bodyStrongAttack;
         /// <summary>
         /// 콤보 일반 공격 범위
         /// </summary>
-        public GameObject ComboNormalAttack => comboNormalAttack;
+        public FixedDangerRange ComboNormalAttack => comboNormalAttack;
         /// <summary>
         /// 콤보 찌르기 공격 범위
         /// </summary>
-        public GameObject ComboStingAttack => comboStingAttack;
-        /// <summary>
-        /// 다운 스매시 추가 경직 시 사용하는 이펙트/히트 오브젝트
-        /// </summary>
-        public GameObject DownEffect => downEffect;
+        public FixedDangerRange ComboStingAttack => comboStingAttack;
         /// <summary>
         /// 바디 월 오브젝트
         /// </summary>
@@ -48,15 +45,6 @@ namespace _Project.Features.Maehwa.Scripts
         /// 보스 데인저 범위 오브젝트
         /// </summary>
         public GameObject BossDangerRange => bossDangerRange;
-
-        /// <summary>
-        /// 다운 스매시 추가 경직 시 사용하는 이펙트/히트 오브젝트 활성/비활성
-        /// </summary>
-        public void SetDownEffectActive(bool active)
-        {
-            if (downEffect != null)
-                downEffect.SetActive(active);
-        }
 
         /// <summary>
         /// Rampage 공격 범위 프리팹 인스턴스 생성 헬퍼
@@ -87,6 +75,26 @@ namespace _Project.Features.Maehwa.Scripts
         {
             if (bossDangerRange != null)
                 bossDangerRange.SetActive(active);
+        }
+
+        public void SetAttackColliderDir(BossContext<MaehwaStateId>.LookingDir dir)
+        {
+            bool isRight = dir == BossContext<MaehwaStateId>.LookingDir.RightDir;
+            
+            FlipLocalScaleX(horizonAttackRange.transform, isRight);
+            FlipLocalScaleX(bodyStrongAttack.transform, isRight);
+            FlipLocalScaleX(comboNormalAttack.transform, isRight);
+            FlipLocalScaleX(comboStingAttack.transform, isRight);
+        }
+        
+        private static void FlipLocalScaleX(Transform target, bool isRight = false)
+        {
+            if (target == null)
+                return;
+
+            var scale = target.localScale;
+            scale.x = Math.Abs(scale.x) * (isRight ? 1 : -1);
+            target.localScale = scale;
         }
     }
 }

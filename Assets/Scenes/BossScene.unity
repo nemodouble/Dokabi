@@ -5127,6 +5127,7 @@ GameObject:
   - component: {fileID: 33413813}
   - component: {fileID: 33413810}
   - component: {fileID: 33413812}
+  - component: {fileID: 33413814}
   m_Layer: 6
   m_Name: HorizonAttack
   m_TagString: Untagged
@@ -10204,6 +10205,21 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!114 &33413814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 33413806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cc49da9347f457596717443bce9354e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SpriteRenderer: {fileID: 33413810}
+  flashMaterial: {fileID: 0}
+  duration: 0.5
 --- !u!1001 &48596758
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20794,6 +20810,7 @@ GameObject:
   - component: {fileID: 837925290}
   - component: {fileID: 837925289}
   - component: {fileID: 837925288}
+  - component: {fileID: 837925292}
   m_Layer: 6
   m_Name: StingAttack
   m_TagString: Untagged
@@ -20950,6 +20967,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &837925292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837925286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cc49da9347f457596717443bce9354e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SpriteRenderer: {fileID: 837925291}
+  flashMaterial: {fileID: 0}
+  duration: 0.5
 --- !u!1001 &858200023
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21055,6 +21087,7 @@ GameObject:
   - component: {fileID: 887068779}
   - component: {fileID: 887068778}
   - component: {fileID: 887068777}
+  - component: {fileID: 887068781}
   m_Layer: 6
   m_Name: NormalAttack
   m_TagString: Untagged
@@ -21211,6 +21244,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &887068781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887068775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cc49da9347f457596717443bce9354e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SpriteRenderer: {fileID: 887068780}
+  flashMaterial: {fileID: 0}
+  duration: 0.5
 --- !u!1 &935167850
 GameObject:
   m_ObjectHideFlags: 0
@@ -21602,7 +21650,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdd91bb6c8cc2b947862465288b6ab48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 960777428}
+  animator:
+  - {fileID: 0}
   boss: {fileID: 960777434}
   bossContext: {fileID: 960777440}
   maehwaContext: {fileID: 960777440}
@@ -21619,6 +21668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cc49da9347f457596717443bce9354e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SpriteRenderer: {fileID: 960777426}
   flashMaterial: {fileID: 2100000, guid: ed90ee658b004434b92592bb27de07a7, type: 2}
   duration: 0.2
 --- !u!114 &960777431
@@ -21696,12 +21746,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bossAnimation: {fileID: 960777429}
-  attackController: {fileID: 960777441}
-  effectPlayer: {fileID: 960777439}
+  attack: {fileID: 960777441}
+  effect: {fileID: 960777439}
   movement: {fileID: 960777438}
-  soundPlayer: {fileID: 960777437}
+  sound: {fileID: 960777437}
   stateMachine: {fileID: 960777436}
   health: {fileID: 960777435}
+  context: {fileID: 0}
 --- !u!114 &960777435
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21906,7 +21957,13 @@ MonoBehaviour:
   boss: {fileID: 960777434}
   hitPS: {fileID: 359598316}
   deadPS: {fileID: 1578761850}
-  spriteFlasher: {fileID: 960777430}
+  flashTargets:
+  - {fileID: 960777430}
+  flipTargets:
+  - {fileID: 960777430}
+  - {fileID: 1779034344}
+  - {fileID: 887068781}
+  - {fileID: 837925292}
   maehwaContext: {fileID: 960777440}
   walkPS: {fileID: 777891739}
   dashPS: {fileID: 1680493956}
@@ -21937,10 +21994,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b151c3c3e9d3455aa9269da1a799dd6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  horizonAttackRange: {fileID: 33413806}
-  bodyStrongAttack: {fileID: 1779034338}
-  comboNormalAttack: {fileID: 887068775}
-  comboStingAttack: {fileID: 837925286}
+  horizonAttackRange: {fileID: 33413807}
+  bodyStrongAttack: {fileID: 1779034341}
+  comboNormalAttack: {fileID: 887068777}
+  comboStingAttack: {fileID: 837925288}
   rampageRangePrefab: {fileID: 518994}
   downEffect: {fileID: 1352087216}
   bodyWall: {fileID: 935167850}
@@ -67057,6 +67114,7 @@ GameObject:
   - component: {fileID: 1779034342}
   - component: {fileID: 1779034340}
   - component: {fileID: 1779034341}
+  - component: {fileID: 1779034344}
   m_Layer: 6
   m_Name: StrongAttack
   m_TagString: Untagged
@@ -67213,6 +67271,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1779034344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779034338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cc49da9347f457596717443bce9354e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SpriteRenderer: {fileID: 1779034343}
+  flashMaterial: {fileID: 0}
+  duration: 0.5
 --- !u!4 &1797585862 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6605131645776706891, guid: 013e457ee142e9146951e975538ad576,

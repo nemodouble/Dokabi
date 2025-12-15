@@ -1,11 +1,10 @@
 using System.Collections.Generic;
-using _Project.Features.Boss.Scripts;
 using _Project.Features.Boss.Scripts.State;
 using Boss.MaeHwa;
 using UnityEngine;
 using Util;
 
-namespace _Project.Features.Maehwa.Scripts.Phase
+namespace _Project.Features.Maehwa.Scripts.State
 {
     public class RampageAttackState : BossState<MaehwaStateId, MaehwaContext>
     {
@@ -33,7 +32,6 @@ namespace _Project.Features.Maehwa.Scripts.Phase
         private readonly List<Vector3> _rotList = new();
         private readonly List<MaeHwaRampageRange> _rangeList = new();
 
-        private BossController<MaehwaStateId, BossContext<MaehwaStateId>> _maeHwaController;
         private Transform _playerTransform;
 
         private int _spawnedWarningCount;
@@ -48,14 +46,6 @@ namespace _Project.Features.Maehwa.Scripts.Phase
 
         public override void OnEnter(MaehwaContext ctx)
         {
-            _maeHwaController = ctx.Controller;
-            if (_maeHwaController == null)
-            {
-                Debug.LogError("RampageAttackState: MaeHwaController 캐스팅 실패");
-                _subState = SubState.Finished;
-                return;
-            }
-
             var playerObj = ctx.PlayerTransform;
             if (playerObj == null)
             {

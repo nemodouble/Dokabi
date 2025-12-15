@@ -15,6 +15,8 @@ namespace _Project.Core.Scripts.FSM
         
         private readonly Random _random = new();
 
+        private bool _initialized;
+
         public TStateId CurrentStateId { get; private set; }
         public IState<TContext> CurrentState { get; private set; }
 
@@ -30,6 +32,16 @@ namespace _Project.Core.Scripts.FSM
             _states[id] = state;
         }
 
+        /// <summary>
+        /// 특정 상태에서 다른 상태로 전이를 추가합니다.
+        /// 우선순위가 높은 전이가 먼저 평가되며,
+        /// 같은 우선순위 내에서는 weight 값을 사용해 가중치 랜덤 선택을 합니다.
+        /// </summary>
+        /// <param name="from">출발 상태 Id</param>
+        /// <param name="to">도착 상태 Id</param>
+        /// <param name="condition">전이 조건 델리게이트 (true일 때 전이)</param>
+        /// <param name="priority">전이 우선순위 (높을수록 먼저 고려)</param>
+        /// <param name="weight">가중치 랜덤 선택 시 사용되는 비율 값</param>
         public void AddTransition(TStateId from, TStateId to, Func<TContext, bool> condition, int priority = 0, float weight = 1f)
         {
             _transitions.Add(new Transition<TStateId, TContext>(from, to, condition, priority, weight));
@@ -46,10 +58,14 @@ namespace _Project.Core.Scripts.FSM
             CurrentStateId = id;
             CurrentState = _states[id];
             CurrentState.OnEnter(_context);
+            _initialized = true;
         }
 
         public void Tick(float deltaTime)
         {
+            if (!_initialized)
+                return;
+
             // 1. 현재 상태 로직
             CurrentState.Tick(_context, deltaTime);
 
@@ -63,6 +79,9 @@ namespace _Project.Core.Scripts.FSM
         
         public void FixedTick(float fixedDeltaTime)
         {
+            if (!_initialized)
+                return;
+
             // 1. 현재 상태 로직
             CurrentState.FixedTick(_context, fixedDeltaTime);
 
@@ -76,6 +95,9 @@ namespace _Project.Core.Scripts.FSM
 
         public void HandleEvent(object evt)
         {
+            if (!_initialized)
+                return;
+
             CurrentState.HandleEvent(_context, evt);
 
             var next = FindNextState();

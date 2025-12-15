@@ -1,12 +1,14 @@
+using _Project.Features.Battle.Scripts;
+using Mechanics.System;
 using UnityEngine;
 
 namespace _Project.Features.Boss.Scripts.State
 {
     public class AttackFixedRange<TStateId> : BossState<TStateId, BossContext<TStateId>>
     {
-        private readonly GameObject _attackRange;
+        private readonly FixedDangerRange _attackRange;
 
-        public AttackFixedRange(TStateId id, GameObject attackRange)
+        public AttackFixedRange(TStateId id, FixedDangerRange attackRange)
             : base(id)
         {
             _attackRange = attackRange;
@@ -21,7 +23,7 @@ namespace _Project.Features.Boss.Scripts.State
 
             if (_attackRange != null)
             {
-                _attackRange.SetActive(true);
+                _attackRange.gameObject.SetActive(true);
             }
 
             // 한 번 켜고 바로 종료

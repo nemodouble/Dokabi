@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f690cb1bdc0e4b4eaedb31eec7fa0f40, type: 3}
+  m_Name: MaeHwaStats
+  m_EditorClassIdentifier: 
+  startWaitTime: 5.5
+  walkSpeed: 3
+  walkTime: 1
+  horizonBeforeWaitTime: 1
+  horizonAfterWaitTime: 1
+  horizonStepSpeed: 20
+  bodyDashSpeed: 20
+  bodyDashTime: 0.3
+  bodyAfterDashWaitTime: 1
+  bodyAfterAttackWaitTime: 1
+  comboFirstBeforeWaitTime: 0.4
+  comboAfterFirstWaitTime: 0.1
+  comboBeforeSecondWaitTime: 0.4
+  comboAfterSecondWaitTime: 0.1
+  comboBeforeThirdWaitTime: 0.9
+  comboAfterThirdWaitTime: 1
+  comboNormalSpeed: 10
+  comboNormalLength: 0.2
+  comboStingSpeed: 20
+  comboStingTime: 0.2
+  rampageRiseSpeed: 5
+  rampageRiseTime: 0.3
+  rampageRiseWaitTime: 0.3
+  rampageBeforeNoticeWaitTime: 1
+  rampageBlinkWait: 2
+  rampageNoticeInterval: 0.1
+  rampageBeforeAttackTime: 0.5
+  rampageAttackTime: 0.2
+  rampageAttackAfterWaitTime: 0.3
+  rampageStaggerTime: 3
+  downAirWaitTime: 0.5
+  downAccel: 30
+  downAccelTime: 2
+  downAfterSmashTime: 1
+  betweenPhaseWaitTime: 1

@@ -1,5 +1,7 @@
 using System;
+using _Project.Features.Battle.Scripts;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Project.Features.Boss.Scripts
 {
@@ -9,14 +11,16 @@ namespace _Project.Features.Boss.Scripts
         [SerializeField] protected Component boss; // BossController<TStateId>
         [SerializeField] protected ParticleSystem hitPS;
         [SerializeField] protected ParticleSystem deadPS;
-        [SerializeField] protected SpriteFlasher spriteFlasher;
+        
+        // 여러 개의 오브젝트를 별도로 관리하기 위한 리스트들
+        [Header("Sprite Targets")] 
+        [SerializeField] protected SpriteView[] flashTargets; // 피격 등에서 Flash 할 대상들
+        [SerializeField] protected SpriteView[] flipTargets;  // 좌우 Flip(보기 방향)만 적용할 대상들
 
         public void Initialize()
         {
             if (boss == null)
                 boss = GetComponent(typeof(BossController<,>));
-            if (spriteFlasher == null)
-                spriteFlasher = GetComponent<SpriteFlasher>();
 
             if (boss == null)
                 return;
@@ -39,9 +43,21 @@ namespace _Project.Features.Boss.Scripts
                 hitPS.Play();
             }
 
-            if (spriteFlasher != null)
+            // 기존 spriteView 대신 flashTargets 리스트를 사용
+            FlashOnHit();
+        }
+
+        // 피격 시 Flash용 헬퍼
+        protected virtual void FlashOnHit()
+        {
+
+            if (flashTargets != null)
             {
-                spriteFlasher.Flash();
+                foreach (var sv in flashTargets)
+                {
+                    if (sv == null) continue;
+                    sv.Flash();
+                }
             }
         }
 
@@ -71,6 +87,18 @@ namespace _Project.Features.Boss.Scripts
         {
             if (ps == null) return;
             ps.Stop();
+        }
+        
+        public void SetLookDirection(bool isLookingRight)
+        {
+            // flipTargets에 들어있는 대상들만 방향 전환 추가 적용
+            if (flipTargets == null) return;
+
+            foreach (var sv in flipTargets)
+            {
+                if (sv == null) continue;
+                sv.SetLookDirection(isLookingRight);
+            }
         }
     }
 }

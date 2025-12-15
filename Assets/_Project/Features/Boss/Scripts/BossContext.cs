@@ -6,6 +6,8 @@ namespace _Project.Features.Boss.Scripts
 {
     public class BossContext<TStateId> : MonoBehaviour
     {
+        public GameObject GameObject => gameObject;
+        public Transform Transform => transform;
         public Transform PlayerTransform { get; private set; }
         
         public BossAnimation Anim { get; private set; }
@@ -15,8 +17,6 @@ namespace _Project.Features.Boss.Scripts
         public BossSound Sound { get; private set; }
         public BossStateMachine<TStateId, BossContext<TStateId>> StateMachine { get; private set; }
         public BossHealth Health { get; private set; }
-        
-        public BossController<TStateId, BossContext<TStateId>> Controller { get; private set; }
 
         public event Action OnDead;
         public event Action<int, Vector2, float> OnHit;
@@ -24,6 +24,13 @@ namespace _Project.Features.Boss.Scripts
         // 상태 진입 이벤트: 상태 ID를 전달해 연출 전담 컴포넌트가 처리하도록 한다.
         public event Action<TStateId> OnStateEntered;
         public event Action<TStateId> OnStateExited;
+        
+        public enum LookingDir
+        {
+            RightDir = 1,
+            LeftDir = -1
+        }
+        private LookingDir _lookingDir = LookingDir.LeftDir;
 
         public virtual void Initialize()
         {
@@ -51,7 +58,6 @@ namespace _Project.Features.Boss.Scripts
             Anim = anim;
             Sound = sound;
             Effect = effect;
-            Controller = GetComponent<BossController<TStateId, BossContext<TStateId>>>();
         }
 
         private void HandleDead()
@@ -72,21 +78,21 @@ namespace _Project.Features.Boss.Scripts
         // ===== Movement Facade =====
         public void Move(Vector2 velocity)
         {
-            if (Controller == null || Movement == null)
+            if (Movement == null)
                 return;
             Movement.SetVelocity(velocity);
         }
 
         public void MoveX(float vx)
         {
-            if (Controller == null || Movement == null)
+            if (Movement == null)
                 return;
             Movement.SetVelocityX(vx);
         }
 
         public void MoveY(float vy)
         {
-            if (Controller == null || Movement == null)
+            if (Movement == null)
                 return;
             Movement.SetVelocityY(vy);
         }
@@ -98,17 +104,25 @@ namespace _Project.Features.Boss.Scripts
 
         public bool IsHeading(Vector2 dir, float distance)
         {
-            if (Controller == null || Movement == null)
+            if (Movement == null)
                 return false;
 
             var hit = Movement.IsHeading(dir, distance);
             return hit.collider != null;
         }
 
+        // 현재 플랫폼 위에 서 있는지 여부를 컨텍스트에서 바로 조회할 수 있도록 래핑
+        public bool IsOnPlatform()
+        {
+            if (Movement == null)
+                return false;
+            return Movement.IsOnPlatform();
+        }
+
         // ===== Attack Facade =====
         public void SummonAttack(GameObject prefab, Vector2 relativePos)
         {
-            if (Controller == null || Attack == null || prefab == null)
+            if (Attack == null || prefab == null)
                 return;
 
             Attack.CallInstantiate(prefab, relativePos);
@@ -145,6 +159,17 @@ namespace _Project.Features.Boss.Scripts
         public void NotifyStateExit(TStateId id)
         {
             OnStateExited?.Invoke(id);
+        }
+        
+        public void SetToLookPlayer()
+        {
+            SetLookingDir(PlayerTransform.position.x < transform.position.x ? LookingDir.LeftDir : LookingDir.RightDir);
+        }
+
+        public virtual void SetLookingDir(LookingDir dir)
+        {
+            _lookingDir = dir;
+            Effect.SetLookDirection(dir == LookingDir.RightDir);
         }
     }
 }

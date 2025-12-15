@@ -18,16 +18,18 @@ namespace _Project.Features.Boss.Scripts
         
         public void HandleEvent(object evt)
         {
-            StateMachine.HandleEvent(evt);
+            StateMachine?.HandleEvent(evt);
         }
 
         private void Update()
         {
+            if (StateMachine == null) return;
             StateMachine.Tick(Time.deltaTime);
         }
         
         private void FixedUpdate()
         {
+            if (StateMachine == null) return;
             StateMachine.FixedTick(Time.fixedDeltaTime);
         }
         
