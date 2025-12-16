@@ -15,13 +15,16 @@ MonoBehaviour:
   startWaitTime: 5.5
   walkSpeed: 3
   walkTime: 1
+  walkCloselyDistance: 4
   horizonBeforeWaitTime: 1
   horizonAfterWaitTime: 1
   horizonStepSpeed: 20
+  horizonTeleportWaitTime: 0.2
   bodyDashSpeed: 20
   bodyDashTime: 0.3
   bodyAfterDashWaitTime: 1
   bodyAfterAttackWaitTime: 1
+  bodyDashStopBeforeObstacleDistance: 3
   comboFirstBeforeWaitTime: 0.4
   comboAfterFirstWaitTime: 0.1
   comboBeforeSecondWaitTime: 0.4
@@ -32,7 +35,9 @@ MonoBehaviour:
   comboNormalLength: 0.2
   comboStingSpeed: 20
   comboStingTime: 0.2
-  rampageRiseSpeed: 5
+  comboSkipSecondDistance: 5
+  comboAttackWithDashDistance: 2.5
+  rampageRiseSpeed: 20
   rampageRiseTime: 0.3
   rampageRiseWaitTime: 0.3
   rampageBeforeNoticeWaitTime: 1
@@ -46,4 +51,5 @@ MonoBehaviour:
   downAccel: 30
   downAccelTime: 2
   downAfterSmashTime: 1
-  betweenPhaseWaitTime: 1
+  downTeleportYPos: 7
+  betweenPhaseWaitTime: 0.2

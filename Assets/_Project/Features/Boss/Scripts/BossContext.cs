@@ -176,5 +176,12 @@ namespace _Project.Features.Boss.Scripts
             _lookingDir = dir;
             Effect.SetLookDirection(dir == LookingDir.Right);
         }
+
+        public void SetGravityEnabled(bool b)
+        {
+            if (Movement == null)
+                return;
+            Movement.SetGravityEnabled(b);
+        }
     }
 }

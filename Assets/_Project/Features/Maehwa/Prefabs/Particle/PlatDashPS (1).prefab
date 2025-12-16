@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2498966819693020429}
   - component: {fileID: 2498966819693020464}
   - component: {fileID: 2498966819693020431}
-  - component: {fileID: 2498966819693020430}
   m_Layer: 10
   m_Name: PlatDashPS (1)
   m_TagString: Untagged
@@ -4880,19 +4879,3 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &2498966819693020430
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2498966819693020428}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ecf312b059d421eba319e751fa6cc38, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  copyX: 1
-  copyY: 0
-  copyZ: 0

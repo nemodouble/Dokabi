@@ -58,6 +58,7 @@ namespace _Project.Features.Maehwa.Scripts.State
             // 2) 그 외: 플레이어 반대편 HorizonPosition으로 MoveByVelocity 스타일 이동
             var runLeft = playerPos.x > bossPos.x;
             var runTarget = runLeft ? leftDest : rightDest;
+            ctx.IsLeftHorizonRunUsed = runLeft;
             ctx.SetLookingDir(runLeft ? Vector2.left : Vector2.right );
 
             _moveDir = (runTarget - bossPos).normalized;

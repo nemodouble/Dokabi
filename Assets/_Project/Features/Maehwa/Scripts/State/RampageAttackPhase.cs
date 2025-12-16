@@ -46,15 +46,10 @@ namespace _Project.Features.Maehwa.Scripts.State
 
         public override void OnEnter(MaehwaContext ctx)
         {
-            var playerObj = ctx.PlayerTransform;
-            if (playerObj == null)
-            {
-                Debug.LogError("RampageAttackState: Player 오브젝트를 찾지 못했습니다.");
-                _subState = SubState.Finished;
-                return;
-            }
-            _playerTransform = playerObj.transform;
-
+            _playerTransform = ctx.PlayerTransform;
+            ctx.transform.position += new  Vector3(0f, 10000f, 0f);
+            
+            IsFinished = false;
             _posList.Clear();
             _rotList.Clear();
             _rangeList.Clear();
@@ -97,6 +92,7 @@ namespace _Project.Features.Maehwa.Scripts.State
                     if (_stateTimer >= attackAfterWaitTime)
                     {
                         _subState = SubState.Finished;
+                        IsFinished = true;
                         // 필요하다면 여기서 다음 상태로 전환하는 이벤트를 날릴 수 있음.
                     }
                     break;

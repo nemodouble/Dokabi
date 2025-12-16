@@ -15,6 +15,19 @@ namespace _Project.Features.Maehwa.Scripts
         public ComboSelectDash.DashDir SelectedDashDir { get; set; } = ComboSelectDash.DashDir.None;
 
         public bool IsRampageDownSmash { get; set; } = false;
+        public bool IsLeftHorizonRunUsed { get; set; } = false;
+
+        public override void Initialize()
+        {
+            base.Initialize();
+            OnStateEntered += MaehwaContext_OnStateEntered;
+        }
+
+        private void MaehwaContext_OnStateEntered(MaehwaStateId obj)
+        {
+            if (obj != MaehwaStateId.DownSmashRampageWait)
+                IsRampageDownSmash = false;
+        }
 
         public override void SetLookingDir(LookingDir dir)
         {

@@ -15,7 +15,8 @@ namespace _Project.Features.Boss.Scripts
         // 여러 개의 오브젝트를 별도로 관리하기 위한 리스트들
         [Header("Sprite Targets")] 
         [SerializeField] protected SpriteView[] flashTargets; // 피격 등에서 Flash 할 대상들
-        [SerializeField] protected SpriteView[] flipTargets;  // 좌우 Flip(보기 방향)만 적용할 대상들
+        [SerializeField] protected SpriteView[] flipTargets;  // SpriteFlip 할 대상들
+        [SerializeField] protected GameObject[] scaleFlipTargets; // ScaleFlip 할 대상들
 
         public void Initialize()
         {
@@ -98,6 +99,15 @@ namespace _Project.Features.Boss.Scripts
             {
                 if (sv == null) continue;
                 sv.SetLookDirection(isLookingRight);
+            }
+            // scaleFlipTargets에 들어있는 대상들만 스케일 반전 적용
+            if (scaleFlipTargets == null) return;
+            foreach (var go in scaleFlipTargets)
+            {
+                if (go == null) continue;
+                var localScale = go.transform.localScale;
+                localScale.x = Math.Abs(localScale.x) * (isLookingRight ? 1 : -1);
+                go.transform.localScale = localScale;
             }
         }
     }

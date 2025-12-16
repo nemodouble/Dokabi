@@ -6,6 +6,8 @@ namespace _Project.Features.Boss.Scripts
     {
         private Rigidbody2D rigid2D;
         private BoxCollider2D boxCollider;
+        
+        private float originalGravityScale;
 
         public void Initialize()
         {
@@ -13,6 +15,7 @@ namespace _Project.Features.Boss.Scripts
                 rigid2D = GetComponent<Rigidbody2D>();
             if (boxCollider == null)
                 boxCollider = GetComponent<BoxCollider2D>();
+            originalGravityScale = rigid2D.gravityScale;
         }
 
         internal RaycastHit2D IsHeading(Vector2 moveDir)
@@ -55,6 +58,19 @@ namespace _Project.Features.Boss.Scripts
 
             var hit = Physics2D.BoxCast(origin, size, 0f, Vector2.down, checkDistance, platformLayer);
             return hit.collider != null;
+        }
+
+        public void SetGravityEnabled(bool b)
+        {
+            if (b)
+            {
+                rigid2D.gravityScale = originalGravityScale;
+            }
+            else
+            {
+                originalGravityScale = rigid2D.gravityScale;
+                rigid2D.gravityScale = 0f;
+            }
         }
     }
 }

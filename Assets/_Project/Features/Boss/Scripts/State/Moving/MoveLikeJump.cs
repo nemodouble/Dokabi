@@ -19,6 +19,7 @@ namespace _Project.Features.Boss.Scripts.State.Moving
         public override void OnEnter(BossContext<TStateId> ctx)
         {
             jumpTimeNow = 0f;
+            IsFinished = false;
             _currentVy = startSpeed;
 
             ctx.NotifyStateEnter(ID);

@@ -90,6 +90,13 @@ namespace _Project.Features.Maehwa.Scripts
                 case MaehwaStateId.DownStart:
                     PlayParticle(teleportPS);
                     break;
+                
+                case MaehwaStateId.HorizonBeforeWait:
+                    maehwaContext.SetLookingDir(maehwaContext.IsLeftHorizonRunUsed
+                        ? BossContext<MaehwaStateId>.LookingDir.Right
+                        : BossContext<MaehwaStateId>.LookingDir.Left);
+                    break;
+                
                 // 다운 가속 시작
                 case MaehwaStateId.DownGetAccel:
                     downEffect.SetActive(true);
@@ -113,17 +120,13 @@ namespace _Project.Features.Maehwa.Scripts
                     StopParticle(dashPS);
                     break;
 
-                // 난무 준비 종료
-                case MaehwaStateId.RampageBeforeNoticeWait:
-                    StopParticle(rampagePS);
-                    break;
-
                 // 텔레포트 종료 (착지 등)
                 case MaehwaStateId.DownSmashRampageWait:
                 case MaehwaStateId.DownSmashWait:
                     StopParticle(teleportPS);
                     break;
                 case MaehwaStateId.DownGetAccel:
+                    StopParticle(rampagePS);
                     downEffect.SetActive(true);
                     break;
             }

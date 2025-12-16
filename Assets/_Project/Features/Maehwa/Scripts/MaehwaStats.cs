@@ -39,7 +39,7 @@ public class MaeHwaStats : ScriptableObject
     public float comboAttackWithDashDistance = 2.5f;
 
     [Header("난무")]
-    public float rampageRiseSpeed = 5f;
+    public float rampageRiseSpeed = 20f;
     public float rampageRiseTime = 0.3f;
     public float rampageRiseWaitTime = 0.3f;
     public float rampageBeforeNoticeWaitTime = 1f;
@@ -56,6 +56,7 @@ public class MaeHwaStats : ScriptableObject
     public float downAccel = 30f;
     public float downAccelTime = 2f;
     public float downAfterSmashTime = 1f;
+    public float downTeleportYPos = 7f;
 
     [Header("기타")]
     public float betweenPhaseWaitTime = 1f;

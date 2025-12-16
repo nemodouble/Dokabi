@@ -10,6 +10,7 @@ namespace _Project.Features.Maehwa.Scripts
         SelectAttack,
         WalkLeft,
         WalkRight,
+        WalkEnd,
         FrontStep,
         BackStep,
         HorizonStart,
@@ -34,7 +35,6 @@ namespace _Project.Features.Maehwa.Scripts
         ComboThirdAttackColliderActive,
         ComboAfterWait,
         RampageStart,
-        RampageRise,
         RampageRiseWait,
         RampageBeforeNoticeWait,
         RampageBlink,
@@ -43,7 +43,7 @@ namespace _Project.Features.Maehwa.Scripts
         DownAirWait,
         DownGetAccel,
         DownSmashWait,
-        DownSmashRampageWait
+        DownSmashRampageWait,
     }
 }
 

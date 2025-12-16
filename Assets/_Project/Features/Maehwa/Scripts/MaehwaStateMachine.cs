@@ -45,8 +45,10 @@ namespace _Project.Features.Maehwa.Scripts
 
             var walkLeft = new MoveByVelocity<MaehwaStateId>(MaehwaStateId.WalkLeft, Vector2.left, s.walkSpeed, s.walkTime, 0f);
             var walkRight = new MoveByVelocity<MaehwaStateId>(MaehwaStateId.WalkRight, Vector2.right, s.walkSpeed, s.walkTime, 0f);
+            var walkEnd = new EmptyState<MaehwaStateId>(MaehwaStateId.WalkEnd);
             StateMachine.AddState(MaehwaStateId.WalkLeft, walkLeft);
             StateMachine.AddState(MaehwaStateId.WalkRight, walkRight);
+            StateMachine.AddState(MaehwaStateId.WalkEnd, walkEnd);
 
             // Select-Step
             var selectStep = new EmptyState<MaehwaStateId>(MaehwaStateId.SelectStep);
@@ -77,8 +79,9 @@ namespace _Project.Features.Maehwa.Scripts
             StateMachine.AddTransition(MaehwaStateId.SelectWalk, MaehwaStateId.WalkLeft, ctx => !ctx.SelectMoveDir());
 
             // Walk 종료 후 Select-Attack
-            StateMachine.AddTransition(MaehwaStateId.WalkLeft, MaehwaStateId.SelectAttack, _ => walkLeft.IsFinished);
-            StateMachine.AddTransition(MaehwaStateId.WalkRight, MaehwaStateId.SelectAttack, _ => walkRight.IsFinished);
+            StateMachine.AddTransition(MaehwaStateId.WalkLeft, MaehwaStateId.WalkEnd, _ => walkLeft.IsFinished);
+            StateMachine.AddTransition(MaehwaStateId.WalkRight, MaehwaStateId.WalkEnd, _ => walkRight.IsFinished);
+            StateMachine.AddTransition(MaehwaStateId.WalkEnd, MaehwaStateId.SelectAttack, _ => true);
 
             // Select-Step -> Front / Back
             StateMachine.AddTransition(MaehwaStateId.SelectStep, MaehwaStateId.BackStep, ctx => ctx.IsInDistance(0f, 3f));
@@ -199,28 +202,26 @@ namespace _Project.Features.Maehwa.Scripts
             StateMachine.AddTransition(MaehwaStateId.ComboAfterWait, MaehwaStateId.EndAttack, _ => comboThirdAfterWait.IsFinished);
 
             // === Rampage ===
-            var rampageRise = new MoveLikeJump<MaehwaStateId>(MaehwaStateId.RampageRise, s.rampageRiseSpeed, s.rampageRiseTime);
+            var rampageStart = new MoveLikeJump<MaehwaStateId>(MaehwaStateId.RampageStart, s.rampageRiseSpeed, s.rampageRiseTime);
             var rampageRiseWait = new WaitState<MaehwaStateId>(MaehwaStateId.RampageRiseWait, s.rampageRiseWaitTime, true);
-            var rampageBeforeNoticeWait = new WaitState<MaehwaStateId>(MaehwaStateId.RampageBeforeNoticeWait, s.rampageBeforeNoticeWaitTime, true);
-            var rampageBlink = new RelativeTeleport<MaehwaStateId>(MaehwaStateId.RampageBlink, new Vector2(0, 7f), Context.PlayerTransform, fixY:7f);
+            var rampageBeforeNoticeWait = new WaitWithoutGravity<MaehwaStateId>(MaehwaStateId.RampageBeforeNoticeWait, s.rampageBeforeNoticeWaitTime, true);
             var rampageNotice = new RampageAttackState(MaehwaStateId.RampageNotice, s.rampageNoticeInterval, s.rampageBeforeAttackTime, s.rampageAttackTime, s.rampageAttackAfterWaitTime);
+            var rampageBlink = new RelativeTeleport<MaehwaStateId>(MaehwaStateId.RampageBlink, new Vector2(0, 7f), Context.PlayerTransform, fixY:s.downTeleportYPos);
 
-            var rampageStart = new EmptyState<MaehwaStateId>(MaehwaStateId.RampageStart);
             StateMachine.AddState(MaehwaStateId.RampageStart, rampageStart);
-            StateMachine.AddState(MaehwaStateId.RampageRise, rampageRise);
             StateMachine.AddState(MaehwaStateId.RampageRiseWait, rampageRiseWait);
             StateMachine.AddState(MaehwaStateId.RampageBeforeNoticeWait, rampageBeforeNoticeWait);
             StateMachine.AddState(MaehwaStateId.RampageBlink, rampageBlink);
             StateMachine.AddState(MaehwaStateId.RampageNotice, rampageNotice);
 
-            StateMachine.AddTransition(MaehwaStateId.RampageStart, MaehwaStateId.RampageRise, _ => true);
-            StateMachine.AddTransition(MaehwaStateId.RampageRise, MaehwaStateId.RampageRiseWait, _ => rampageRise.IsFinished);
+            StateMachine.AddTransition(MaehwaStateId.RampageStart, MaehwaStateId.RampageRiseWait, _ => rampageStart.IsFinished);
             StateMachine.AddTransition(MaehwaStateId.RampageRiseWait, MaehwaStateId.RampageBeforeNoticeWait, _ => rampageRiseWait.IsFinished);
             StateMachine.AddTransition(MaehwaStateId.RampageBeforeNoticeWait, MaehwaStateId.RampageNotice, _ => rampageBeforeNoticeWait.IsFinished);
-            StateMachine.AddTransition(MaehwaStateId.RampageNotice, MaehwaStateId.DownAirWait, _ => true);
+            StateMachine.AddTransition(MaehwaStateId.RampageNotice, MaehwaStateId.RampageBlink, _ => rampageNotice.IsFinished);
+            StateMachine.AddTransition(MaehwaStateId.RampageBlink, MaehwaStateId.DownGetAccel, _ => true);
 
             // === Down ===
-            var downStart = new RelativeTeleport<MaehwaStateId>(MaehwaStateId.DownStart, new Vector2(0, 0f), Context.PlayerTransform, fixY:7f);
+            var downStart = new RelativeTeleport<MaehwaStateId>(MaehwaStateId.DownStart, new Vector2(0, 0f), Context.PlayerTransform, fixY:s.downTeleportYPos);
             var downAirWait = new WaitState<MaehwaStateId>(MaehwaStateId.DownAirWait, s.downAirWaitTime, true);
             var downGetAccel = new MoveByVelocity<MaehwaStateId>(MaehwaStateId.DownGetAccel, Vector2.down, s.downAccel, s.downAccelTime, 0f);
             var downSmashWait = new WaitState<MaehwaStateId>(MaehwaStateId.DownSmashWait, s.downAfterSmashTime, false);
@@ -235,16 +236,16 @@ namespace _Project.Features.Maehwa.Scripts
             StateMachine.AddTransition(MaehwaStateId.DownStart, MaehwaStateId.DownAirWait, _ => true);
             StateMachine.AddTransition(MaehwaStateId.DownAirWait, MaehwaStateId.DownGetAccel, _ => downAirWait.IsFinished);
             StateMachine.AddTransition(MaehwaStateId.DownGetAccel, MaehwaStateId.DownSmashWait, ctx => ctx.IsOnPlatform());
-            StateMachine.AddTransition(MaehwaStateId.DownGetAccel, MaehwaStateId.DownSmashRampageWait, ctx => ctx.IsOnPlatform() && ctx.IsRampageDownSmash);
+            StateMachine.AddTransition(MaehwaStateId.DownGetAccel, MaehwaStateId.DownSmashRampageWait, ctx => ctx.IsOnPlatform() && ctx.IsRampageDownSmash, 1);
             StateMachine.AddTransition(MaehwaStateId.DownSmashWait, MaehwaStateId.EndAttack, _ => downSmashWait.IsFinished);
             StateMachine.AddTransition(MaehwaStateId.DownSmashRampageWait, MaehwaStateId.EndAttack, _ => downSmashRampageWait.IsFinished);
 
             // Select-Attack 에서 패턴 분기
-            // StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.ComboStart, _ => true);
-            // StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.BodyStart, _ => true);
-            // StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.HorizonStart, _ => true);
+            StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.ComboStart, _ => true);
+            StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.BodyStart, _ => true);
+            StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.HorizonStart, _ => true);
             StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.RampageStart, _ => true);
-            // StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.DownStart, _ => true);
+            StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.DownStart, _ => true);
         }
     }
 }
