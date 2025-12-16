@@ -11,7 +11,7 @@ namespace _Project.Features.Maehwa.Scripts
     /// MaeHwa 전용 공격/히트박스 관리 컨트롤러.
     /// BossAttackController를 상속하여, 공격 프리팹 및 히트 범위를 관리한다.
     /// </summary>
-    public class MaehwaAttack : BossAttack
+    public class MaehwaAttack : BossAttack<MaehwaStateId>
     {
         [Header("Maehwa Attack Objects")]        
         [SerializeField] private FixedDangerRange horizonAttackRange;

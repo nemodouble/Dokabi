@@ -1,20 +1,16 @@
+using _Project.Features.Battle.Scripts;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Project.Features.Boss.Scripts
 {
-    public class BossAttack : MonoBehaviour
+    public class BossAttack<TStateId> : MonoBehaviour
     {
-        private Component boss; // BossController<TStateId> 대응
+        [SerializeField] private BossContext<TStateId> context; 
 
         public void Initialize()
         {
-            if (boss == null)
-                boss = GetComponent(typeof(BossController<,>));
-
-            if (boss != null && boss.TryGetComponent(out BossContext<object> ctx))
-            {
-                ctx.OnDead += OnDead;
-            }
+            context = GetComponent<BossContext<TStateId>>();
         }
 
         private void OnDead()

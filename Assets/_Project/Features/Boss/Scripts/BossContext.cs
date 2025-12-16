@@ -11,8 +11,8 @@ namespace _Project.Features.Boss.Scripts
         public Transform PlayerTransform { get; private set; }
         
         public BossAnimation Anim { get; private set; }
-        public BossAttack Attack { get; private set; }
-        public BossEffect Effect { get; private set; }
+        public BossAttack<TStateId> Attack { get; private set; }
+        public BossEffect<TStateId> Effect { get; private set; }
         public BossMovement Movement { get; private set; }
         public BossSound Sound { get; private set; }
         public BossStateMachine<TStateId, BossContext<TStateId>> StateMachine { get; private set; }
@@ -47,10 +47,10 @@ namespace _Project.Features.Boss.Scripts
         public void BindModules(
             BossHealth health,
             BossMovement movement,
-            BossAttack attack,
+            BossAttack<TStateId> attack,
             BossAnimation anim,
             BossSound sound,
-            BossEffect effect)
+            BossEffect<TStateId> effect)
         {
             Health = health;
             Movement = movement;

@@ -11,8 +11,8 @@ namespace _Project.Features.Boss.Scripts
     {
         [Header("Boss Components")]
         [SerializeField] private BossAnimation bossAnimation;
-        [FormerlySerializedAs("attackController")] [SerializeField] private BossAttack attack;
-        [FormerlySerializedAs("effectPlayer")] [SerializeField] private BossEffect effect;
+        [FormerlySerializedAs("attackController")] [SerializeField] private BossAttack<TStateId> attack;
+        [FormerlySerializedAs("effectPlayer")] [SerializeField] private BossEffect<TStateId> effect;
         [SerializeField] private BossMovement movement;
         [FormerlySerializedAs("soundPlayer")] [SerializeField] private BossSound sound;
         [SerializeField] private BossStateMachine<TStateId, TContext> stateMachine;
@@ -39,8 +39,8 @@ namespace _Project.Features.Boss.Scripts
             CacheOrGetComponent(ref context);
 
             // 의존 관계 연결 및 세부 초기화
-            context?.Initialize();
             context?.BindModules(health, movement, attack, bossAnimation, sound, effect);
+            context?.Initialize();
             health?.Initialize();
             bossAnimation?.Initialize();
             sound?.Initialize();

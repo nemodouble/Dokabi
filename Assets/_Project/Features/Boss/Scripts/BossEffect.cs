@@ -5,10 +5,10 @@ using UnityEngine.Serialization;
 
 namespace _Project.Features.Boss.Scripts
 {
-    public class BossEffect : MonoBehaviour
+    public class BossEffect<TStateID> : MonoBehaviour
     {
         [Header("Common Boss Effect References")]
-        [SerializeField] protected Component boss; // BossController<TStateId>
+        [SerializeField] protected BossContext<TStateID> context;
         [SerializeField] protected ParticleSystem hitPS;
         [SerializeField] protected ParticleSystem deadPS;
         
@@ -20,17 +20,9 @@ namespace _Project.Features.Boss.Scripts
 
         public void Initialize()
         {
-            if (boss == null)
-                boss = GetComponent(typeof(BossController<,>));
-
-            if (boss == null)
-                return;
-
-            if (boss.TryGetComponent(out BossContext<object> ctx))
-            {
-                ctx.OnHit += OnHit;
-                ctx.OnDead += OnDead;
-            }
+            context = GetComponent<BossContext<TStateID>>();
+            context.OnHit += OnHit;
+            context.OnDead += OnDead;
         }
         
         public void OnHit(int damage, Vector2 attackDir, float knockbackForce)
@@ -51,7 +43,6 @@ namespace _Project.Features.Boss.Scripts
         // 피격 시 Flash용 헬퍼
         protected virtual void FlashOnHit()
         {
-
             if (flashTargets != null)
             {
                 foreach (var sv in flashTargets)

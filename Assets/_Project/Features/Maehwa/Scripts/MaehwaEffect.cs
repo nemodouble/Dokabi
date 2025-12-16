@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace _Project.Features.Maehwa.Scripts
 {
-    public class MaehwaEffect : BossEffect
+    public class MaehwaEffect : BossEffect<MaehwaStateId>
     {
         [SerializeField] private MaehwaContext maehwaContext;
         [Header("Particles")] 

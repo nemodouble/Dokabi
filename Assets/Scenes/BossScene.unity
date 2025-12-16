@@ -22242,7 +22242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74fc7aaf52414106b10763392487086e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boss: {fileID: 960777434}
+  context: {fileID: 0}
   hitPS: {fileID: 359598316}
   deadPS: {fileID: 1578761850}
   flashTargets:
@@ -22284,6 +22284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b151c3c3e9d3455aa9269da1a799dd6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  context: {fileID: 0}
   horizonAttackRange: {fileID: 33413807}
   bodyStrongAttack: {fileID: 1779034341}
   comboNormalAttack: {fileID: 887068777}
