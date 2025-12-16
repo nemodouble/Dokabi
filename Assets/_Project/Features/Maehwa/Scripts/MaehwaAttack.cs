@@ -72,7 +72,7 @@ namespace _Project.Features.Maehwa.Scripts
         {
             bool isRight = dir == BossContext<MaehwaStateId>.LookingDir.Right;
             
-            FlipLocalScaleX(horizonAttackRange.transform, isRight);
+            FlipLocalScaleX(horizonAttackRange.transform, !isRight);
             FlipLocalScaleX(bodyStrongAttack.transform, isRight);
             FlipLocalScaleX(comboNormalAttack.transform, isRight);
             FlipLocalScaleX(comboStingAttack.transform, isRight);

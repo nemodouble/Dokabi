@@ -15,6 +15,7 @@ public class MaeHwaStats : ScriptableObject
     public float horizonBeforeWaitTime = 1f;
     public float horizonAfterWaitTime = 1f;
     public float horizonStepSpeed = 20f;
+    public float horizonTeleportWaitTime = 0.2f;
 
     [Header("바디태클")]
     public float bodyDashSpeed = 20f;
@@ -48,6 +49,7 @@ public class MaeHwaStats : ScriptableObject
     public float rampageAttackTime = 0.2f;
     public float rampageAttackAfterWaitTime = 0.3f;
     public float rampageStaggerTime = 3f;
+
 
     [Header("다운스매싱")]
     public float downAirWaitTime = 0.5f;

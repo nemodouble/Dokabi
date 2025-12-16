@@ -52,7 +52,7 @@ namespace _Project.Features.Maehwa.Scripts
                 // 첫 진입(초기 시작): prevPhase == ""
                 case MaehwaStateId.StartWait:
                 // 한 사이클 끝나고 다음 행동 고르기 직전
-                case MaehwaStateId.EndPhase:
+                case MaehwaStateId.EndAttack:
                 // 공격 패턴 시작 직전(공격 후보 뽑는 순간)
                 case MaehwaStateId.SelectAttack:
                 // 콤보 중간에도 다시 플레이어를 바라보는 지점
@@ -77,7 +77,7 @@ namespace _Project.Features.Maehwa.Scripts
 
                 // 대시류 시작 (바디태클/콤보 3타/난무 등 필요 시 확장)
                 case MaehwaStateId.BodyDash:
-                case MaehwaStateId.HorizonStep:
+                case MaehwaStateId.HorizonRun:
                     PlayParticle(dashPS);
                     break;
 
@@ -109,7 +109,7 @@ namespace _Project.Features.Maehwa.Scripts
 
                 // 대시 종료
                 case MaehwaStateId.BodyDash:
-                case MaehwaStateId.HorizonStep:
+                case MaehwaStateId.HorizonRun:
                     StopParticle(dashPS);
                     break;
 

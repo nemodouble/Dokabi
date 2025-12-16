@@ -166,6 +166,11 @@ namespace _Project.Features.Boss.Scripts
             SetLookingDir(PlayerTransform.position.x < transform.position.x ? LookingDir.Left : LookingDir.Right);
         }
 
+        public virtual void SetLookingDir(Vector2 dir)
+        {
+            SetLookingDir(dir.x >= 0 ? LookingDir.Right : LookingDir.Left);
+        }
+
         public virtual void SetLookingDir(LookingDir dir)
         {
             _lookingDir = dir;

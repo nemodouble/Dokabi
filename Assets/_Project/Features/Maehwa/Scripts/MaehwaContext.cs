@@ -9,6 +9,8 @@ namespace _Project.Features.Maehwa.Scripts
     public class MaehwaContext : BossContext<MaehwaStateId>
     {
         [SerializeField] public MaeHwaStats stats;
+        [SerializeField] public Transform horizonLeftPosition;
+        [SerializeField] public Transform horizonRightPosition;
 
         public ComboSelectDash.DashDir SelectedDashDir { get; set; } = ComboSelectDash.DashDir.None;
 

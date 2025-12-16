@@ -21860,6 +21860,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats: {fileID: 11400000, guid: 943e58c7ae72450449df510b408df2c5, type: 2}
+  horizonLeftPosition: {fileID: 1552648733}
+  horizonRightPosition: {fileID: 365599272}
 --- !u!114 &960777441
 MonoBehaviour:
   m_ObjectHideFlags: 0

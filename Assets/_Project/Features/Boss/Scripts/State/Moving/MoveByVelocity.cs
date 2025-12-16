@@ -70,12 +70,16 @@ namespace _Project.Features.Boss.Scripts.State.Moving
             {
                 var current = (Vector2)ctx.transform.position;
                 var toTarget = (Vector2)targetPos.Value - current;
-                if (toTarget.magnitude <= 0.1f)
+
+                // 목표 지점에 매우 가깝거나, 이미 살짝 지나친 경우
+                if (toTarget.magnitude <= 0.1f || Vector2.Dot(toTarget, _moveDir) <= 0f)
                 {
+                    ctx.Transform.position = targetPos.Value; // 위치를 정확히 목표 지점으로 스냅
                     IsFinished = true;
                     ctx.StopMove();
                     return;
                 }
+
                 _moveDir = toTarget.normalized;
             }
 
@@ -85,6 +89,7 @@ namespace _Project.Features.Boss.Scripts.State.Moving
         public override void OnExit(BossContext<TStateId> ctx)
         {
             ctx.StopMove();
+            ctx.NotifyStateExit(ID);
         }
 
         public override void HandleEvent(BossContext<TStateId> ctx, object evt) { }
