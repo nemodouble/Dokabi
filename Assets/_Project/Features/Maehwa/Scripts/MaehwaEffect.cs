@@ -87,7 +87,7 @@ namespace _Project.Features.Maehwa.Scripts
                     break;
 
                 // 텔레포트 시작
-                case MaehwaStateId.DownBlink:
+                case MaehwaStateId.DownStart:
                     PlayParticle(teleportPS);
                     break;
                 // 다운 가속 시작

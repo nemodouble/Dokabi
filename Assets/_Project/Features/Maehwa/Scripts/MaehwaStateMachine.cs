@@ -196,7 +196,7 @@ namespace _Project.Features.Maehwa.Scripts
             var rampageRise = new MoveLikeJump<MaehwaStateId>(MaehwaStateId.RampageRise, s.rampageRiseSpeed, s.rampageRiseTime);
             var rampageRiseWait = new WaitState<MaehwaStateId>(MaehwaStateId.RampageRiseWait, s.rampageRiseWaitTime, true);
             var rampageBeforeNoticeWait = new WaitState<MaehwaStateId>(MaehwaStateId.RampageBeforeNoticeWait, s.rampageBeforeNoticeWaitTime, true);
-            var rampageBlink = new Teleport<MaehwaStateId>(MaehwaStateId.DownBlink, true, new Vector2(0, 7f), Context.PlayerTransform);
+            var rampageBlink = new RelativeTeleport<MaehwaStateId>(MaehwaStateId.RampageBlink, new Vector2(0, 7f), Context.PlayerTransform, fixY:7f);
             var rampageNotice = new RampageAttackState(MaehwaStateId.RampageNotice, s.rampageNoticeInterval, s.rampageBeforeAttackTime, s.rampageAttackTime, s.rampageAttackAfterWaitTime);
 
             var rampageStart = new EmptyState<MaehwaStateId>(MaehwaStateId.RampageStart);
@@ -214,22 +214,19 @@ namespace _Project.Features.Maehwa.Scripts
             StateMachine.AddTransition(MaehwaStateId.RampageNotice, MaehwaStateId.DownAirWait, _ => true);
 
             // === Down ===
-            var downBlink = new Teleport<MaehwaStateId>(MaehwaStateId.DownBlink, true, new Vector2(0, 7f), Context.PlayerTransform);
+            var downStart = new RelativeTeleport<MaehwaStateId>(MaehwaStateId.DownStart, new Vector2(0, 0f), Context.PlayerTransform, fixY:7f);
             var downAirWait = new WaitState<MaehwaStateId>(MaehwaStateId.DownAirWait, s.downAirWaitTime, true);
             var downGetAccel = new MoveByVelocity<MaehwaStateId>(MaehwaStateId.DownGetAccel, Vector2.down, s.downAccel, s.downAccelTime, 0f);
             var downSmashWait = new WaitState<MaehwaStateId>(MaehwaStateId.DownSmashWait, s.downAfterSmashTime, false);
             var downSmashRampageWait = new WaitState<MaehwaStateId>(MaehwaStateId.DownSmashRampageWait, s.rampageStaggerTime, false);
 
-            var downStart = new EmptyState<MaehwaStateId>(MaehwaStateId.DownStart);
             StateMachine.AddState(MaehwaStateId.DownStart, downStart);
-            StateMachine.AddState(MaehwaStateId.DownBlink, downBlink);
             StateMachine.AddState(MaehwaStateId.DownAirWait, downAirWait);
             StateMachine.AddState(MaehwaStateId.DownGetAccel, downGetAccel);
             StateMachine.AddState(MaehwaStateId.DownSmashWait, downSmashWait);
             StateMachine.AddState(MaehwaStateId.DownSmashRampageWait, downSmashRampageWait);
 
-            StateMachine.AddTransition(MaehwaStateId.DownStart, MaehwaStateId.DownBlink, _ => true);
-            StateMachine.AddTransition(MaehwaStateId.DownBlink, MaehwaStateId.DownAirWait, _ => true);
+            StateMachine.AddTransition(MaehwaStateId.DownStart, MaehwaStateId.DownAirWait, _ => true);
             StateMachine.AddTransition(MaehwaStateId.DownAirWait, MaehwaStateId.DownGetAccel, _ => downAirWait.IsFinished);
             StateMachine.AddTransition(MaehwaStateId.DownGetAccel, MaehwaStateId.DownSmashWait, ctx => ctx.IsOnPlatform());
             StateMachine.AddTransition(MaehwaStateId.DownSmashWait, MaehwaStateId.EndAttack, _ => true);
@@ -238,9 +235,9 @@ namespace _Project.Features.Maehwa.Scripts
             // Select-Attack 에서 패턴 분기
             // StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.ComboStart, _ => true);
             // StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.BodyStart, _ => true);
-            StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.HorizonStart, _ => true);
+            // StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.HorizonStart, _ => true);
             // StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.RampageStart, _ => true);
-            // StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.DownStart, _ => true);
+            StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.DownStart, _ => true);
         }
     }
 }

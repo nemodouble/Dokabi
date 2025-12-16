@@ -2,24 +2,34 @@ using UnityEngine;
 
 namespace _Project.Features.Boss.Scripts.State.Moving
 {
-    public class Teleport<TStateId> : BossState<TStateId, BossContext<TStateId>>
+    public class RelativeTeleport<TStateId> : BossState<TStateId, BossContext<TStateId>>
     {
-        private bool _isRelative = false;
         private Transform _targetTransform;
-        private Vector3 _offset;
+        private readonly Vector3 _offset;
+        private readonly float? _fixX;
+        private readonly float? _fixY;
         
-        public Teleport(TStateId id, bool isRelative, Vector3 offset, Transform targetTransform = null) : base(id)
+        public RelativeTeleport(TStateId id,
+            Vector3 offset,
+            Transform targetTransform = null,
+            float? fixX = null,
+            float? fixY = null ) : base(id)
         {
-            _isRelative = isRelative;
             _offset = offset;
             _targetTransform = targetTransform;
+            _fixX = fixX;
+            _fixY = fixY;
         }
 
         public override void OnEnter(BossContext<TStateId> ctx)
         {
             ctx.NotifyStateEnter(ID);
             if (_targetTransform == null) _targetTransform = ctx.transform;
-            ctx.Transform.position = _targetTransform.position + _offset;
+            var newPos = _targetTransform.position + _offset;
+            if (_fixX.HasValue) newPos.x = _fixX.Value;
+            if (_fixY.HasValue) newPos.y = _fixY.Value;
+            ctx.transform.position = newPos;
+            IsFinished = true;
         }
 
         public override void OnExit(BossContext<TStateId> ctx)

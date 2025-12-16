@@ -40,7 +40,6 @@ namespace _Project.Features.Maehwa.Scripts
         RampageBlink,
         RampageNotice,
         DownStart,
-        DownBlink,
         DownAirWait,
         DownGetAccel,
         DownSmashWait,

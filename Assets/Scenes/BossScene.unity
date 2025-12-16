@@ -21846,7 +21846,7 @@ MonoBehaviour:
   dashPS: {fileID: 1680493956}
   rampagePS: {fileID: 1747231815}
   teleportPS: {fileID: 1183281387}
-  downEffect: {fileID: 0}
+  downEffect: {fileID: 1352087216}
 --- !u!114 &960777440
 MonoBehaviour:
   m_ObjectHideFlags: 0
