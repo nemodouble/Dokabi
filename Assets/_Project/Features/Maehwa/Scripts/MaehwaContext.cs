@@ -14,6 +14,8 @@ namespace _Project.Features.Maehwa.Scripts
 
         public ComboSelectDash.DashDir SelectedDashDir { get; set; } = ComboSelectDash.DashDir.None;
 
+        public bool IsRampageDownSmash { get; set; } = false;
+
         public override void SetLookingDir(LookingDir dir)
         {
             base.SetLookingDir(dir);

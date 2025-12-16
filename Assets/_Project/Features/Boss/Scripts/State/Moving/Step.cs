@@ -6,20 +6,20 @@ namespace _Project.Features.Boss.Scripts.State.Moving
 {
     public class Step<TStateId> : BossState<TStateId, BossContext<TStateId>>
     {
-        private readonly Vector2 _relativePos;
+        protected readonly Vector2 RelativePos;
         private readonly float _maxSpeed;
         private readonly float _accel;
         private readonly float _decelLengthRate;
 
-        private Vector2 _startingPos;
-        private Vector2 _targetPos;
+        protected Vector2 StartingPos;
+        protected Vector2 TargetPos;
 
         private Vector2 _moveDir;
         private float _currentSpeed;
 
         public Step(TStateId id, Vector2 relativePos, float maxSpeed, float accel, float decelLengthRate) : base(id)
         {
-            _relativePos = relativePos;
+            RelativePos = relativePos;
             _maxSpeed = maxSpeed;
             _accel = accel;
             _decelLengthRate = decelLengthRate;
@@ -32,9 +32,9 @@ namespace _Project.Features.Boss.Scripts.State.Moving
             // 상태 진입 알림 (연출은 BossContext를 구독한 레이어가 담당)
             ctx.NotifyStateEnter(ID);
 
-            _startingPos = ctx.transform.position;
-            _targetPos = _startingPos + _relativePos;
-            _moveDir = (_targetPos - _startingPos).normalized;
+            StartingPos = ctx.transform.position;
+            TargetPos = StartingPos + RelativePos;
+            _moveDir = (TargetPos - StartingPos).normalized;
             _currentSpeed = 0f;
         }
 
@@ -45,7 +45,7 @@ namespace _Project.Features.Boss.Scripts.State.Moving
 
             var bossTransform = ctx.transform;
             var bossPos = (Vector2)bossTransform.position;
-            var toTarget = _targetPos - bossPos;
+            var toTarget = TargetPos - bossPos;
             var leftLength = toTarget.magnitude;
 
             // 목표 지점 도달
@@ -68,9 +68,9 @@ namespace _Project.Features.Boss.Scripts.State.Moving
             _moveDir = toTarget.normalized;
 
             // 감속 구간이면 남은 거리 비율에 따라 속도 줄이기
-            if (leftLength < _relativePos.magnitude * _decelLengthRate)
+            if (leftLength < RelativePos.magnitude * _decelLengthRate)
             {
-                _currentSpeed = _maxSpeed * leftLength / _relativePos.magnitude;
+                _currentSpeed = _maxSpeed * leftLength / RelativePos.magnitude;
                 if (_currentSpeed <= 0.01f)
                 {
                     IsFinished = true;

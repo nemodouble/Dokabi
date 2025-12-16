@@ -52,7 +52,13 @@ namespace _Project.Features.Maehwa.Scripts
             var selectStep = new EmptyState<MaehwaStateId>(MaehwaStateId.SelectStep);
             StateMachine.AddState(MaehwaStateId.SelectStep, selectStep);
 
-            var frontStep = new Step<MaehwaStateId>(MaehwaStateId.FrontStep, Vector2.right * 3f, 20f, 10, 0.3f);
+            var frontStep = new KeepDistanceXStep<MaehwaStateId>(MaehwaStateId.FrontStep,
+                Vector2.right * 3f,
+                20f,
+                10,
+                0.3f,
+                Context.PlayerTransform,
+                10f);
             var backStep = new Step<MaehwaStateId>(MaehwaStateId.BackStep, Vector2.right * 3f, 20f, 10, 0.3f);
             StateMachine.AddState(MaehwaStateId.FrontStep, frontStep);
             StateMachine.AddState(MaehwaStateId.BackStep, backStep);
@@ -229,15 +235,16 @@ namespace _Project.Features.Maehwa.Scripts
             StateMachine.AddTransition(MaehwaStateId.DownStart, MaehwaStateId.DownAirWait, _ => true);
             StateMachine.AddTransition(MaehwaStateId.DownAirWait, MaehwaStateId.DownGetAccel, _ => downAirWait.IsFinished);
             StateMachine.AddTransition(MaehwaStateId.DownGetAccel, MaehwaStateId.DownSmashWait, ctx => ctx.IsOnPlatform());
-            StateMachine.AddTransition(MaehwaStateId.DownSmashWait, MaehwaStateId.EndAttack, _ => true);
-            StateMachine.AddTransition(MaehwaStateId.DownSmashRampageWait, MaehwaStateId.EndAttack, _ => true);
+            StateMachine.AddTransition(MaehwaStateId.DownGetAccel, MaehwaStateId.DownSmashRampageWait, ctx => ctx.IsOnPlatform() && ctx.IsRampageDownSmash);
+            StateMachine.AddTransition(MaehwaStateId.DownSmashWait, MaehwaStateId.EndAttack, _ => downSmashWait.IsFinished);
+            StateMachine.AddTransition(MaehwaStateId.DownSmashRampageWait, MaehwaStateId.EndAttack, _ => downSmashRampageWait.IsFinished);
 
             // Select-Attack 에서 패턴 분기
             // StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.ComboStart, _ => true);
             // StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.BodyStart, _ => true);
             // StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.HorizonStart, _ => true);
-            // StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.RampageStart, _ => true);
-            StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.DownStart, _ => true);
+            StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.RampageStart, _ => true);
+            // StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.DownStart, _ => true);
         }
     }
 }
