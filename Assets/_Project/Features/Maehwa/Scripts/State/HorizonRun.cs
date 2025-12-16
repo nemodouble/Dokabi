@@ -59,9 +59,9 @@ namespace _Project.Features.Maehwa.Scripts.State
             var runLeft = playerPos.x > bossPos.x;
             var runTarget = runLeft ? leftDest : rightDest;
             ctx.IsLeftHorizonRunUsed = runLeft;
-            ctx.SetLookingDir(runLeft ? Vector2.left : Vector2.right );
 
             _moveDir = (runTarget - bossPos).normalized;
+            ctx.SetLookingDir(_moveDir.x < 0 ? Vector2.left : Vector2.right );
             _targetPos = runTarget;
         }
 
