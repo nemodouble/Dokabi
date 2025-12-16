@@ -27,10 +27,10 @@ namespace _Project.Features.Boss.Scripts
         
         public enum LookingDir
         {
-            RightDir = 1,
-            LeftDir = -1
+            Right = 1,
+            Left = -1
         }
-        private LookingDir _lookingDir = LookingDir.LeftDir;
+        protected LookingDir _lookingDir = LookingDir.Left;
 
         public virtual void Initialize()
         {
@@ -163,13 +163,13 @@ namespace _Project.Features.Boss.Scripts
         
         public void SetToLookPlayer()
         {
-            SetLookingDir(PlayerTransform.position.x < transform.position.x ? LookingDir.LeftDir : LookingDir.RightDir);
+            SetLookingDir(PlayerTransform.position.x < transform.position.x ? LookingDir.Left : LookingDir.Right);
         }
 
         public virtual void SetLookingDir(LookingDir dir)
         {
             _lookingDir = dir;
-            Effect.SetLookDirection(dir == LookingDir.RightDir);
+            Effect.SetLookDirection(dir == LookingDir.Right);
         }
     }
 }

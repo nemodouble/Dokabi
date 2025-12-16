@@ -21,6 +21,7 @@ public class MaeHwaStats : ScriptableObject
     public float bodyDashTime = 0.3f;
     public float bodyAfterDashWaitTime = 1f;
     public float bodyAfterAttackWaitTime = 1f;
+    public float bodyDashStopBeforeObstacleDistance = 3f;
 
     [Header("콤보")]
     public float comboFirstBeforeWaitTime = 0.4f;
@@ -56,5 +57,5 @@ public class MaeHwaStats : ScriptableObject
 
     [Header("기타")]
     public float betweenPhaseWaitTime = 1f;
-    
+
 }

@@ -108,24 +108,23 @@ namespace _Project.Features.Maehwa.Scripts
             StateMachine.AddTransition(MaehwaStateId.EndPhase, MaehwaStateId.SelectPattern, _ => endPhase.IsFinished);
 
             // === Body ===
+            var bodyStart = new EmptyState<MaehwaStateId>(MaehwaStateId.BodyStart);
+            var bodyDash = new BodyDash(MaehwaStateId.BodyDash, s.bodyDashSpeed, s.bodyDashTime);
             var bodyAfterDashWait = new WaitState<MaehwaStateId>(MaehwaStateId.BodyAfterDashWait, s.bodyAfterDashWaitTime, false);
-            var bodyLeftDash = new MoveByVelocity<MaehwaStateId>(MaehwaStateId.BodyDash, Vector2.left, s.bodyDashSpeed, s.bodyDashTime, 0f);
-            var bodyRightDash = new MoveByVelocity<MaehwaStateId>(MaehwaStateId.BodyDash, Vector2.right, s.bodyDashSpeed, s.bodyDashTime, 0f);
             var bodyAttack = new AttackFixedRange<MaehwaStateId>(MaehwaStateId.BodyAttack, atk.BodyStrongAttack);
             var bodyAfterAttackWait = new WaitState<MaehwaStateId>(MaehwaStateId.BodyAfterAttackWait, s.bodyAfterAttackWaitTime, false);
 
-            var bodyStart = new EmptyState<MaehwaStateId>(MaehwaStateId.BodyStart);
             StateMachine.AddState(MaehwaStateId.BodyStart, bodyStart);
+            StateMachine.AddState(MaehwaStateId.BodyDash, bodyDash);
             StateMachine.AddState(MaehwaStateId.BodyAfterDashWait, bodyAfterDashWait);
-            StateMachine.AddState(MaehwaStateId.BodyDash, bodyLeftDash);
             StateMachine.AddState(MaehwaStateId.BodyAttack, bodyAttack);
             StateMachine.AddState(MaehwaStateId.BodyAfterAttackWait, bodyAfterAttackWait);
 
             StateMachine.AddTransition(MaehwaStateId.BodyStart, MaehwaStateId.BodyDash, _ => true);
-            StateMachine.AddTransition(MaehwaStateId.BodyDash, MaehwaStateId.BodyAfterDashWait, _ => bodyLeftDash.IsFinished || bodyRightDash.IsFinished);
+            StateMachine.AddTransition(MaehwaStateId.BodyDash, MaehwaStateId.BodyAfterDashWait, _ => bodyDash.IsFinished);
             StateMachine.AddTransition(MaehwaStateId.BodyAfterDashWait, MaehwaStateId.BodyAttack, _ => bodyAfterDashWait.IsFinished);
             StateMachine.AddTransition(MaehwaStateId.BodyAttack, MaehwaStateId.BodyAfterAttackWait, _ => true);
-            StateMachine.AddTransition(MaehwaStateId.BodyAfterAttackWait, MaehwaStateId.EndPhase, _ => true);
+            StateMachine.AddTransition(MaehwaStateId.BodyAfterAttackWait, MaehwaStateId.EndPhase, _ => bodyAfterAttackWait.IsFinished);
 
             // === Combo ===
             var comboStart = new EmptyState<MaehwaStateId>(MaehwaStateId.ComboStart);
@@ -168,26 +167,21 @@ namespace _Project.Features.Maehwa.Scripts
             StateMachine.AddState(MaehwaStateId.ComboFirstBeforeWait, comboFirstBeforeWait);
             StateMachine.AddState(MaehwaStateId.ComboFirstAttackColliderActive, comboFirstAttack);
             StateMachine.AddState(MaehwaStateId.ComboFirstAfterWait, comboFirstAfterWait);
-            
             StateMachine.AddState(MaehwaStateId.ComboSecondBeforeWait, comboSecondBeforeWait);
             StateMachine.AddState(MaehwaStateId.ComboSecondAttackColliderActive, comboSecondAttack);
             StateMachine.AddState(MaehwaStateId.ComboSecondAfterWait, comboSecondAfterWait);
-            
             StateMachine.AddState(MaehwaStateId.ComboThirdBeforeWait, comboThirdBeforeWait);
             StateMachine.AddState(MaehwaStateId.ComboThirdAttackColliderActive, comboThirdAttack);
             StateMachine.AddState(MaehwaStateId.ComboAfterWait, comboThirdAfterWait);
 
             StateMachine.AddTransition(MaehwaStateId.ComboStart, MaehwaStateId.ComboFirstBeforeWait, _ => true);
-            
             StateMachine.AddTransition(MaehwaStateId.ComboFirstBeforeWait, MaehwaStateId.ComboFirstAttackColliderActive, _ => comboFirstBeforeWait.IsFinished);
             StateMachine.AddTransition(MaehwaStateId.ComboFirstAttackColliderActive, MaehwaStateId.ComboFirstAfterWait, _ => comboFirstAttack.IsFinished);
             StateMachine.AddTransition(MaehwaStateId.ComboFirstAfterWait, MaehwaStateId.ComboSecondBeforeWait, ctx => ctx.IsInDistance(0, s.comboSkipSecondDistance) && comboFirstAfterWait.IsFinished);
             StateMachine.AddTransition(MaehwaStateId.ComboFirstAfterWait, MaehwaStateId.ComboThirdBeforeWait, ctx => !ctx.IsInDistance(0, s.comboSkipSecondDistance) && comboFirstAfterWait.IsFinished);
-            
             StateMachine.AddTransition(MaehwaStateId.ComboSecondBeforeWait, MaehwaStateId.ComboSecondAttackColliderActive, _ => comboSecondBeforeWait.IsFinished);
             StateMachine.AddTransition(MaehwaStateId.ComboSecondAttackColliderActive, MaehwaStateId.ComboSecondAfterWait, _ => comboSecondAttack.IsFinished);
             StateMachine.AddTransition(MaehwaStateId.ComboSecondAfterWait, MaehwaStateId.ComboThirdBeforeWait, _ => comboSecondAfterWait.IsFinished);
-            
             StateMachine.AddTransition(MaehwaStateId.ComboThirdBeforeWait, MaehwaStateId.ComboThirdAttackColliderActive, _ => comboThirdBeforeWait.IsFinished);
             StateMachine.AddTransition(MaehwaStateId.ComboThirdAttackColliderActive, MaehwaStateId.ComboAfterWait, _ => comboThirdAttack.IsFinished);
             StateMachine.AddTransition(MaehwaStateId.ComboAfterWait, MaehwaStateId.EndPhase, _ => comboThirdAfterWait.IsFinished);
@@ -236,8 +230,8 @@ namespace _Project.Features.Maehwa.Scripts
             StateMachine.AddTransition(MaehwaStateId.DownSmashRampageWait, MaehwaStateId.EndPhase, _ => true);
 
             // Select-Attack 에서 패턴 분기
-            StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.ComboStart, _ => true);
-            // StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.BodyStart, _ => true);
+            // StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.ComboStart, _ => true);
+            StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.BodyStart, _ => true);
             // StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.HorizonStart, _ => true);
             // StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.RampageStart, _ => true);
             // StateMachine.AddTransition(MaehwaStateId.SelectAttack, MaehwaStateId.DownStart, _ => true);

@@ -2,6 +2,7 @@ using System;
 using _Project.Features.Battle.Scripts;
 using _Project.Features.Boss.Scripts;
 using Boss.MaeHwa;
+using Mechanics.System;
 using UnityEngine;
 
 namespace _Project.Features.Maehwa.Scripts
@@ -18,9 +19,9 @@ namespace _Project.Features.Maehwa.Scripts
         [SerializeField] private FixedDangerRange comboNormalAttack;
         [SerializeField] private FixedDangerRange comboStingAttack;
         [SerializeField] private GameObject rampageRangePrefab;
-        [SerializeField] private GameObject bodyWall;
-        [SerializeField] private GameObject bossDangerRange;
-
+        [SerializeField] private GrabRange grabRange;
+        [SerializeField] private EnemyBody enemyBody;
+        
         /// <summary>
         /// 가로베기 공격 범위
         /// </summary>
@@ -38,13 +39,13 @@ namespace _Project.Features.Maehwa.Scripts
         /// </summary>
         public FixedDangerRange ComboStingAttack => comboStingAttack;
         /// <summary>
-        /// 바디 월 오브젝트
+        /// 그랩(잡기) 범위
         /// </summary>
-        public GameObject BodyWall => bodyWall;
+        public GrabRange GrabRange => grabRange;
         /// <summary>
-        /// 보스 데인저 범위 오브젝트
+        /// 매화 접촉 데미지 바디
         /// </summary>
-        public GameObject BossDangerRange => bossDangerRange;
+        public EnemyBody EnemyBody => enemyBody;
 
         /// <summary>
         /// Rampage 공격 범위 프리팹 인스턴스 생성 헬퍼
@@ -59,32 +60,23 @@ namespace _Project.Features.Maehwa.Scripts
             return go.GetComponent<MaeHwaRampageRange>();
         }
 
-        /// <summary>
-        /// 바디 월 활성화/비활성화
-        /// </summary>
-        public void SetBodyWallActive(bool active)
+        public void ActiveBodyDash(bool activate)
         {
-            if (bodyWall != null)
-                bodyWall.SetActive(active);
-        }
-
-        /// <summary>
-        /// 보스 데인저 범위 활성화/비활성화
-        /// </summary>
-        public void SetBossDangerRangeActive(bool active)
-        {
-            if (bossDangerRange != null)
-                bossDangerRange.SetActive(active);
+            if (GrabRange != null)
+            {
+                GrabRange.gameObject.SetActive(activate);
+            }
         }
 
         public void SetAttackColliderDir(BossContext<MaehwaStateId>.LookingDir dir)
         {
-            bool isRight = dir == BossContext<MaehwaStateId>.LookingDir.RightDir;
+            bool isRight = dir == BossContext<MaehwaStateId>.LookingDir.Right;
             
             FlipLocalScaleX(horizonAttackRange.transform, isRight);
             FlipLocalScaleX(bodyStrongAttack.transform, isRight);
             FlipLocalScaleX(comboNormalAttack.transform, isRight);
             FlipLocalScaleX(comboStingAttack.transform, isRight);
+            FlipLocalScaleX(grabRange.transform, isRight);
         }
         
         private static void FlipLocalScaleX(Transform target, bool isRight = false)

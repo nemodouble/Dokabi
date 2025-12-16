@@ -67,11 +67,11 @@ namespace _Project.Features.Maehwa.Scripts
 
                 // 걷기 시작: Walk 진입 시 이펙트 시작
                 case MaehwaStateId.WalkLeft:
-                    maehwaContext.SetLookingDir(BossContext<MaehwaStateId>.LookingDir.LeftDir);
+                    maehwaContext.SetLookingDir(BossContext<MaehwaStateId>.LookingDir.Left);
                     PlayParticle(walkPS);
                     break;
                 case MaehwaStateId.WalkRight:
-                    maehwaContext.SetLookingDir(BossContext<MaehwaStateId>.LookingDir.RightDir);
+                    maehwaContext.SetLookingDir(BossContext<MaehwaStateId>.LookingDir.Right);
                     PlayParticle(walkPS);
                     break;
 

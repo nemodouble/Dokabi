@@ -55,5 +55,14 @@ namespace _Project.Features.Maehwa.Scripts
             var distance = Mathf.Abs(transform.position.x - PlayerTransform.position.x);
             return distance >= minDistance && distance <= maxDistance;
         }
+        
+        public bool IsThereSomethingInFront(float range, LayerMask layerMask)
+        {
+            var direction = _lookingDir == LookingDir.Right ? Vector2.right : Vector2.left;
+            var rayOrigin = (Vector2)transform.position + direction * 0.5f; // 보스 앞쪽에서 시작
+            var rayEnd = rayOrigin + direction * range;
+            var hit = Physics2D.Linecast(rayOrigin, rayEnd, layerMask);
+            return hit.collider != null;
+        }
     }
 }

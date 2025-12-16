@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -15,6 +16,8 @@ namespace Character.Player
         private float m_Decelerate = 50;
 
         private const float WalkSpeed = 8.6f;
+
+        [ShowInInspector] public const float PLAYER_WEIGHT = 0.5f;
 
         [Header("점프")]
         public float jumpSpeed = 980;
@@ -545,11 +548,12 @@ namespace Character.Player
             Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, false);
         }
 
-        public void StartStunState(float stunTime, bool canInitStunTime = false)
+        public bool TryChangeStunState(float stunTime, bool canInitStunTime = false)
         {
+            if (!CanChangeActionState(ActionStatus.Stun)) return false;
             m_CanInitStunTime = canInitStunTime;
-            if (CanChangeActionState(ActionStatus.Stun))
-                StartCoroutine(StunState(stunTime));
+            StartCoroutine(StunState(stunTime));
+            return true;
         }
         
         // Player stun state
@@ -778,6 +782,11 @@ namespace Character.Player
             dir.x = attackerPosition.x > transform.position.x ? -1 : 1;
             dir.y = attackerPosition.y > transform.position.y ? 1 : -1;
             return dir;
+        }
+
+        public void SetPosition(Vector3 pos)
+        {
+            transform.position = pos;
         }
     }
 }

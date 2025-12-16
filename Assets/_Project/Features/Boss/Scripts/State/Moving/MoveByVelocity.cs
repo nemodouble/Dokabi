@@ -60,7 +60,6 @@ namespace _Project.Features.Boss.Scripts.State.Moving
 
         public override void FixedTick(BossContext<TStateId> ctx, float deltaTime)
         {
-            var breakPoint = ID.ToString();
             if (IsFinished)
             {
                 ctx.StopMove();
