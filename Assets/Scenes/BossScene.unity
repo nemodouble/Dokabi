@@ -5205,7 +5205,7 @@ Transform:
   m_GameObject: {fileID: 33413806}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5305,7 +5305,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: fd4daf3a7a3b99b4b9014274e9d888ad, type: 2}
+  - {fileID: 2100000, guid: c4de5ce1c07bde445b165bb5a0a9d2a7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5441,7 +5441,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 15
+      scalar: 1
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -5546,8 +5546,8 @@ ParticleSystem:
         m_RotationOrder: 4
     startColor:
       serializedVersion: 2
-      minMaxState: 0
-      minColor: {r: 1, g: 1, b: 1, a: 1}
+      minMaxState: 2
+      minColor: {r: 1, g: 1, b: 1, a: 0.78039217}
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
@@ -5612,7 +5612,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.4
+      scalar: 0.6
       minScalar: 0.4
       maxCurve:
         serializedVersion: 2
@@ -5989,7 +5989,7 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 20
+    type: 19
     angle: 25
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
@@ -6000,7 +6000,7 @@ ParticleSystem:
     m_Scale: {x: 0.9, y: 0.9, z: 0.9}
     placementMode: 2
     m_MeshMaterialIndex: 0
-    m_MeshNormalOffset: 0
+    m_MeshNormalOffset: 0.1
     m_MeshSpawn:
       mode: 0
       spread: 0
@@ -6060,17 +6060,17 @@ ParticleSystem:
     m_Mesh: {fileID: 0}
     m_MeshRenderer: {fileID: 0}
     m_SkinnedMeshRenderer: {fileID: 0}
-    m_Sprite: {fileID: 21300000, guid: 88c5ccd42c52469479b1f417e82390f7, type: 3}
+    m_Sprite: {fileID: 21300000, guid: 73a05a9fd5c92884e9b6be515acec5aa, type: 3}
     m_SpriteRenderer: {fileID: 33413810}
     m_UseMeshMaterialIndex: 0
     m_UseMeshColors: 1
     alignToDirection: 0
-    m_Texture: {fileID: 2800000, guid: 88c5ccd42c52469479b1f417e82390f7, type: 3}
+    m_Texture: {fileID: 2800000, guid: 73a05a9fd5c92884e9b6be515acec5aa, type: 3}
     m_TextureClipChannel: 3
     m_TextureClipThreshold: 0
     m_TextureUVChannel: 0
-    m_TextureColorAffectsParticles: 1
-    m_TextureAlphaAffectsParticles: 1
+    m_TextureColorAffectsParticles: 0
+    m_TextureAlphaAffectsParticles: 0
     m_TextureBilinearFiltering: 0
     randomDirectionAmount: 0
     sphericalDirectionAmount: 0
@@ -6305,7 +6305,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 60
+        scalar: 10
         minScalar: 30
         maxCurve:
           serializedVersion: 2
@@ -7420,7 +7420,7 @@ ParticleSystem:
     radial:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.3
+      scalar: 1
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -7473,7 +7473,7 @@ ParticleSystem:
     speedModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 0.03
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -37966,7 +37966,7 @@ PrefabInstance:
     - target: {fileID: 8921746235751753929, guid: 10c4c36fab4c9054ca2342f36c63347e,
         type: 3}
       propertyPath: m_CompositePaths.m_Paths.Array.data[0].Array.data[0].x
-      value: 9.999942
+      value: 9.99997
       objectReference: {fileID: 0}
     - target: {fileID: 8921746235751753929, guid: 10c4c36fab4c9054ca2342f36c63347e,
         type: 3}
@@ -37976,7 +37976,7 @@ PrefabInstance:
     - target: {fileID: 8921746235751753929, guid: 10c4c36fab4c9054ca2342f36c63347e,
         type: 3}
       propertyPath: m_CompositePaths.m_Paths.Array.data[0].Array.data[1].x
-      value: 9.999942
+      value: 9.99997
       objectReference: {fileID: 0}
     - target: {fileID: 8921746235751753929, guid: 10c4c36fab4c9054ca2342f36c63347e,
         type: 3}
@@ -37991,12 +37991,12 @@ PrefabInstance:
     - target: {fileID: 8921746235751753929, guid: 10c4c36fab4c9054ca2342f36c63347e,
         type: 3}
       propertyPath: m_CompositePaths.m_Paths.Array.data[0].Array.data[2].y
-      value: 4.999942
+      value: 4.999971
       objectReference: {fileID: 0}
     - target: {fileID: 8921746235751753929, guid: 10c4c36fab4c9054ca2342f36c63347e,
         type: 3}
       propertyPath: m_CompositePaths.m_Paths.Array.data[0].Array.data[3].x
-      value: -9.999942
+      value: -9.99997
       objectReference: {fileID: 0}
     - target: {fileID: 8921746235751753929, guid: 10c4c36fab4c9054ca2342f36c63347e,
         type: 3}
@@ -38006,17 +38006,17 @@ PrefabInstance:
     - target: {fileID: 8921746235751753929, guid: 10c4c36fab4c9054ca2342f36c63347e,
         type: 3}
       propertyPath: m_ColliderPaths.Array.data[0].m_ColliderPaths.Array.data[0].Array.data[0].X
-      value: 99999707
+      value: 100000000
       objectReference: {fileID: 0}
     - target: {fileID: 8921746235751753929, guid: 10c4c36fab4c9054ca2342f36c63347e,
         type: 3}
       propertyPath: m_ColliderPaths.Array.data[0].m_ColliderPaths.Array.data[0].Array.data[0].Y
-      value: -50000000
+      value: 50000000
       objectReference: {fileID: 0}
     - target: {fileID: 8921746235751753929, guid: 10c4c36fab4c9054ca2342f36c63347e,
         type: 3}
       propertyPath: m_ColliderPaths.Array.data[0].m_ColliderPaths.Array.data[0].Array.data[1].X
-      value: 99999707
+      value: -100000000
       objectReference: {fileID: 0}
     - target: {fileID: 8921746235751753929, guid: 10c4c36fab4c9054ca2342f36c63347e,
         type: 3}
@@ -38031,12 +38031,12 @@ PrefabInstance:
     - target: {fileID: 8921746235751753929, guid: 10c4c36fab4c9054ca2342f36c63347e,
         type: 3}
       propertyPath: m_ColliderPaths.Array.data[0].m_ColliderPaths.Array.data[0].Array.data[2].Y
-      value: 49999707
+      value: -50000000
       objectReference: {fileID: 0}
     - target: {fileID: 8921746235751753929, guid: 10c4c36fab4c9054ca2342f36c63347e,
         type: 3}
       propertyPath: m_ColliderPaths.Array.data[0].m_ColliderPaths.Array.data[0].Array.data[3].X
-      value: -99999707
+      value: 100000000
       objectReference: {fileID: 0}
     - target: {fileID: 8921746235751753929, guid: 10c4c36fab4c9054ca2342f36c63347e,
         type: 3}

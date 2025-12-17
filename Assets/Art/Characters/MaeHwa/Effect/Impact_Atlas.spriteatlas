@@ -77,6 +77,7 @@ SpriteAtlas:
     - a4c5a0ccd8b9e724cb5683b07514382e: 21300000
     - e63314cc731f9804fa3842f38274d7b0: 21300000
     - 3a2453ece9d3afd4da2e8819cbebbeea: 21300000
+    - 73a05a9fd5c92884e9b6be515acec5aa: 21300000
     - 697d83cf1ef35744595ee0748e9e9718: 21300000
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -102,6 +103,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: a4c5a0ccd8b9e724cb5683b07514382e, type: 3}
   - {fileID: 21300000, guid: e63314cc731f9804fa3842f38274d7b0, type: 3}
   - {fileID: 21300000, guid: 3a2453ece9d3afd4da2e8819cbebbeea, type: 3}
+  - {fileID: 21300000, guid: 73a05a9fd5c92884e9b6be515acec5aa, type: 3}
   - {fileID: 21300000, guid: 697d83cf1ef35744595ee0748e9e9718, type: 3}
   m_PackedSpriteNamesToIndex:
   - Horizon_2
@@ -126,6 +128,7 @@ SpriteAtlas:
   - Attack2
   - Attack3
   - Down_Smash2
+  - Horizon_shape
   - Down_Smash3
   m_RenderDataMap: {}
   m_Tag: Impact_Atlas
