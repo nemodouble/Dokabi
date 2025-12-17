@@ -13,13 +13,19 @@ MonoBehaviour:
   m_Name: MaeHwaStats
   m_EditorClassIdentifier: 
   startWaitTime: 5.5
-  walkSpeed: 3
+  walkSpeed: 5
   walkTime: 1
   walkCloselyDistance: 4
+  stepOffsetX: 5
+  stepMaxSpeed: 20
+  stepDecelAccel: 20
+  stepDecelStartRatio: 0.3
+  stepMaxDistance: 10
   horizonBeforeWaitTime: 1
   horizonAfterWaitTime: 1
   horizonStepSpeed: 20
   horizonTeleportWaitTime: 0.2
+  horizonMaxRunTime: 3
   bodyDashSpeed: 20
   bodyDashTime: 0.3
   bodyAfterDashWaitTime: 1

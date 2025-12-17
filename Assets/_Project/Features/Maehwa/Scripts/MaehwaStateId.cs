@@ -11,6 +11,7 @@ namespace _Project.Features.Maehwa.Scripts
         WalkLeft,
         WalkRight,
         WalkEnd,
+        Step,
         FrontStep,
         BackStep,
         HorizonStart,

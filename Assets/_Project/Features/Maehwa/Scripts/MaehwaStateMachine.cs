@@ -54,16 +54,16 @@ namespace _Project.Features.Maehwa.Scripts
             var selectStep = new EmptyState<MaehwaStateId>(MaehwaStateId.SelectStep);
             StateMachine.AddState(MaehwaStateId.SelectStep, selectStep);
 
-            var frontStep = new KeepDistanceXStep<MaehwaStateId>(MaehwaStateId.FrontStep,
-                Vector2.right * 3f,
-                20f,
-                10,
-                0.3f,
+            var step = new KeepDistanceXStep<MaehwaStateId>(MaehwaStateId.Step,
+                Vector2.right * s.stepOffsetX,
+                s.stepMaxSpeed,
+                s.stepDecelAccel,
+                s.stepDecelStartRatio,
                 Context.PlayerTransform,
-                10f);
-            var backStep = new Step<MaehwaStateId>(MaehwaStateId.BackStep, Vector2.right * 3f, 20f, 10, 0.3f);
-            StateMachine.AddState(MaehwaStateId.FrontStep, frontStep);
-            StateMachine.AddState(MaehwaStateId.BackStep, backStep);
+                s.stepMaintainDistance,
+                MaehwaStateId.FrontStep,
+                MaehwaStateId.BackStep);
+            StateMachine.AddState(MaehwaStateId.Step, step);
 
             // Select-Attack
             var selectAttack = new EmptyState<MaehwaStateId>(MaehwaStateId.SelectAttack);
@@ -84,12 +84,8 @@ namespace _Project.Features.Maehwa.Scripts
             StateMachine.AddTransition(MaehwaStateId.WalkEnd, MaehwaStateId.SelectAttack, _ => true);
 
             // Select-Step -> Front / Back
-            StateMachine.AddTransition(MaehwaStateId.SelectStep, MaehwaStateId.BackStep, ctx => ctx.IsInDistance(0f, 3f));
-            StateMachine.AddTransition(MaehwaStateId.SelectStep, MaehwaStateId.FrontStep, ctx => !ctx.IsInDistance(0f, 3f));
-
-            // Step 종료 후 Select-Attack
-            StateMachine.AddTransition(MaehwaStateId.FrontStep, MaehwaStateId.SelectAttack, _ => frontStep.IsFinished);
-            StateMachine.AddTransition(MaehwaStateId.BackStep, MaehwaStateId.SelectAttack, _ => backStep.IsFinished);
+            StateMachine.AddTransition(MaehwaStateId.SelectStep, MaehwaStateId.Step, _ => true);
+            StateMachine.AddTransition(MaehwaStateId.Step, MaehwaStateId.SelectAttack, _ => step.IsFinished);
 
             // 공격 종료 공통 
             var endPhase = new WaitState<MaehwaStateId>(MaehwaStateId.EndAttack, s.betweenPhaseWaitTime, true);
@@ -112,8 +108,8 @@ namespace _Project.Features.Maehwa.Scripts
             var horizonStep = new HorizonRun(
                 MaehwaStateId.HorizonRun,
                 s.horizonStepSpeed,
-                3f,
-                s.horizonTeleportWaitTime);                     // 최대 이동 시간 (기존과 동일)
+                s.horizonMaxRunTime,
+                s.horizonTeleportWaitTime);
             StateMachine.AddState(MaehwaStateId.HorizonRun, horizonStep);
 
             StateMachine.AddTransition(MaehwaStateId.HorizonStart, MaehwaStateId.HorizonRun, _ => true);

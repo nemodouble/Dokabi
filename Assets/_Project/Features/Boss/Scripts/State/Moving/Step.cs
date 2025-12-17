@@ -8,8 +8,8 @@ namespace _Project.Features.Boss.Scripts.State.Moving
     {
         protected readonly Vector2 RelativePos;
         private readonly float _maxSpeed;
-        private readonly float _accel;
-        private readonly float _decelLengthRate;
+        private readonly float _decelAccel;
+        private readonly float _decelStartRatio;
 
         protected Vector2 StartingPos;
         protected Vector2 TargetPos;
@@ -17,12 +17,12 @@ namespace _Project.Features.Boss.Scripts.State.Moving
         private Vector2 _moveDir;
         private float _currentSpeed;
 
-        public Step(TStateId id, Vector2 relativePos, float maxSpeed, float accel, float decelLengthRate) : base(id)
+        public Step(TStateId id, Vector2 relativePos, float maxSpeed, float decelAccel, float decelStartRatio) : base(id)
         {
             RelativePos = relativePos;
             _maxSpeed = maxSpeed;
-            _accel = accel;
-            _decelLengthRate = decelLengthRate;
+            _decelAccel = decelAccel;
+            _decelStartRatio = decelStartRatio;
         }
 
         public override void OnEnter(BossContext<TStateId> ctx)
@@ -68,7 +68,7 @@ namespace _Project.Features.Boss.Scripts.State.Moving
             _moveDir = toTarget.normalized;
 
             // 감속 구간이면 남은 거리 비율에 따라 속도 줄이기
-            if (leftLength < RelativePos.magnitude * _decelLengthRate)
+            if (leftLength < RelativePos.magnitude * _decelStartRatio)
             {
                 _currentSpeed = _maxSpeed * leftLength / RelativePos.magnitude;
                 if (_currentSpeed <= 0.01f)
@@ -79,7 +79,7 @@ namespace _Project.Features.Boss.Scripts.State.Moving
             // 가속 구간
             else
             {
-                var dv = (_maxSpeed - _currentSpeed) * _accel * deltaTime;
+                var dv = (_maxSpeed - _currentSpeed) * _decelAccel * deltaTime;
                 _currentSpeed = Mathf.Clamp(_currentSpeed + dv, 0f, _maxSpeed);
             }
         }

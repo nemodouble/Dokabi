@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "MaeHwaStats", menuName = "Boss/MaeHwa Stats")]
 public class MaeHwaStats : ScriptableObject
@@ -7,15 +8,29 @@ public class MaeHwaStats : ScriptableObject
     public float startWaitTime = 5.5f;
     
     [Header("걷기")]
-    public float walkSpeed = 3f;
+    public float walkSpeed = 6f;
     public float walkTime = 1f;
     public float walkCloselyDistance = 4f;
+
+    [Header("스텝")]
+    [Tooltip("스텝 시 기준이 되는 상대 방향 (기본 3f 우측)")]
+    public float stepOffsetX = 3f;
+    [Tooltip("스텝 시 최대 이동 속도")]
+    public float stepMaxSpeed = 20f;
+    [Tooltip("스텝 시 감속 가속도(절대값이 클수록 급감속)")]
+    public float stepDecelAccel = 10f;
+    [Tooltip("감속을 시작하는 길이 비율 (1이면 전체 거리, 0.5면 절반 지점부터 감속)")]
+    public float stepDecelStartRatio = 0.3f;
+    [Tooltip("플레이어를 기준으로 스텝을 수행할 최대 거리")]
+    public float stepMaintainDistance = 10f;
 
     [Header("가로베기")]
     public float horizonBeforeWaitTime = 1f;
     public float horizonAfterWaitTime = 1f;
     public float horizonStepSpeed = 20f;
     public float horizonTeleportWaitTime = 0.2f;
+    [Tooltip("가로 돌진 시 최대 이동 시간")]
+    public float horizonMaxRunTime = 3f;
 
     [Header("바디태클")]
     public float bodyDashSpeed = 20f;
